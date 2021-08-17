@@ -9,36 +9,36 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
 ## Current lineup of the plugins
 ###  Pre-processing
 * Create dataset
-    * [Object detection](./img/ObjectDetection.md)
-    * [Simple (Japanese) text classification](./img/SimpleTextClassification.md)
-    * [String classification](./img/StringClassification.md)
-    * [Simple tabular data](./img/SimpleTabularDataset.md)
-    * [Split image](./img/SplitImage.md)
-    * [Split wav](./img/SplitWav.md)
+    * [Object detection](./manuals/ObjectDetection.md)
+    * [Simple (Japanese) text classification](./manuals/SimpleTextClassification.md)
+    * [String classification](./manuals/StringClassification.md)
+    * [Simple tabular data](./manuals/SimpleTabularDataset.md)
+    * [Split image](./manuals/SplitImage.md)
+    * [Split wav](./manuals/SplitWav.md)
     
 ###  Post-processing
 * Utils
-    * [Cross tabulation](./img/CrossTabulation.md)
-    * [CSV to wav](./img/CSVtoWav.md)
-    * [Inference](./img/Inference.md)
-    * [Parameter stats](./img/ParameterStats.md)
-    * [Restore split images / wav](./img/RestoreSplitWav.md)
-    * [Similar words](./img/Similar_Words.md)
-    * [Simple (Japanese) text generation](./img/SimpleTextGeneration.md)
-    * [t-SNE](./img/tSNE.md)
+    * [Cross tabulation](./manuals/CrossTabulation.md)
+    * [CSV to wav](./manuals/CSVtoWav.md)
+    * [Inference](./manuals/Inference.md)
+    * [Parameter stats](./manuals/ParameterStats.md)
+    * [Restore split images / wav](./manuals/RestoreSplitWav.md)
+    * [Similar words](./manuals/Similar_Words.md)
+    * [Simple (Japanese) text generation](./manuals/SimpleTextGeneration.md)
+    * [t-SNE](./manuals/tSNE.md)
     
 * Visualization
-    * [Scatter plot](./img/ScatterPlot.md)
-    * [Tile images](./img/TileImages.md)
+    * [Scatter plot](./manuals/ScatterPlot.md)
+    * [Tile images](./manuals/TileImages.md)
 
 * eXplainable AI (XAI)
-    * [SGD influence](./img/SGDinfl.md)
-    * [Face evaluation](./img/FaceEvaluation.md)
-    * [Grad-CAM](./img/Grad-CAM.md)
-    * [LIME](./img/LIME.md)
-    * [SHAP](./img/SHAP.md)
-    * [Smooth Grad](./img/SmoothGrad.md)
-    * [TracIn](./img/TracIn.md)
+    * [SGD influence](./manuals/SGDinfl.md)
+    * [Face evaluation](./manuals/FaceEvaluation.md)
+    * [Grad-CAM](./manuals/Grad-CAM.md)
+    * [LIME](./manuals/LIME.md)
+    * [SHAP](./manuals/SHAP.md)
+    * [Smooth Grad](./manuals/SmoothGrad.md)
+    * [TracIn](./manuals/TracIn.md)
 
 ## How to use the latest plugins
 The plugins run on Neural Network Console. If you do not have Neural Network Console, please download from here (https://dl.sony.com/).
@@ -61,4 +61,5 @@ The plugins run on Neural Network Console. If you do not have Neural Network Con
 <p align="center">
 <img src="./img/postprocessing.png" width="400px">  
 </p>
+
 
