@@ -11,8 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from utils.model import get_context
+from utils.file import read_csv, add_info_to_csv, save_to_csv
 import functools
 import os
+import sys
 import numpy as np
 import nnabla as nn
 import nnabla.functions as F
@@ -21,7 +24,9 @@ from tqdm import tqdm
 from .model import resnet23_prediction, resnet56_prediction, loss_function
 from .datasource import get_datasource
 from .args import get_infl_args
-from .utils import save_to_csv, get_context
+par_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if par_dir not in sys.path:
+    sys.path.append(par_dir)
 
 
 CHECKPOINTS_PATH_FORMAT = "params_{}.h5"
@@ -34,8 +39,7 @@ def load_ckpt_path(checkpoint, train_epochs):
 
 
 def load_data(input_path):
-    data_source = get_datasource(
-        filename=os.path.join(input_path, 'data_train.csv'))
+    data_source = get_datasource(filename=input_path)
     num_iteration = data_source.size
     iterator = data_iterator(data_source, 1, None, False, False)
     return iterator, num_iteration
@@ -142,21 +146,20 @@ def get_scores(args, data_iterator, num_iteration, ckpt_paths):
 def calc_infl(args):
     ctx = get_context(device_id=args.device_id)
     nn.set_default_context(ctx)
-
-    data_iterator, num_iteration = load_data(args.weight_input)
+    data_csv_path = os.path.join(args.weight_input, 'data_train.csv')
+    data_source, num_iteration = load_data(data_csv_path)
     ckpt_paths = load_ckpt_path(args.checkpoint, args.train_epochs)
 
-    results = get_scores(args, data_iterator, num_iteration, ckpt_paths)
-    results_values = np.array(list(results.values())).T
+    results = get_scores(args, data_source, num_iteration, ckpt_paths)
     # sort by influence in ascending order
-    results_values = results_values[results_values[:, 1].astype(
-        float).argsort()]
-    save_to_csv(
-        filename=args.output,
-        header=results.keys(),
-        list_to_save=results_values,
-        data_type='object,float,int'
-    )
+    rows = read_csv(data_csv_path)
+    rows = [r[:-3] + [r[-2]] for r in rows]
+    rows = add_info_to_csv(rows, results['influence'], 'influence', position=0)
+    header = rows.pop(0)
+    rows = np.array(rows)
+    rows = rows[rows[:, 0].astype(float).argsort()[::-1]]
+    save_to_csv(filename=args.output, header=header,
+                list_to_save=rows, data_type=str)
 
 
 if __name__ == "__main__":
