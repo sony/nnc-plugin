@@ -133,13 +133,11 @@ class BatchSizeAdjuster:
         self.pre_batch_size = None
         self.test = None
 
-    def adjust_batch_size(self, model, solver, batch_size, loss=None, test=False):
+    def adjust_batch_size(self, model, batch_size, loss=None, test=False):
         if (self.pre_batch_size != batch_size) | (self.test != test):
-            params = nn.get_parameters(grad_only=False)
             self._get_network(batch_size)
             model = functools.partial(
                 model, network=self.network, batch_size=batch_size)
-            solver.set_parameters(params)
             self._pred, self._loss, self._input = _adjust_batch_size(
                 model, batch_size, loss, test)
         self.pre_batch_size = batch_size
@@ -155,7 +153,6 @@ class BatchSizeAdjuster:
 
 def get_config(args, is_eval=False):
     class Congig(object):
-
         def __init__(self, cfg, is_eval):
             lr = 0.05
 
