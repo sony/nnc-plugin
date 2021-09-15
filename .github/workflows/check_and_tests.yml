@@ -26,7 +26,6 @@ jobs:
           name: format diff
           path: output/format
 
-
   check-help-messages:
     runs-on: ubuntu-latest
     steps:
