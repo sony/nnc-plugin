@@ -69,7 +69,8 @@ def func(args):
             pbar.update(1)
         pbar.close()
 
-    save_info_to_csv(args.input, args.output, file_names, column_name='gradcam')
+    save_info_to_csv(args.input, args.output,
+                     file_names, column_name='gradcam')
     logger.log(99, 'Grad-CAM completed successfully.')
 
 
