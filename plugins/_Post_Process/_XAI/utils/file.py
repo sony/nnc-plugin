@@ -17,7 +17,7 @@ import numpy as np
 from shutil import rmtree
 
 
-def save_info_to_csv(input_path, output_path, file_names, column_name, insert_pos=1):
+def save_info_to_csv(input_path, output_path, file_names, column_name='gradcam', insert_pos=0):
     with open(input_path, newline='') as f:
         rows = [row for row in csv.reader(f)]
     row0 = rows.pop(0)
