@@ -94,7 +94,7 @@ def infl_sgd(model_info_dict, file_dir_dict, use_all_params, need_evaluate):
     solver.set_parameters(trained_params)
     # gradient
     u = compute_gradient(grad_model, bsa, solver, valset,
-                         batch_size, idx_val, target_epoch, resize_size_val)
+                         batch_size, idx_val, resize_size_val)
 
     test = False
     infl_model = functools.partial(
@@ -110,7 +110,7 @@ def infl_sgd(model_info_dict, file_dir_dict, use_all_params, need_evaluate):
             fn = _select_modelfile_for_infl(
                 use_all_params=use_all_params, epoch=epoch, step=step)
             _, loss_fn, input_image = bsa.adjust_batch_size(
-                infl_model, solver, 1, loss_fn, test)
+                infl_model, 1, loss_fn, test)
             nn.load_parameters(fn)
             params = nn.get_parameters(grad_only=False)
             solver.set_parameters(params)
@@ -141,7 +141,7 @@ def infl_sgd(model_info_dict, file_dir_dict, use_all_params, need_evaluate):
 
             # update u
             _, loss_fn, input_image = bsa.adjust_batch_size(
-                infl_model, solver, len(idx), loss_fn, test)
+                infl_model, len(idx), loss_fn, test)
             input_image["image"].d = X
             input_image["label"].d = np.array(y).reshape(-1, 1)
             loss_fn.forward()
@@ -177,7 +177,7 @@ def infl_sgd(model_info_dict, file_dir_dict, use_all_params, need_evaluate):
                 list_to_save=infl_list, data_type=data_type)
 
 
-def compute_gradient(grad_model, bs_adjuster, solver, dataset, batch_size, idx_list_to_data, epoch, resize_size):
+def compute_gradient(grad_model, bs_adjuster, solver, dataset, batch_size, idx_list_to_data, resize_size):
     n = len(idx_list_to_data)
     grad_idx = get_batch_indices(n, batch_size, seed=None)
     u = {}
@@ -187,14 +187,14 @@ def compute_gradient(grad_model, bs_adjuster, solver, dataset, batch_size, idx_l
         X, y = get_batch_data(dataset, idx_list_to_data,
                               i, resize_size, test=test)
         _, loss_fn, input_image = bs_adjuster.adjust_batch_size(
-            grad_model, solver, len(X), loss_fn, test)
+            grad_model, len(X), loss_fn, test)
         input_image["image"].d = X
         input_image["label"].d = y
         loss_fn.forward()
         solver.zero_grad()
         loss_fn.backward(clear_buffer=True)
 
-        for j, (key, param) in enumerate(nn.get_parameters(grad_only=False).items()):
+        for key, param in nn.get_parameters(grad_only=False).items():
             uu = u.get(key, None)
             if uu is None:
                 u[key] = nn.Variable(param.shape)

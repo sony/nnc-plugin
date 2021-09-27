@@ -94,7 +94,7 @@ def retrain(model_info_dict, file_dir_dict, escape_list=[]):
             if len(X) == 0:
                 continue
             _, loss_train, input_image_train = bsa.adjust_batch_size(
-                train_model, solver, len(X), loss_train, test=test)
+                train_model, len(X), loss_train, test=test)
             input_image_train["image"].d = X
             input_image_train["label"].d = y
 
