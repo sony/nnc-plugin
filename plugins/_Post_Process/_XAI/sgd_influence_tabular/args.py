@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import argparse
 
 
@@ -19,8 +20,7 @@ def add_basic_args(parser):
         '-m', '--model', help='path to model nnp file (model) default=results.nnp')
     parser.add_argument(
         '-bs', '--batch_size', help='batch size for train, infl default=64', default=64, type=int)
-    # epoch for SGD influence calculation(int). It becomes 1 when model nnp is
-    # designated.
+    # epoch for SGD influence calculation(int). It becomes 1 when model nnp is designated.
     parser.add_argument(
         '-e', '--num-epochs', help=argparse.SUPPRESS, default=20, type=int)
     # device id of gpu
@@ -29,8 +29,7 @@ def add_basic_args(parser):
     # if True, retrain all.
     parser.add_argument(
         '-ra', '--retrain_all', help=argparse.SUPPRESS, action='store_true')
-    # if True, save and use only final model, Otherwise, save all params with
-    # which sgd-influence is calculated.
+    # if True, save and use only final model, Otherwise, save all params with which sgd-influence is calculated.
     parser.add_argument(
         '-cl', '--only-last-params', help=argparse.SUPPRESS, action='store_true')
     # target data for train_infl_eval

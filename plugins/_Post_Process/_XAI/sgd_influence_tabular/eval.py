@@ -11,20 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from sgd_influence.utils import get_context, read_csv
+
 import os
-import sys
 import functools
 from tqdm import tqdm
 import numpy as np
 import nnabla as nn
 import nnabla.functions as F
-from .network import get_solver, select_model, calc_acc, get_n_classes
-from .network import get_batch_data, get_indices, setup_dataset
-from .infl import save_to_csv
-par_dir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-2])
-if par_dir not in sys.path:
-    sys.path.append(par_dir)
+from sgd_influence_tabular.network import get_solver, select_model, calc_acc, get_n_classes
+from sgd_influence_tabular.network import get_batch_data, get_indices, setup_dataset
+from utils.file import get_context, read_csv, save_to_csv
 
 
 def select_model_file(output_path, start_epoch):
@@ -100,8 +96,7 @@ def retrain(config, escape_list=[]):
         nn.load_parameters(fn)
         solver.set_parameters(nn.get_parameters(grad_only=False))
         for step_info in info[epoch]:
-            idx, lr, alpha = step_info['idx'], step_info[
-                'lr'], step_info['alpha']
+            idx, lr, alpha = step_info['idx'], step_info['lr'], step_info['alpha']
             X, y = get_batch_data(trainset, idx_train,
                                   idx, escape_list=escape_list)
             params = nn.get_parameters(grad_only=False)
@@ -137,7 +132,7 @@ def get_escape_list(infl_filename, n_to_remove):
     infl_arr = np.array(infl_list)
     header = infl_list[0]
     idx_ds = header.index('index')
-    escape_list = infl_arr[1:1 + n_to_remove, idx_ds].astype(int).tolist()
+    escape_list = infl_arr[1:1+n_to_remove, idx_ds].astype(int).tolist()
     return escape_list
 
 

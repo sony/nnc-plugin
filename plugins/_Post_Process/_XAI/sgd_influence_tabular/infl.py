@@ -11,30 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from sgd_influence.utils import get_context
+
 import os
-import sys
 import functools
-import csv
 import numpy as np
 from tqdm import tqdm
 import nnabla as nn
 import nnabla.functions as F
-from .network import get_solver, select_model, get_n_classes
-from .network import get_indices, get_batch_indices, get_batch_data
-from .network import get_config, setup_dataset
-from .args import get_infl_args
-par_dir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-2])
-if par_dir not in sys.path:
-    sys.path.append(par_dir)
-
-
-def save_to_csv(filename, header, list_to_save, data_type):
-    with open(filename, 'w') as f:
-        writer = csv.writer(f, lineterminator='\n')
-        writer.writerow(header)
-        writer.writerows(np.array([tuple(row)
-                                   for row in list_to_save], dtype=data_type))
+from sgd_influence_tabular.network import get_solver, select_model, get_n_classes
+from sgd_influence_tabular.network import get_indices, get_batch_indices, get_batch_data
+from sgd_influence_tabular.network import get_config, setup_dataset
+from sgd_influence_tabular.args import get_infl_args
+from utils.model import get_context
+from utils.file import save_to_csv
 
 
 def get_weight_name(save_dir, epoch, step, only_last_params, final_model_name='final_model.h5'):
@@ -58,15 +47,18 @@ def compute_gradient(bs_adjuster, grad_model, solver, dataset, batch_size, idx_l
         input_data_train["feat"].d = X
         input_data_train["label"].d = y
         loss.forward()
-        solver.zero_grad()
+        for k, p in nn.get_parameters().items():
+            p.grad.zero()
         loss.backward()
 
-        for j, (key, param) in enumerate(nn.get_parameters(grad_only=False).items()):
-            uu = u.get(key, None)
-            if uu is None:
-                u[key] = nn.Variable(param.shape)
-                u[key].data.zero()
-            u[key].d += param.g / n
+    for k, p in nn.get_parameters(grad_only=False).items():
+        key = f'{k}_u'
+        uu = u.get(key, None)
+        if uu is None:
+            u[key] = nn.Variable(p.shape)
+            u[key].data.zero()
+            u[key].grad.zero()
+        u[key].d = p.g.copy()
     return u
 
 
@@ -103,73 +95,71 @@ def infl_sgd(cfg):
     # model setup
     info_list = np.load(os.path.join(
         save_dir, info_filename), allow_pickle=True)
-    fn = '%s/epoch%02d/weights/final_model.h5' % (save_dir, len(info_list) - 1)
-    nn.load_parameters(fn)
-    trained_params = nn.get_parameters(grad_only=False)
-    lr = info_list[-1][-1]['lr']
     solver = get_solver(network, cfg.network_info, lr)
-    solver.set_parameters(trained_params)
+    fn = '%s/epoch%02d/weights/final_model.h5' % (save_dir, len(info_list)-1)
+    nn.load_parameters(fn)
+    trained_params = nn.get_parameters()
+    lr = info_list[-1][-1]['lr']
+
+    solver.set_parameters(trained_params, reset=True)
     # gradient
     idx_train = get_indices(n_tr, seed)
     idx_val = get_indices(n_val, seed)
     u = compute_gradient(bsa, grad_model, solver, valset,
                          batch_size, idx_val, cfg.alpha)
     loss = None
-    pre_bs = None
     infl_dict = {}
-    for epoch in tqdm(range(cfg.infl_end_epoch, cfg.num_epochs)[::-1], desc='calculate influence'):
-        for step_info in tqdm(info_list[epoch][::-1]):
-            step, idx, lr, alpha = step_info['step'], step_info[
-                'idx'], step_info['lr'], step_info['alpha']
+    for epoch in range(cfg.infl_end_epoch, cfg.num_epochs)[::-1]:
+        for step_info in tqdm(info_list[epoch][::-1], desc='calculate influence'):
+            step, idx, lr, alpha = step_info['step'], step_info['idx'], step_info['lr'], step_info['alpha']
+            fn = get_weight_name(save_dir, epoch, step, cfg.only_last_params)
+            nn.load_parameters(fn)
+            params = nn.get_parameters()
+            _, loss, input_data = bsa.adjust_batch_size(infl_model, 1, loss)
+            solver.set_parameters(params)
+            solver.set_learning_rate(lr)
             for i in idx:
-                fn = get_weight_name(save_dir, epoch, step,
-                                     cfg.only_last_params)
-                nn.load_parameters(fn)
-                params = nn.get_parameters(grad_only=False)
                 X, y = get_batch_data(trainset, idx_train, [i])
-                if pre_bs != len(X):
-                    _, loss, input_data = bsa.adjust_batch_size(
-                        infl_model, len(X), loss)
-                solver.set_parameters(params)
-                solver.set_learning_rate(lr)
-                pre_bs = len(X)
                 input_data["feat"].d = X
                 input_data["label"].d = y
-                for _k, p in nn.get_parameters(grad_only=False).items():
+                for _k, p in nn.get_parameters().items():
                     loss += 0.5 * alpha * F.sum(p * p)
                 loss.forward()
-                solver.zero_grad()
+                for k, p in nn.get_parameters().items():
+                    p.grad.zero()
                 loss.backward()
                 csv_idx = idx_train[i]
                 infl = infl_dict.get(csv_idx, 0.0)
-                for k, p in nn.get_parameters(grad_only=False).items():
-                    infl += lr * (u[k].d * p.g).sum().item() / idx.size
+                for k, p in nn.get_parameters().items():
+                    infl += lr * (u[f'{k}_u'].d * p.g).sum().item() / idx.size
                 infl_dict[csv_idx] = infl
             # update u
+            params = nn.get_parameters()
             X, y = get_batch_data(trainset, idx_train, idx)
             _, loss, input_data = bsa.adjust_batch_size(
                 infl_model, len(X), loss)
-            pre_bs = len(X)
+            solver.set_parameters(params, reset=True)
             input_data["feat"].d = X
             input_data["label"].d = y
-            grad_params = {}
-            for _k, p in nn.get_parameters(grad_only=False).items():
+
+            for _k, p in nn.get_parameters().items():
                 loss += 0.5 * alpha * F.sum(p * p)
+
             loss.forward()
-            params = nn.get_parameters(grad_only=False)
-            for k, p in zip(params.keys(), nn.grad([loss], params.values())):
-                if p:
-                    grad_params[k] = p.get_unlinked_variable()
+            params = nn.get_parameters()
             ug = 0
-            for k, uu in u.items():
-                gp = grad_params.get(k, None)
-                if gp:
+            for k, _gp in zip(params.keys(), nn.grad([loss], params.values())):
+                gp = _gp.get_unlinked_variable()
+                uu = u.get(f'{k}_u', None)
+                if uu is not None:
                     ug += F.sum(uu * gp)
             ug.forward()
-            solver.zero_grad()
+            for k, p in nn.get_parameters().items():
+                p.grad.zero()
             ug.backward()
-            for k, p in nn.get_parameters(grad_only=False).items():
-                u[k].d -= lr * p.g / len(X)
+            for k, p in nn.get_parameters().items():
+                key = f'{k}_u'
+                u[key].d -= lr * p.g / len(X)
     # save
     # sort by influence score
     infl_list = [[k] + [v] for k, v in infl_dict.items()]
