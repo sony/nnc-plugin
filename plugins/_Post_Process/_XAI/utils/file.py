@@ -17,6 +17,15 @@ import numpy as np
 from shutil import rmtree
 
 
+def add_info_to_csv(rows, vals_to_add, column_name, position=-1):
+    header = rows.pop(0)
+    header.insert(position, column_name)
+    for i, val_to_add in enumerate(vals_to_add):
+        rows[i].insert(position, val_to_add)
+    rows.insert(0, header)
+    return rows
+
+
 def save_info_to_csv(input_path, output_path, file_names, column_name='gradcam', insert_pos=0):
     with open(input_path, newline='') as f:
         rows = [row for row in csv.reader(f)]

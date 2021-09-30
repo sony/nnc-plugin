@@ -63,6 +63,42 @@ def get_train_infl_args():
     return parser.parse_args()
 
 
+def get_train_infl_args_of_inflence_functions():
+    parser = argparse.ArgumentParser(
+        description='Influence Functions (image)\n' +
+        '\n' +
+        '"Understanding Black-box Predictions via Influence Functions"\n' +
+        '  Pang Wei Koh, Percy Liang.\n' +
+        'https://arxiv.org/abs/1703.04730\n' +
+        '', formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument(
+        '-t', '--input-train', help='path to training dataset csv file (csv)', required=True)
+    parser.add_argument(
+        '-v', '--input-val', help='path to validation dataset csv file (csv)', required=True)
+    parser.add_argument(
+        '-o', '--output', help='path to output csv file (csv) default=influence(influence_functions).csv', default='influence(influence_functions).csv')
+    parser.add_argument(
+        '-s', '--seed', help='random seed number default=0', default=0, type=int)
+    # path to score csv file
+    parser.add_argument(
+        '-so', '--score_output', help=argparse.SUPPRESS, default=None)
+    # save dir name default=sgd_infl_results
+    parser.add_argument(
+        '-d', '--weight_output', help=argparse.SUPPRESS, default='influence_functions_results', type=str)
+    # calc method of sgd-influence default=last
+    parser.add_argument(
+        '-c', '--calc-infl-method', help=argparse.SUPPRESS, default='last', choices=['last', 'all'])
+    # alpha for loss calculation
+    parser.add_argument(
+        '-ap', '--alpha', help=argparse.SUPPRESS, default=0.1, type=float)
+    # if True, save all params with which sgd-influence is calculated. Otherwise, save and use only final model.
+    parser.add_argument(
+        '-a', '--calc-infl-with-all-params', help=argparse.SUPPRESS, default=True, type=bool)
+    parser = get_basic_args(parser)
+
+    return parser.parse_args()
+
+
 def get_eval_args():
     parser = argparse.ArgumentParser(
         description='check performance of SGD-influence', formatter_class=argparse.RawTextHelpFormatter)

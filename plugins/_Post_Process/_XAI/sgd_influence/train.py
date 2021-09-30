@@ -53,7 +53,7 @@ def eval_model(val_model, bs_adjuster, solver, dataset, idx_list_to_data, batch_
         X, y = get_batch_data(dataset, idx_list_to_data,
                               i, resize_size, test=test)
         pred, loss_fn, input_image = bs_adjuster.adjust_batch_size(
-            val_model, solver, len(X), loss_fn, test)
+            val_model, len(X), loss_fn, test)
         input_image["image"].d = X
         input_image["label"].d = y
         loss_fn.forward()
@@ -137,7 +137,7 @@ def train(model_info_dict, file_dir_dict, use_all_params, need_evaluate, bundle_
             X, y = get_batch_data(trainset, idx_train, i,
                                   resize_size_train, test=False, seeds=seeds)
             _, loss_train, input_image_train = bsa.adjust_batch_size(
-                train_model, solver, len(X), loss_train)
+                train_model, len(X), loss_train)
             input_image_train["image"].d = X
             input_image_train["label"].d = y
 

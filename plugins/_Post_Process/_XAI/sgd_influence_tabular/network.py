@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import numpy as np
 import functools
 import nnabla as nn
@@ -36,6 +37,7 @@ def logreg(x, n_classes=1):
 
 def dnn(x, m=[8, 8], n_classes=1):
     h = block(x, 'block1', m[0])
+    h = F.dropout(h, output_mask=True)[0]
     h = block(h, 'block2', m[1])
     h = PF.affine(h, n_classes)
     return h
@@ -101,7 +103,7 @@ def setup_model_func(network, n_classes, n_features, batch_size, test, net_name_
     if is_regression:
         loss = F.mean(F.pow_scalar(F.sub2(pred, target), 2))
     else:
-        loss = F.softmax_cross_entropy(pred, target)
+        loss = F.sigmoid_cross_entropy(pred, target)
     loss = calc_loss_reduction(loss, reduction)
     input_data = {"feat": feat, "label": target}
     return pred, loss, input_data
@@ -155,7 +157,7 @@ def get_batch_indices(num_data, batch_size, seed=None):
         shuffled_idx = get_indices(num_data, seed)
     indices_list = []
     for i in range(0, num_data, batch_size):
-        indices = shuffled_idx[i:i + batch_size]
+        indices = shuffled_idx[i:i+batch_size]
         indices_list.append(indices)
     return indices_list
 
@@ -176,40 +178,55 @@ def get_n_classes(input_csv_path, label_variable):
 
 
 class BatchSizeAdjuster:
-
     def __init__(self, filepath):
         self._nnp_filepath = filepath
         self._nnp_loader = NnpLoader
         self._read_nnp_network()
         self._cnt = 0
+        self._pre_bs = None
+        self._pred = None
+        self._loss = None
+        self._inpt = None
 
     def adjust_batch_size(self, model, batch_size, loss=None, test=False):
-        pred, loss, inpt = _adjust_batch_size(model, batch_size, loss, test)
-        if pred.shape[0] == batch_size:
-            self._cnt = 0
-            return pred, loss, inpt
+        if self._pre_bs == batch_size:
+            return self._pred, self._loss, self._inpt
         else:
-            self._cnt += 1
-            if self._cnt == 5:
-                raise RuntimeError
             self._read_nnp_network()
             model = functools.partial(model, network=self.nnp_network)
-            return self.adjust_batch_size(model, batch_size, loss)
+            self._pred, self._loss, self._inpt = _adjust_batch_size(
+                model, batch_size, loss, test)
+            return self._pred, self._loss, self._inpt
 
     def _read_nnp_network(self):
         self.nnp_network = None
         self.nnp_network = self._nnp_loader(self._nnp_filepath)
 
 
-class Config:
+class BatchSizeAdjusterFunc:
+    def __init__(self):
+        self._pre_bs = None
+        self._pred = None
+        self._loss = None
+        self._inpt = None
 
+    def adjust_batch_size(self, model, batch_size, loss=None, test=False):
+        if self._pre_bs == batch_size:
+            return self._pred, self._loss, self._inpt
+        else:
+            self._pred, self._loss, self._inpt = _adjust_batch_size(
+                model, batch_size, loss, test)
+            return self._pred, self._loss, self._inpt
+
+
+class Config:
     def __init__(self, args, is_eval):
         self.temp_dir = args.temp_dir
         self.target = args.target
         self.model = args.model
         self.device_id = args.device_id
         self.retrain_all = args.retrain_all
-        self.lr = 0.1
+        self.lr = 0.001
         self.decay = True
         self.batch_size = args.batch_size
         self.m = [8, 8]
@@ -264,6 +281,7 @@ class Config:
                     f"'{net_name_dict['validation']}' is not in network names {net.get_network_names()}")
             self.num_epochs = 1
         else:
+            self.bs_adjuster = BatchSizeAdjusterFunc()
             net = dnn
             info = None
             self.num_epochs = args.num_epochs

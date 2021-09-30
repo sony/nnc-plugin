@@ -33,6 +33,7 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
 
 * eXplainable AI (XAI)
     * [SGD influence](./manuals/SGDinfl.md)
+    * [Influence Functions](./manuals/InfluenceFunctions.md)
     * [Face evaluation](./manuals/FaceEvaluation.md)
     * [Grad-CAM](./manuals/Grad-CAM.md)
     * [LIME](./manuals/LIME.md)

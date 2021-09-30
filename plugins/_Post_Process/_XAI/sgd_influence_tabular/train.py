@@ -11,25 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from sgd_influence.utils import get_context, ensure_dir
+
 import os
-import sys
 import functools
 import numpy as np
 from tqdm import tqdm
 import nnabla as nn
 import nnabla.functions as F
-from .network import get_solver, select_model, get_n_classes
-from .network import get_batch_data, get_indices
-from .network import get_batch_indices, get_config, setup_dataset
-from .args import get_train_args
-par_dir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-2])
-if par_dir not in sys.path:
-    sys.path.append(par_dir)
+from sgd_influence_tabular.network import get_solver, select_model, get_n_classes
+from sgd_influence_tabular.network import get_batch_data, get_indices
+from sgd_influence_tabular.network import get_batch_indices, get_config, setup_dataset
+from sgd_influence_tabular.args import get_train_args
+from utils.model import get_context
+from utils.file import ensure_dir
 
 
 class SaveController:
-
     def __init__(self, bundle_size, num_steps, weight_dir, base_name):
         self._total_count = 0
         self._count = 0
@@ -99,7 +96,7 @@ def train(cfg):
     model = train_model
     loss_train = None
     solver = get_solver(network, cfg.network_info, lr)
-    solver.set_parameters(nn.get_parameters(grad_only=False))
+    solver.set_parameters(nn.get_parameters())
     lr_n = lr
     c = 0
     info_list = []
@@ -110,39 +107,34 @@ def train(cfg):
         save_controller = SaveController(
             bundle_size, len(idx_list), weight_dir, base_name)
         # save initial model
-        params = nn.get_parameters(grad_only=False).copy()
+
         if epoch >= infl_end_epoch:
+            params = nn.get_parameters()
             save_weight(params, weight_dir, 'initial_model.h5')
         for step, idx in enumerate(idx_list):
             info.append({'epoch': epoch, 'step': step,
-                         'idx': idx, 'lr': lr_n, 'alpha': alpha})
+                        'idx': idx, 'lr': lr_n, 'alpha': alpha})
             c += 1
+            params = nn.get_parameters()
             # store model
-            params = nn.get_parameters(grad_only=False).copy()
             if (not cfg.only_last_params) & (epoch >= infl_end_epoch):
                 save_controller.save(params, step)
             X, y = get_batch_data(trainset, idx_train, idx)
             _, loss_train, input_data_train = bsa.adjust_batch_size(
                 model, len(X), loss_train)
             solver.set_parameters(params)
-            solver.set_learning_rate(lr)
             input_data_train["feat"].d = X
             input_data_train["label"].d = y
-            for _k, p in nn.get_parameters(grad_only=False).items():
+
+            for _k, p in nn.get_parameters().items():
                 loss_train += 0.5 * alpha * F.sum(p * p)
+
             loss_train.forward()
             solver.zero_grad()
-            loss_train.backward()
-            for _k, p in nn.get_parameters(grad_only=False).items():
-                p.g *= len(X) / idx.size
+            loss_train.backward(clear_buffer=True)
             solver.update()
 
-            # decay
-            if cfg.decay:
-                decay_rate = np.sqrt(c / (c + 1))
-                lr_n *= decay_rate
-
-        params = nn.get_parameters(grad_only=False).copy()
+        params = nn.get_parameters()
         if epoch >= infl_end_epoch:
             save_weight(params, weight_dir, 'final_model.h5')
         info_list.append(info)
