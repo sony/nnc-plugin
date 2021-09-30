@@ -18,8 +18,8 @@ from tqdm import tqdm
 import numpy as np
 import nnabla as nn
 import nnabla.functions as F
-from sgd_influence_tabular.network import get_solver, select_model, calc_acc, get_n_classes
-from sgd_influence_tabular.network import get_batch_data, get_indices, setup_dataset
+from .network import get_solver, select_model, calc_acc, get_n_classes
+from .network import get_batch_data, get_indices, setup_dataset
 from utils.file import get_context, read_csv, save_to_csv
 
 

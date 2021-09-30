@@ -13,13 +13,14 @@
 # limitations under the License.
 import os
 from nnabla import logger
-from tracin.args import get_train_infl_args
-from tracin.train import train
-from tracin.calculate_score import calc_infl
-from tracin.utils import delete_dir
+from tracin_utils.args import get_train_infl_args
+from tracin_utils.train import train
+from tracin_utils.calculate_score import calc_infl
+from tracin_utils.utils import delete_dir
 
 
-def main(args):
+def main():
+    args = get_train_infl_args()
     os.environ['NNABLA_CUDNN_DETERMINISTIC'] = '1'
     os.environ['NNABLA_CUDNN_ALGORITHM_BY_HEURISTIC'] = '1'
     try:
@@ -33,5 +34,4 @@ def main(args):
 
 
 if __name__ == "__main__":
-    args = get_train_infl_args()
-    main(args)
+    main()

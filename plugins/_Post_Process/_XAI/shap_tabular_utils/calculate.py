@@ -189,7 +189,7 @@ class KernelSHAP:
             num_subset_sizes = np.int(np.ceil((M - 1) / 2.0))
             num_paired_subset_sizes = np.int(np.floor((M - 1) / 2.0))
             weight_vector = np.array([(M - 1.0) / (i * (M - i))
-                                     for i in range(1, num_subset_sizes + 1)])
+                                      for i in range(1, num_subset_sizes + 1)])
             weight_vector[:num_paired_subset_sizes] *= 2
             weight_vector /= np.sum(weight_vector)
 

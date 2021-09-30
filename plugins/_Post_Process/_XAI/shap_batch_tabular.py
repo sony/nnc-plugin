@@ -16,8 +16,8 @@ import numpy as np
 import argparse
 import csv
 from nnabla import logger
-from shap_tabular.calculate import KernelSHAP, check_datasize
-from shap_tabular.visualize import visualize
+from shap_tabular_utils.calculate import KernelSHAP, check_datasize
+from shap_tabular_utils.visualize import visualize
 
 
 def func(args):

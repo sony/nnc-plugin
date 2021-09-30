@@ -17,8 +17,8 @@ from tqdm import tqdm
 from nnabla import logger
 from nnabla.utils.image_utils import imsave
 from nnabla.utils.data_iterator import data_iterator_csv_dataset
-from smoothgrad.smoothgrad import get_smoothgrad_image, get_config
-from smoothgrad.args import get_multi_image_args
+from smoothgrad_utils.smoothgrad import get_smoothgrad_image, get_config
+from smoothgrad_utils.args import get_multi_image_args
 from utils.file import save_info_to_csv
 from utils.model import get_class_index
 

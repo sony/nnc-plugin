@@ -15,11 +15,11 @@
 import os
 import nnabla as nn
 from nnabla import logger
-from sgd_influence.model import get_config
-from sgd_influence.train import train
-from sgd_influence.utils import delete_dir, get_context, ensure_dir
-from sgd_influence.args import get_train_infl_args_of_inflence_functions
-from influence_functions.infl import infl_icml
+from sgd_influence_utils.model import get_config
+from sgd_influence_utils.train import train
+from sgd_influence_utils.utils import delete_dir, get_context, ensure_dir
+from sgd_influence_utils.args import get_train_infl_args_of_inflence_functions
+from influence_functions_utils.infl import infl_icml
 
 
 def func(args):

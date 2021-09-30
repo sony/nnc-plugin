@@ -75,8 +75,8 @@ def plot_additive_plot(data, figsize, text_rotation=0, min_perc=0.05):
 
 def format_data(data):
     negative_features = np.array([[data['features'][x]['effect'],
-                                  data['features'][x]['value'],
-                                  data['feature_names'][x]]
+                                   data['features'][x]['value'],
+                                   data['feature_names'][x]]
                                   for x in data['features'].keys() if data['features'][x]['effect'] < 0])
 
     negative_features = np.array(
@@ -85,7 +85,7 @@ def format_data(data):
     positive_features = np.array([[data['features'][x]['effect'],
                                    data['features'][x]['value'],
                                    data['feature_names'][x]]
-                                 for x in data['features'].keys() if data['features'][x]['effect'] >= 0])
+                                  for x in data['features'].keys() if data['features'][x]['effect'] >= 0])
     positive_features = np.array(
         sorted(positive_features, key=lambda x: float(x[0]), reverse=True))
 

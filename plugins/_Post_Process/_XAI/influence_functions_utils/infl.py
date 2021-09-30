@@ -19,10 +19,10 @@ import nnabla.functions as F
 import os
 import functools
 from tqdm import tqdm
-from sgd_influence.model import setup_model
-from sgd_influence.dataset import get_batch_data, init_dataset, get_data, get_image_size, get_batch_indices
-from sgd_influence.utils import get_indices, save_to_csv, is_proto_graph
-from sgd_influence.infl import compute_gradient, save_infl_for_analysis
+from sgd_influence_utils.model import setup_model
+from sgd_influence_utils.dataset import get_batch_data, init_dataset, get_data, get_image_size, get_batch_indices
+from sgd_influence_utils.utils import get_indices, save_to_csv, is_proto_graph
+from sgd_influence_utils.infl import compute_gradient, save_infl_for_analysis
 
 
 def infl_icml(model_info_dict, file_dir_dict, use_all_params, need_evaluate, alpha):

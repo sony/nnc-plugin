@@ -17,9 +17,9 @@ import tqdm
 from nnabla import logger
 from nnabla.utils.image_utils import imsave
 from nnabla.utils.data_iterator import data_iterator_csv_dataset
-from gradcam.gradcam import get_gradcam_image
-from gradcam.utils import get_class_index
-from gradcam.setup_model import get_config
+from gradcam_utils.gradcam import get_gradcam_image
+from gradcam_utils.utils import save_info_to_csv, get_class_index
+from gradcam_utils.setup_model import get_config
 from utils.file import save_info_to_csv
 
 

@@ -14,8 +14,8 @@
 import argparse
 from nnabla import logger
 from nnabla.utils.image_utils import imsave, imread
-from smoothgrad.smoothgrad import get_smoothgrad_image, get_config
-from smoothgrad.args import get_single_image_args
+from smoothgrad_utils.smoothgrad import get_smoothgrad_image, get_config
+from smoothgrad_utils.args import get_single_image_args
 
 
 def func(args):
