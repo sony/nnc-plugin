@@ -1,45 +1,45 @@
-# Plugins of Neural Network Console
+# Plugins for Neural Network Console \(English/[日本語](README_ja.md)\)
 
 ![](./img/plugin.png)
 
-## What is the plugins of Neural Network Console ?
+## What is the plugins for Neural Network Console ?
 The plugins enable pre-processing and post-processing on Neural Network Console. There are already plugins on Neural Network Console, but you can use the latest release of the pulings from this repository.
 
 
 ## Current lineup of the plugins
 ###  Pre-processing
 * Create dataset
-    * [Object detection](./manuals/ObjectDetection.md)
-    * [Simple (Japanese) text classification](./manuals/SimpleTextClassification.md)
-    * [String classification](./manuals/StringClassification.md)
-    * [Simple tabular data](./manuals/SimpleTabularDataset.md)
-    * [Split image](./manuals/SplitImage.md)
-    * [Split wav](./manuals/SplitWav.md)
-    
+    * [Object detection](./manuals/Pre_Process/Create_Dataset/ObjectDetection.rst)
+    * [Simple  (Japanese) text classification](./manuals/Pre_Process/Create_Dataset/SimpleTextClassification.rst)
+    * [String classification](./manuals/Pre_Process/Create_Dataset/StringClassification.rst)
+    * [Simple tabular data](./manuals/Pre_Process/Create_Dataset/SimpleTabularDataset.rst)
+    * [Split image](./manuals/Pre_Process/Create_Dataset/SplitImage.rst)
+    * [Split wav](./manuals/Pre_Process/Create_Dataset/SplitWav.rst)
+
 ###  Post-processing
 * Utils
-    * [Cross tabulation](./manuals/CrossTabulation.md)
-    * [CSV to wav](./manuals/CSVtoWav.md)
-    * [Inference](./manuals/Inference.md)
-    * [Parameter stats](./manuals/ParameterStats.md)
-    * [Restore split images / wav](./manuals/RestoreSplitWav.md)
-    * [Similar words](./manuals/Similar_Words.md)
-    * [Simple (Japanese) text generation](./manuals/SimpleTextGeneration.md)
-    * [t-SNE](./manuals/tSNE.md)
+    * [Cross tabulation](./manuals/Post_Process/Utils/CrossTabulation.rst)
+    * [CSV to wav](./manuals/Post_Process/Utils/CSVtoWAV.rst)
+    * [Inference](./manuals/Post_Process/Utils/Inference.rst)
+    * [Parameter stats](./manuals/Post_Process/Utils/ParameterStats.rst)
+    * [Restore split images / wav](./manuals/Post_Process/Utils/RestoreSplitImageWav.rst)
+    * [Similar words](./manuals/Post_Process/Utils/SimilarWords.rst)
+    * [Simple (Japanese) text generation](./manuals/Post_Process/Utils/SimpleTextGeneration.rst)
+    * [tSNE](./manuals/Post_Process/Utils/tSNE.rst)
     
 * Visualization
-    * [Scatter plot](./manuals/ScatterPlot.md)
-    * [Tile images](./manuals/TileImages.md)
+    * [Scatter plot](./manuals/Post_Process/Visualization/ScatterPlot.rst)
+    * [Tile images](./manuals/Post_Process/Visualization/TileImages.rst)
 
 * eXplainable AI (XAI)
-    * [SGD influence](./manuals/SGDinfl.md)
-    * [Influence Functions](./manuals/InfluenceFunctions.md)
-    * [Face evaluation](./manuals/FaceEvaluation.md)
-    * [Grad-CAM](./manuals/Grad-CAM.md)
-    * [LIME](./manuals/LIME.md)
-    * [SHAP](./manuals/SHAP.md)
-    * [Smooth Grad](./manuals/SmoothGrad.md)
-    * [TracIn](./manuals/TracIn.md)
+    * [SGD influence](./manuals/Post_Process/XAI/SGDInfluence.rst)
+    * [Influence Functions](./manuals/Post_Process/XAI/InfluenceFunctions.rst)
+    * [Face evaluation](./manuals/Post_Process/XAI/FaceEvaluation.rst)
+    * [Grad-CAM](./manuals/Post_Process/XAI/GradCAM.rst)
+    * [LIME](./manuals/Post_Process/XAI/LIME.rst)
+    * [SHAP](./manuals/Post_Process/XAI/SHAP.rst)
+    * [Smooth Grad](./manuals/Post_Process/XAI/SmoothGrad.rst)
+    * [TracIn](./manuals/Post_Process/XAI/TracIn.rst)
 
 ## How to use the latest plugins
 The plugins run on Neural Network Console. If you do not have Neural Network Console, please download from here (https://dl.sony.com/).
