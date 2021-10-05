@@ -26,13 +26,13 @@ def add_info_to_csv(rows, vals_to_add, column_name, position=-1):
     return rows
 
 
-def save_info_to_csv(input_path, output_path, file_names, column_name='gradcam'):
+def save_info_to_csv(input_path, output_path, file_names, column_name='gradcam', insert_pos=0):
     with open(input_path, newline='') as f:
         rows = [row for row in csv.reader(f)]
     row0 = rows.pop(0)
-    row0.append(column_name)
+    row0.insert(insert_pos, column_name)
     for i, file_name in enumerate(file_names):
-        rows[i].append(file_name)
+        rows[i].insert(insert_pos, file_name)
     with open(output_path, 'w') as f:
         writer = csv.writer(f, lineterminator='\n')
         writer.writerow(row0)

@@ -20,7 +20,7 @@ import tqdm
 import os
 from nnabla import logger
 from nnabla.utils.data_iterator import data_iterator_csv_dataset
-
+from utils.file import save_info_to_csv
 from shap_utils.utils import get_executor, red_blue_map, gradient, get_interim_input, plot_shap
 
 
@@ -90,19 +90,8 @@ def func(args):
             index += 1
             pbar.update(1)
 
-    with open(args.input, newline='') as f:
-        rows = [row for row in csv.reader(f)]
-    row0 = rows.pop(0)
-
-    row0.append('shap')
-    for i, file_name in enumerate(file_names):
-        rows[i].append(file_name)
-    with open(args.output, 'w') as f:
-        writer = csv.writer(f, lineterminator='\n')
-        writer.writerow(row0)
-        writer.writerows(rows)
-
     pbar.close()
+    save_info_to_csv(args.input, args.output, file_names, column_name='shap')
 
     logger.log(99, 'SHAP completed successfully.')
 

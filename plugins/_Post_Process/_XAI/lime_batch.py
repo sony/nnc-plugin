@@ -30,6 +30,7 @@ import nnabla as nn
 import nnabla.functions as F
 import nnabla.parametric_functions as PF
 import nnabla.solvers as S
+from utils.file import save_info_to_csv
 
 
 def ridge(dataset):
@@ -200,18 +201,7 @@ def func(args):
 
         pbar.close()
 
-    # output
-    with open(args.input, newline='') as f:
-        rows = [row for row in csv.reader(f)]
-    header = rows.pop(0)
-
-    header.append('lime')
-    for i, file_name in enumerate(file_names):
-        rows[i].append(file_name)
-    with open(args.output, 'w') as f:
-        writer = csv.writer(f, lineterminator='\n')
-        writer.writerow(header)
-        writer.writerows(rows)
+    save_info_to_csv(args.input, args.output, file_names, column_name='lime')
 
     logger.log(99, 'LIME (image batch) completed successfully.')
 
