@@ -32,7 +32,7 @@ def func(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Object Detection (Yolo v2 format)\n\n' +
+        description='Object Detection (from Yolo v2 format)\n\n' +
         'Convert Yolo v2 object detection dataset format to NNC dataset CSV format.\n\n',
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
