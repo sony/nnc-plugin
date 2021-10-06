@@ -11,13 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import numpy as np
 import argparse
 import csv
 from nnabla import logger
 import os
-from shap_tabular.calculate import KernelSHAP, check_datasize
-from shap_tabular.visualize import visualize
+from shap_tabular_utils.calculate import KernelSHAP, check_datasize
+from shap_tabular_utils.visualize import visualize
 
 
 def func(args):
@@ -25,7 +26,7 @@ def func(args):
         reader = csv.reader(f)
         _ = next(reader)
         X = np.array([[float(r) for r in row]
-                     for row in reader])[args.index][:-1]
+                      for row in reader])[args.index][:-1]
     with open(args.train, 'r') as f:
         reader = csv.reader(f)
         feature_names = next(reader)[:-1]

@@ -14,8 +14,8 @@
 import argparse
 from nnabla import logger
 from nnabla.utils.image_utils import imsave, imread
-from gradcam.gradcam import get_gradcam_image
-from gradcam.setup_model import get_config
+from gradcam_utils.gradcam import get_gradcam_image
+from gradcam_utils.setup_model import get_config
 
 
 def func(args):

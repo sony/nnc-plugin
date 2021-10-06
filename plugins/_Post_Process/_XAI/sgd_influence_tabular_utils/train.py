@@ -18,10 +18,10 @@ import numpy as np
 from tqdm import tqdm
 import nnabla as nn
 import nnabla.functions as F
-from sgd_influence_tabular.network import get_solver, select_model, get_n_classes
-from sgd_influence_tabular.network import get_batch_data, get_indices
-from sgd_influence_tabular.network import get_batch_indices, get_config, setup_dataset
-from sgd_influence_tabular.args import get_train_args
+from .network import get_solver, select_model, get_n_classes
+from .network import get_batch_data, get_indices
+from .network import get_batch_indices, get_config, setup_dataset
+from .args import get_train_args
 from utils.model import get_context
 from utils.file import ensure_dir
 
@@ -113,7 +113,7 @@ def train(cfg):
             save_weight(params, weight_dir, 'initial_model.h5')
         for step, idx in enumerate(idx_list):
             info.append({'epoch': epoch, 'step': step,
-                        'idx': idx, 'lr': lr_n, 'alpha': alpha})
+                         'idx': idx, 'lr': lr_n, 'alpha': alpha})
             c += 1
             params = nn.get_parameters()
             # store model

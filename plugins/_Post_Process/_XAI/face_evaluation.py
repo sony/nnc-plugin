@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import argparse
-from face_evaluations.face_calc_features import make_ita_dict
+from face_evaluation_utils.face_calc_features import make_ita_dict
 from nnabla import logger
 
 

@@ -13,8 +13,8 @@
 # limitations under the License.
 from nnabla import logger
 import nnabla.utils.load as load
-from gradcam.utils import get_layer_shape, get_last_conv_name, get_first_conv_name
-from gradcam.utils import is_binary_classification, get_num_classes
+from .utils import get_layer_shape, get_last_conv_name, get_first_conv_name
+from .utils import is_binary_classification, get_num_classes
 
 
 def load_executor(nnp_file):
