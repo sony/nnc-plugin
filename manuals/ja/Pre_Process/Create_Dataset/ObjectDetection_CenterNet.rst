@@ -1,7 +1,7 @@
-Object Detection (from Yolo v2 format)
+Object Detection (for CenterNet from Yolo v2 format)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Yolo v2フォーマットで準備された物体検出データセットを、Neural Network ConsoleのデータセットCSVファイル形式、特に物体検出サンプルプロジェクト、synthetic_image_object_detectionで用いている形式にコンバートします。
+Yolo v2フォーマットで準備された物体検出データセットを、Neural Network ConsoleのCenterNet用データセットCSVファイル形式、特に物体検出サンプルプロジェクト、synthetic_image_object_detection_centernetで用いている形式にコンバートします。
 
 Yolo v2フォーマットは、画像ファイルと同名かつ拡張子をtxtに変更したファイル名のテキストファイルを用意し、テキストファイルの各行に物体のIndex、中心X座標、中心Y座標、幅、高さを入力します。物体のIndexは0から始まる整数で、座標及び縦横のサイズは画像の左上を(0.0, 0.0)、画像の右下を(1.0,1.0)として指定します。
 
@@ -32,13 +32,13 @@ image.txt
    :widths: 30 70
    :class: longtable
 
-   * - input-dir
+   * - input_dir
      - Yolo v2フォーマットの変換元データセットを構成する画像とテキストファイルの含まれるフォルダを指定します
 
-   * - output-dir
+   * - output_dir
      - コンバート後のデータセットCSVファイルおよび、そこに含まれるデータファイルの出力フォルダを指定します
 
-   * - num-class
+   * - num_class
      - 変換元データセットに含まれる検出対象の物体の総数（テキストファイルに含まれる物体Indexの最大値+1）を指定します
 
    * - channel
@@ -50,10 +50,7 @@ image.txt
    * - height
      - コンバート後のデータセットの画像の高さをピクセル単位で指定します
 
-   * - anchor
-     - アンカーの数（物体検出を行う基礎となる縦横比、サイズのバリエーション数）を指定します
-
-   * - grid-size
+   * - grid_size
      -
         width, heightで指定した画像を構成するグリッドのサイズをピクセル単位で指定します
         
@@ -96,5 +93,5 @@ image.txt
         
 **ご参考**
 
-本プラグインを用いて、かつgrid-sizeに16を指定して作成した物体検出用データセットは、synthetic_image_object_detectionサンプルプロジェクトを用い、Training、Validation、Runtime各ネットワークの各Argumentレイヤー、NumClassのValueプロパティをnum-classで指定した値に、NumAnchorのValueプロパティをanchorで指定した値に、InputChのValueプロパティをchannelで指定した値に、Width、HeightのValueプロパティをそれぞれwidth, heightで指定した値に設定することでひとまず学習を試行することができます。
+本プラグインを用いて、かつgrid-sizeに4を指定して作成した物体検出用データセットは、synthetic_image_object_detection_centernetサンプルプロジェクトを用い、Main、Runtime各ネットワークの各Argumentレイヤー、num_class、input_channel、input_width、input_height、grid_sizeのValueプロパティをそれぞれnum_class、channel、width、height、grid_sizeで指定した値に設定することでひとまず学習を試行することができます。
 

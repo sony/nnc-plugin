@@ -1,7 +1,7 @@
-Object Detection (from Yolo v2 format)
+Object Detection (for CenterNet from Yolo v2 format)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This plugin converts the object detection dataset prepared in Yolo v2 format to Neural Network Console dataset CSV file format, especially to the format used in object detection sample project “synthetic_image_object_detection”.
+This plugin converts the object detection dataset prepared in Yolo v2 format to Neural Network Console dataset CSV file format for CenterNet, especially to the format used in object detection sample project “synthetic_image_object_detection_centernet”.
 
 For Yolo v2 format, prepare a text file with the same name as the image file and a file name with the extension changed to “.txt”, and enter the index, center X coordinate, center Y coordinate, width, and height of the object in each line of the text file. The index of the object is an integer starting from 0, and the coordinates and vertical and horizontal sizes are specified with (0.0, 0.0) at the upper left of the image and (1.0, 1.0) at the lower right of the image.
 
@@ -24,13 +24,13 @@ image.txt
    :widths: 30 70
    :class: longtable
 
-   * - input-dir
+   * - input_dir
      - Specify the folder that contains the images and text files of the Yolo v2 format source dataset.
 
-   * - output-dir
+   * - output_dir
      - Specify the folder to output the created dataset to.
 
-   * - num-class
+   * - num_class
      - Specify the number of object types to be detected in the source dataset (maximum object index +1)
 
    * - channel
@@ -42,10 +42,7 @@ image.txt
    * - height
      - Specify the output image height in pixels.
 
-   * - anchor
-     - Specify the number of anchors (the number of variations of aspect ratio and size that are the basis for object detection).
-
-   * - grid-size
+   * - grid_size
      -
         Specify the size of the grid that makes up the image specified by width and height in pixels.
         
@@ -91,7 +88,7 @@ image.txt
 
 **Reference**
 
-The object detection dataset created using this plugin and with the grid-size set to 16 can be trained by using the synthetic_image_object_detection sample project.
+The object detection dataset created using this plugin and with the grid-size set to 4 can be trained by using the synthetic_image_object_detection_centernet sample project.
 
-For training, for each Argument layer in the Training, Validation, and Runtime networks, set the Value property of NumClass to the value specified by num-class, set NumAnchor to the value specified by anchor, set InputCh to the value specified by channel, and set Width and Height to the values specified by width and height, respectively.
+For training, for each Argument layer in the Main and Runtime networks, set the Value property of num_class, input_channel, input_width, input_height and grid_size to the value specified by num_class, channel, width, height and grid_size, respectively.
 
