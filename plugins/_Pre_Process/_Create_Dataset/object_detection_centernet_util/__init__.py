@@ -69,8 +69,10 @@ class ObjectRect:
         return self.width() * self.height()
 
     def overlap(self, rect2):
-        w = np.max([np.min([self.right(), rect2.right()]) - np.max([self.left(), rect2.left()])], 0)
-        h = np.max([np.min([self.bottom(), rect2.bottom()]) - np.max([self.top(), rect2.top()])], 0)
+        w = np.max([np.min([self.right(), rect2.right()]) -
+                    np.max([self.left(), rect2.left()])], 0)
+        h = np.max([np.min([self.bottom(), rect2.bottom()]) -
+                    np.max([self.top(), rect2.top()])], 0)
         return w * h
 
     def iou(self, rect2):
@@ -138,7 +140,8 @@ def draw_umich_gaussian(heatmap, center, radius, k=1):
     top, bottom = min(y, radius), min(height - y, radius + 1)
 
     masked_heatmap = heatmap[y - top:y + bottom, x - left:x + right]
-    masked_gaussian = gaussian[radius - top:radius + bottom, radius - left:radius + right]
+    masked_gaussian = gaussian[radius - top:radius +
+                               bottom, radius - left:radius + right]
     if min(masked_gaussian.shape) > 0 and min(masked_heatmap.shape) > 0:  # TODO debug
         np.maximum(masked_heatmap, masked_gaussian * k, out=masked_heatmap)
     return heatmap
@@ -171,7 +174,8 @@ def create_file_list(source_dir, dir=""):
     items = os.listdir(os.path.join(source_dir, dir))
     for item in items:
         if os.path.isdir(os.path.join(source_dir, dir, item)):
-            result.extend(create_file_list(source_dir=source_dir, dir=os.path.join(dir, item)))
+            result.extend(create_file_list(
+                source_dir=source_dir, dir=os.path.join(dir, item)))
         elif re.search(r'\.(bmp|jpg|jpeg|png|gif|tif|tiff)', os.path.splitext(item)[1], re.IGNORECASE):
             result.append(os.path.join(dir, item))
     return result
@@ -242,7 +246,8 @@ def convert_image(process_dict):
                 # padding mode
                 if float(h) / w < float(height) / width:
                     target_h = int(float(height) / width * w)
-                    pad = (((target_h - h) // 2, target_h - (target_h - h) // 2 - h), (0, 0))
+                    pad = (((target_h - h) // 2, target_h -
+                            (target_h - h) // 2 - h), (0, 0))
                     size_after_mode = (w, target_h)
                 else:
                     target_w = int(float(width) / height * h)
@@ -288,14 +293,17 @@ def convert_image(process_dict):
         label_rect = ObjectRect(XYWH=label[1:]).clip()
 
         if label_rect.width() > 0.0 and label_rect.height() > 0.0:
-            gx, gy = int(label_rect.centerx() * grid_w), int(label_rect.centery() * grid_h)
+            gx, gy = int(label_rect.centerx() *
+                         grid_w), int(label_rect.centery() * grid_h)
 
-            radius = gaussian_radius((math.ceil(label_rect.height() * grid_h), math.ceil(label_rect.width() * grid_w)))
+            radius = gaussian_radius(
+                (math.ceil(label_rect.height() * grid_h), math.ceil(label_rect.width() * grid_w)))
 
             radius = max(0, int(radius))
             ct = np.array([gx, gy], dtype=np.float32)
             ct_int = ct.astype(np.int32)
-            hm[int(label[0])] = draw_umich_gaussian(hm[int(label[0])], ct_int, radius)
+            hm[int(label[0])] = draw_umich_gaussian(
+                hm[int(label[0])], ct_int, radius)
 
             region_array[0][gy][gx] = [label_rect.centerx() * grid_w - gx, label_rect.centery() * grid_h - gy,
                                        np.log(label_rect.width() * grid_w), np.log(label_rect.height() * grid_h)]
@@ -325,10 +333,13 @@ def create_object_detection_dataset_command(dataset_dict):
         logger.log(99, 'height must be divisible by grid_size.')
         return
 
-    dest_csv_file_name = [os.path.join(dataset_dict["outdir"], dataset_dict["file1"])]
+    dest_csv_file_name = [os.path.join(
+        dataset_dict["outdir"], dataset_dict["file1"])]
     if dataset_dict["file2"]:
-        dest_csv_file_name.append(os.path.join(dataset_dict["outdir"], dataset_dict["file2"]))
-    test_data_ratio = int(dataset_dict["ratio2"]) if dataset_dict["ratio2"] else 0
+        dest_csv_file_name.append(os.path.join(
+            dataset_dict["outdir"], dataset_dict["file2"]))
+    test_data_ratio = int(
+        dataset_dict["ratio2"]) if dataset_dict["ratio2"] else 0
 
     if dataset_dict["inputdir"] == dataset_dict["outdir"]:
         logger.critical("Input directory and output directory are same.")
@@ -347,7 +358,7 @@ def create_object_detection_dataset_command(dataset_dict):
     # create output data
     logger.log(99, "Creating output images...")
     process_dicts = [{'data': data, 'source_dir': source_dir, 'dest_dir': dest_dir, 'width': width,
-                     'height': height, 'mode': mode, 'ch': ch, 'num_class': num_class, 'grid_size': grid_size} for data in file_list]
+                      'height': height, 'mode': mode, 'ch': ch, 'num_class': num_class, 'grid_size': grid_size} for data in file_list]
     p = mp.Pool(mp.cpu_count())
     pbar = tqdm.tqdm(total=len(process_dicts))
     for _ in p.imap_unordered(convert_image, process_dicts):
@@ -367,14 +378,15 @@ def create_object_detection_dataset_command(dataset_dict):
 
     temp_file_list = copy.copy(file_list)
     for png_path in tqdm.tqdm(temp_file_list):
-        label_data = np.loadtxt(os.path.join(dest_dir, png_path.replace('.png', '_label.csv')), delimiter=',')
+        label_data = np.loadtxt(os.path.join(
+            dest_dir, png_path.replace('.png', '_label.csv')), delimiter=',')
         if ~np.any(label_data):
             file_list.remove(png_path)
 
     csv_data_num = [(len(file_list) * (100 - test_data_ratio)) // 100]
     csv_data_num.append(len(file_list) - csv_data_num[0])
     data_head = 0
-    for csv_file_name, data_num in tqdm.tqdm(zip(dest_csv_file_name, csv_data_num), total = len(dest_csv_file_name)):
+    for csv_file_name, data_num in tqdm.tqdm(zip(dest_csv_file_name, csv_data_num), total=len(dest_csv_file_name)):
         if data_num:
             file_list_2 = file_list[data_head:data_head + data_num]
             data_head += data_num
@@ -384,7 +396,8 @@ def create_object_detection_dataset_command(dataset_dict):
                 writer.writerow(['x:image', 'y:label', 'r:region'])
                 for file in file_list_2:
                     base_file_name = os.path.splitext(file)[0]
-                    writer.writerow([file, base_file_name + '_label.csv', base_file_name + '_region.csv'])
+                    writer.writerow(
+                        [file, base_file_name + '_label.csv', base_file_name + '_region.csv'])
 
     logger.log(99, "Dataset was successfully created.")
     return True

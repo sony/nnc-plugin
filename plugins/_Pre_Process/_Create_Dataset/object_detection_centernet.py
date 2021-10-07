@@ -96,8 +96,8 @@ def main():
     parser.add_argument(
         '-f1',
         '--output_file1',
-        help='output file name 1 (csv) default=training_for_ceneternet.csv',
-        default='training_for_ceneternet.csv',
+        help='output file name 1 (csv) default=training_for_centernet.csv',
+        default='training_for_centernet.csv',
         required=True
     )
     parser.add_argument(
@@ -111,8 +111,8 @@ def main():
     parser.add_argument(
         '-f2',
         '--output_file2',
-        help='output file name 2 (csv) default=validation_for_ceneternet.csv',
-        default='validation_for_ceneternet.csv'
+        help='output file name 2 (csv) default=validation_for_centernet.csv',
+        default='validation_for_centernet.csv'
     )
     parser.add_argument(
         '-r2',
@@ -139,7 +139,8 @@ def main():
     dataset_dict["file2"] = args.output_file2
     dataset_dict["ratio2"] = args.ratio2
 
-    object_detection_centernet_util.create_object_detection_dataset_command(dataset_dict)
+    object_detection_centernet_util.create_object_detection_dataset_command(
+        dataset_dict)
 
     logger.log(99, 'Dataset creation completed successfully.')
 
