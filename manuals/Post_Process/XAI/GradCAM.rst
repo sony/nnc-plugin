@@ -2,14 +2,12 @@ XAI/Grad-CAM
 ~~~~~~~~~~~~
 
 Using a method called Grad-CAM, the areas of the input image that affect the classification result are made visible in Convolutional Neural Networks, which performs image classification.
+At least one convolution layer is necessary in the model to use this plugin.
 
-Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization
+`Ramprasaath R Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam, Devi Parikh, Dhruv Batra. "Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization". Proceedings of the IEEE International Conference on Computer Vision, 2017. <https://openaccess.thecvf.com/content_iccv_2017/html/Selvaraju_Grad-CAM_Visual_Explanations_ICCV_2017_paper.html>`_
 
-Ramprasaath R. Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam,
-   - Devi Parikh, Dhruv Batra
-   - https://arxiv.org/abs/1610.02391
-
-
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -39,19 +37,22 @@ Ramprasaath R. Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam,
         
         If Grad-CAM is executed from the evaluation results of the Evaluation tab, the visualization results are saved to the specified file in the training result folder.
 
+Output Information
+===================
+
+The result of this plugin is saved in the designated 'output' path as PNG file.
+It is shown in jet colormap over the original image, where reddish color means the positively affected area.
 
 XAI/Grad-CAM(batch)
 ~~~~~~~~~~~~~~~~~~~
 
 Using a method called Grad-CAM, the areas of the input image that affect the classification result are made visible in Convolutional Neural Networks, which performs image classification. Grad-CAM(batch) processes all images in the specified dataset, while Grad-CAM processes a single image.
+At least one convolution layer is necessary in the model to use this plugin.
 
-Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization
+`Ramprasaath R Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam, Devi Parikh, Dhruv Batra. "Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization". Proceedings of the IEEE International Conference on Computer Vision, 2017. <https://openaccess.thecvf.com/content_iccv_2017/html/Selvaraju_Grad-CAM_Visual_Explanations_ICCV_2017_paper.html>`_
 
-Ramprasaath R. Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam,
-   - Devi Parikh, Dhruv Batra
-   - https://arxiv.org/abs/1610.02391
-
-
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -81,4 +82,16 @@ Ramprasaath R. Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam,
         
         If Grad-CAM is executed from the evaluation results of the Evaluation tab, the visualization results are saved to the specified file in the training result folder.
 
+Output Information
+===================
 
+The result of this plugin is saved in the designated 'output' path as CSV file.
+The information on the columns of CSV file is as follows.
+The other columns than listed below are the same meaning as those in output_result.csv file that is generated as a result of evaluation.
+
+.. list-table::
+   :widths: 30 70
+   :class: longtable
+
+   * - gradcam
+     - The result path of this plugin for the target instance, the image of which is displayed in NNC window. It is shown in jet colormap over the original image, where reddish color means the positively affected area.
