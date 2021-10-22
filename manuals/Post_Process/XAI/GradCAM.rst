@@ -2,6 +2,7 @@ XAI/Grad-CAM
 ~~~~~~~~~~~~
 
 Using a method called Grad-CAM, the areas of the input image that affect the classification result are made visible in Convolutional Neural Networks, which performs image classification.
+At least one convolution layer is necessary in the model to use this plugin.
 
 Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization
 
@@ -44,6 +45,7 @@ XAI/Grad-CAM(batch)
 ~~~~~~~~~~~~~~~~~~~
 
 Using a method called Grad-CAM, the areas of the input image that affect the classification result are made visible in Convolutional Neural Networks, which performs image classification. Grad-CAM(batch) processes all images in the specified dataset, while Grad-CAM processes a single image.
+At least one convolution layer is necessary in the model to use this plugin.
 
 Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization
 

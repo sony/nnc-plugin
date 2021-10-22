@@ -2,6 +2,7 @@ XAI/Grad-CAM
 ~~~~~~~~~~~~
 
 Grad-CAMと呼ばれる手法を用い、画像分類を行うConvolutional Neural Networksにおいて、分類結果に影響を及ぼす入力画像の箇所を可視化します。
+本pluginを実行するためには、少なくとも1つのConvolution層がモデル内に含まれている必要があります。
 
 Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization
 
@@ -41,6 +42,7 @@ XAI/Grad-CAM(batch)
 ~~~~~~~~~~~~~~~~~~~
 
 Grad-CAMと呼ばれる手法を用い、画像分類を行うConvolutional Neural Networksにおいて、分類結果に影響を及ぼす入力画像の箇所を可視化します。Grad-CAMプラグインが1枚の画像に対して処理を行うのに対し、Grad-CAM(batch)プラグインは指定するデータセットに含まれる複数枚の画像に一括して処理を行います。
+本pluginを実行するためには、少なくとも1つのConvolution層がモデル内に含まれている必要があります。
 
 Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization
 
