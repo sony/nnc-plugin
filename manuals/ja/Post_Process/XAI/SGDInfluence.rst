@@ -5,15 +5,13 @@ SGD Influence と呼ばれる手法を用い、画像認識を行うモデルに
 
 本プラグインでは、以下の3論文をベースとした近似アルゴリズムを使用しています。
 
-Data Cleansing for Deep Neural Networks with Storage-efficient Approximation of Influence Functions
-  - Kenji Suzuki, Yoshiyuki Kobayashi, Takuya Narihira
-  - https://arxiv.org/abs/2103.11807
-Data Cleansing for Models Trained with SGD
-  - Satoshi Hara, Atsushi Nitanda, Takanori Maehara
-  - https://arxiv.org/abs/1906.08473
-Understanding Black-box Predictions via Influence Functions
-  - Pang Wei Koh, Percy Liang
-  - https://arxiv.org/abs/1703.04730
+* `Kenji Suzuki, Yoshiyuki Kobayashi, Takuya Narihira. "Data Cleansing for Deep Neural Networks with Storage-efficient Approximation of Influence Functions". , 2021. <https://arxiv.org/abs/2103.11807>`_
+* `Satoshi Hara, Atsushi Nitanda, Takanori Maehara. "Data Cleansing for Models Trained with SGD". Advances in Neural Information Processing Systems 32, pages 4215–4224, 2019. <https://papers.nips.cc/paper/2019/hash/5f14615696649541a025d3d0f8e0447f-Abstract.html>`_
+* `Pang Wei Koh, Percy Liang. "Understanding black-box predictions via influence functions". Proceedings of the 34th International Conference on Machine Learning, 2017 <http://proceedings.mlr.press/v70/koh17a>`_
+
+
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -51,6 +49,24 @@ Understanding Black-box Predictions via Influence Functions
    * - batch_size
      - SGD Influenceのモデルが学習する際のbatch_sizeです
 
+
+Output Information
+===================
+
+本プラグインの実行結果は 'output' で指定した名前のCSVファイルとして出力されます。
+CSVファイル内の各カラムに関しての情報は以下の通りです（以下のリストに無い名称のカラムは、 '評価' の結果得られる output_result.csvと同様の意味です）。
+
+.. list-table::
+   :widths: 30 70
+   :class: longtable
+
+   * - influence
+     - 本プラグインによって計算された、対象のインスタンスのInfuence値です。本CSVファイルの行はこのInfluence値によってソートされています
+
+   * - datasource_index
+     - 対象のインスタンスの `input-train`のデータセットCSVファイルにおけるインデックスを意味します。再学習の際などに、 `input-train` のデータセットCSVファイルと同じ順番に並べ替える際に利用します
+
+
 XAI/SGD Influence (tabular)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -59,9 +75,10 @@ SGD Influence と呼ばれる手法を用い、テーブルデータを用いた
 **ご注意** *現在、dropoutが含まれるネットワークにおいて、当プラグインが動作しない不具合が確認されています。*
 
 
-Data Cleansing for Models Trained with SGD
-  - Satoshi Hara, Atsushi Nitanda, Takanori Maehara
-  - https://arxiv.org/abs/1906.08473
+`Satoshi Hara, Atsushi Nitanda, Takanori Maehara. "Data Cleansing for Models Trained with SGD". Advances in Neural Information Processing Systems 32, pages 4215–4224, 2019. <https://papers.nips.cc/paper/2019/hash/5f14615696649541a025d3d0f8e0447f-Abstract.html>`_
+
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -91,3 +108,18 @@ Data Cleansing for Models Trained with SGD
        input-train で指定されたデータセットのシャッフルに用いられます
 
 
+Output Information
+===================
+
+本プラグインの実行結果は 'output' で指定した名前のCSVファイルとして出力されます。
+CSVファイル内の各カラムに関しての情報は以下の通りです（以下のリストに無い名称のカラムは、 '評価' の結果得られる output_result.csvと同様の意味です）。
+
+.. list-table::
+   :widths: 30 70
+   :class: longtable
+
+   * - index
+     - 対象のインスタンスの `input-train`のデータセットCSVファイルにおけるインデックスを意味します。再学習の際などに、 `input-train` のデータセットCSVファイルと同じ順番に並べ替える際に利用します
+
+   * - influence
+     - 本プラグインによって計算された、対象のインスタンスのInfuence値です。本CSVファイルの行はこのInfluence値によってソートされています

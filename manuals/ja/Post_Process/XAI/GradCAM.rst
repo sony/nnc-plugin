@@ -4,11 +4,10 @@ XAI/Grad-CAM
 Grad-CAMと呼ばれる手法を用い、画像分類を行うConvolutional Neural Networksにおいて、分類結果に影響を及ぼす入力画像の箇所を可視化します。
 本pluginを実行するためには、少なくとも1つのConvolution層がモデル内に含まれている必要があります。
 
-Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization
+`Ramprasaath R Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam, Devi Parikh, Dhruv Batra. "Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization". Proceedings of the IEEE International Conference on Computer Vision, 2017. <https://openaccess.thecvf.com/content_iccv_2017/html/Selvaraju_Grad-CAM_Visual_Explanations_ICCV_2017_paper.html>`_
 
-Ramprasaath R. Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam,
-  - Devi Parikh, Dhruv Batra
-  - https://arxiv.org/abs/1610.02391
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -38,17 +37,24 @@ Ramprasaath R. Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam,
         
         評価タブの評価結果からGrad-CAMを実行した場合、学習結果フォルダに指定したファイル名で可視化結果が保存されます
 
+
+Output Information
+===================
+
+本プラグインの実行結果は 'output' で指定した名前のPNGファイルとして出力されます。
+対象のインスタンスへの本プラグインの適用結果が表示されます。 元画像にjet カラーマップを重ねた形で表示され、赤色に近いほど分類結果に強く影響した箇所であることを示します。
+
+
 XAI/Grad-CAM(batch)
 ~~~~~~~~~~~~~~~~~~~
 
 Grad-CAMと呼ばれる手法を用い、画像分類を行うConvolutional Neural Networksにおいて、分類結果に影響を及ぼす入力画像の箇所を可視化します。Grad-CAMプラグインが1枚の画像に対して処理を行うのに対し、Grad-CAM(batch)プラグインは指定するデータセットに含まれる複数枚の画像に一括して処理を行います。
 本pluginを実行するためには、少なくとも1つのConvolution層がモデル内に含まれている必要があります。
 
-Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization
+`Ramprasaath R Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam, Devi Parikh, Dhruv Batra. "Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization". Proceedings of the IEEE International Conference on Computer Vision, 2017. <https://openaccess.thecvf.com/content_iccv_2017/html/Selvaraju_Grad-CAM_Visual_Explanations_ICCV_2017_paper.html>`_
 
-Ramprasaath R. Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam,
-  - Devi Parikh, Dhruv Batra
-  - https://arxiv.org/abs/1610.02391
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -78,3 +84,15 @@ Ramprasaath R. Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam,
         
         評価タブの評価結果からGrad-CAMを実行した場合、学習結果フォルダに指定したファイル名で可視化結果が保存されます
 
+Output Information
+===================
+
+本プラグインの実行結果は 'output' で指定した名前のCSVファイルとして出力されます。
+CSVファイル内の各カラムに関しての情報は以下の通りです（以下のリストに無い名称のカラムは、 '評価' の結果得られる output_result.csvと同様の意味です）。
+
+.. list-table::
+   :widths: 30 70
+   :class: longtable
+
+   * - gradcam
+     - 対象のインスタンスへの本プラグインの適用結果が表示されます。 元画像にjet カラーマップを重ねた形で表示され、赤色に近いほど分類結果に強く影響した箇所であることを示します

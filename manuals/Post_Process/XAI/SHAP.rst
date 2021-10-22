@@ -1,11 +1,12 @@
 XAI/SHAP(Image)
 ~~~~~~~~~~~~~~~
 
-Using a method called SHAP, the areas of the input image that affect the classification result are made visible in the model, which performs image classification. It is shown in red over the original image for the positively affected area in the classification, while in blue for the negatively affected area.
+Using a method called SHAP, the areas of the input image that affect the classification result are made visible in the model, which performs image classification.
 
-A Unified Approach to Interpreting Model Predictions
-   - Scott Lundberg, Su-In Lee
-   - https://arxiv.org/abs/1705.07874
+`Scott M Lundberg, Su-In Lee. "A unified approach to interpreting model predictions". Proceedings of the 31st International Conference on Neural Information Processing Systems, 2017. <https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html>`_
+
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -37,16 +38,23 @@ A Unified Approach to Interpreting Model Predictions
      - Specify the layer of interest for which SHAP computation is executed. Designate the layer counts from the input layer (input is counted as 0th layer). By default, it is processed with input layer.
 
    * - output
-     - Specify the name of the CSV file to output the inference results to.
+     - Specify the name of the image file to output the visualization results to.
+
+Output Information
+===================
+
+The result of this plugin is saved in the designated 'output' path as PNG file.
+It is shown in red over the original image for the positively affected area in the classification, while in blue for the negatively affected area.
 
 XAI/SHAP(Image batch)
 ~~~~~~~~~~~~~~~~~~~~~
 
 Using a method called SHAP, the areas of the input image that affect the classification result are made visible in the model, which performs image classification. SHAP(batch) processes all images in the specified dataset, while SHAP processes a single image.
 
-A Unified Approach to Interpreting Model Predictions
-   - Scott Lundberg, Su-In Lee
-   - https://arxiv.org/abs/1705.07874
+`Scott M Lundberg, Su-In Lee. "A unified approach to interpreting model predictions". Proceedings of the 31st International Conference on Neural Information Processing Systems, 2017. <https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html>`_
+
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -80,6 +88,21 @@ A Unified Approach to Interpreting Model Predictions
    * - Output
      - Specify the name of the CSV file to output the inference results to.
 
+Output Information
+===================
+
+The result of this plugin is saved in the designated 'output' path as CSV file.
+The information on the columns of CSV file is as follows.
+The other columns than listed below are the same meaning as those in output_result.csv file that is generated as a result of evaluation.
+
+.. list-table::
+   :widths: 30 70
+   :class: longtable
+
+   * - shap
+     - The result path of this plugin for the target instance, the image of which is shown in NNC window. It is shown in red over the original image for the positively affected area in the classification, while in blue for the negatively affected area.
+
+
 XAI/Kernel SHAP (Tabular)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -88,9 +111,10 @@ explained with the contribution of the features in input table
 data. Each feature is explained with degree of contribution, which
 enables to interpret the classifier judgement.
 
-A Unified Approach to Interpreting Model Predictions
-   - Scott Lundberg, Su-In Lee
-   - https://arxiv.org/abs/1705.07874
+`Scott M Lundberg, Su-In Lee. "A unified approach to interpreting model predictions". Proceedings of the 31st International Conference on Neural Information Processing Systems, 2017. <https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html>`_
+
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -121,6 +145,14 @@ A Unified Approach to Interpreting Model Predictions
    * - output
      - Specify the name of the CSV file to output the inference results to.
 
+Output Information
+===================
+
+The result of this plugin is saved in the designated 'output' path as CSV file.
+The information on the rows and columns of CSV file is as follows.
+The 'Sample (Index {n})' row represents the value of each feature, the name of which corresponds to each column name in output_result.csv.
+The 'Importance' row shows the importance of each input feature in the classification.
+The 'Image' column represents the visual summarization of Kernel SHAP, which is shown with the image and its path.
 
 
 XAI/Kernel SHAP (Tabular Batch)
@@ -132,6 +164,11 @@ data. Each feature is explained with degree of contribution, which
 enables to interpret the classifier judgement. Kernel SHAP(tabular
 batch) processes all records in the specified dataset, while Kernel
 SHAP(tabular) processes a single record.
+
+`Scott M Lundberg, Su-In Lee. "A unified approach to interpreting model predictions". Proceedings of the 31st International Conference on Neural Information Processing Systems, 2017. <https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html>`_
+
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -159,3 +196,17 @@ SHAP(tabular) processes a single record.
    * - output
      - Specify the name of the CSV file to output the inference results to.
 
+Output Information
+===================
+
+The result of this plugin is saved in the designated 'output' path as CSV file.
+The information on the columns of CSV file is as follows.
+For the other columns, the column name of each feature represents the importance of target instance.
+
+
+.. list-table::
+   :widths: 30 70
+   :class: longtable
+
+   * - index
+     - The index of the target instance in input-train dataset CSV file.

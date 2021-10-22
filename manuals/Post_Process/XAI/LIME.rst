@@ -3,9 +3,10 @@ XAI/LIME(image)
 
 Using a method called LIME, the areas of the input image that affect the classification result are made visible in the model, which performs image classification.
 
-Why Should I Trust You? : Explaining the Predictions of Any Classifier
-   - Marco Tulio Ribeiro, Sameer Singh, Carlos Guestrin
-   - https://arxiv.org/abs/1602.04938
+`Marco Tulio Ribeiro, Sameer Singh, Carlos Guestrin. "Why Should I Trust You?: Explaining the Predictions of Any Classifier". Knowledge Discovery and Data Mining, 2016. <https://dl.acm.org/doi/abs/10.1145/2939672.2939778>`_
+
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -44,14 +45,21 @@ Why Should I Trust You? : Explaining the Predictions of Any Classifier
         
         If LIME is executed from the evaluation results of the Evaluation tab, the visualization results are saved to the specified file in the training result folder.
 
+Output Information
+===================
+
+The result of this plugin is saved in the designated 'output' path as PNG file.
+
+
 XAI/LIME(image batch)
 ~~~~~~~~~~~~~~~~~~~~~
 
 Using a method called LIME, the areas of the input image that affect the classification result are made visible in the model, which performs image classification. LIME(batch) processes all images in the specified dataset, while LIME processes a single image. This plugin can be used both for binary of multi class classifications.
 
-Why Should I Trust You? : Explaining the Predictions of Any Classifier
-   - Marco Tulio Ribeiro, Sameer Singh, Carlos Guestrin
-   - https://arxiv.org/abs/1602.04938
+`Marco Tulio Ribeiro, Sameer Singh, Carlos Guestrin. "Why Should I Trust You?: Explaining the Predictions of Any Classifier". Knowledge Discovery and Data Mining, 2016. <https://dl.acm.org/doi/abs/10.1145/2939672.2939778>`_
+
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -87,14 +95,29 @@ Why Should I Trust You? : Explaining the Predictions of Any Classifier
         
         If LIME(batch) is executed from the evaluation results of the Evaluation tab, the visualization results are saved to the specified file in the training result folder.
 
+Output Information
+===================
+
+The result of this plugin is saved in the designated 'output' path as CSV file.
+The information on the columns of CSV file is as follows.
+The other columns than listed below are the same meaning as those in output_result.csv file that is generated as a result of evaluation.
+
+.. list-table::
+   :widths: 30 70
+   :class: longtable
+
+   * - lime
+     - The result path of this plugin for the target instance, the image of which is displayed in NNC window.
+
 XAI/LIME(tabular)
 ~~~~~~~~~~~~~~~~~
 
 Using a method called LIME, a classification result is explained with the contribution of the features in input table data. Each feature is explained with a set of inequality and degree of contribution, which enables to interpret the classifier judgement. This plugin supports regression model and classification model with categorical features as well as model with continuous values.
 
-Why Should I Trust You? : Explaining the Predictions of Any Classifier
-   - Marco Tulio Ribeiro, Sameer Singh, Carlos Guestrin
-   - https://arxiv.org/abs/1602.04938
+`Marco Tulio Ribeiro, Sameer Singh, Carlos Guestrin. "Why Should I Trust You?: Explaining the Predictions of Any Classifier". Knowledge Discovery and Data Mining, 2016. <https://dl.acm.org/doi/abs/10.1145/2939672.2939778>`_
+
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -127,14 +150,23 @@ Why Should I Trust You? : Explaining the Predictions of Any Classifier
    * - output
      - Specify the name of the CSV file to output the processing results to.
 
+Output Information
+===================
+
+The result of this plugin is saved in the designated 'output' path as CSV file.
+The information on the rows and columns of CSV file is as follows.
+The 'Sample (Index {n})' row represents the value of each feature, the name of which corresponds to each column name in output_result.csv.
+The 'Importance' row shows the importance of each input feature in the classification. The row above 'Importance' means the feature range that gives the importance.
+
 XAI/LIME(tabular batch)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Using a method called LIME, a classification result is explained with the contribution of the features in input table data. Each feature is explained with a set of inequality and degree of contribution, which enables to interpret the classifier judgement. This plugin supports regression model and classification model with categorical features as well as model with continuous values. LIME(tabular batch) processes all records in the specified dataset, while LIME(tabular) processes a single record.
 
-Why Should I Trust You? : Explaining the Predictions of Any Classifier
-   - Marco Tulio Ribeiro, Sameer Singh, Carlos Guestrin
-   - https://arxiv.org/abs/1602.04938
+`Marco Tulio Ribeiro, Sameer Singh, Carlos Guestrin. "Why Should I Trust You?: Explaining the Predictions of Any Classifier". Knowledge Discovery and Data Mining, 2016. <https://dl.acm.org/doi/abs/10.1145/2939672.2939778>`_
+
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -163,3 +195,18 @@ Why Should I Trust You? : Explaining the Predictions of Any Classifier
 
    * - output
      - Specify the name of the CSV file to output the processing results to.
+
+Output Information
+===================
+
+The result of this plugin is saved in the designated 'output' path as CSV file.
+The information on the columns of CSV file is as follows.
+For the other columns, the column name of each feature represents the importance of target instance.
+
+
+.. list-table::
+   :widths: 30 70
+   :class: longtable
+
+   * - index
+     - The index of the target instance in input-train dataset CSV file.
