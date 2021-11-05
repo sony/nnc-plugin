@@ -274,6 +274,7 @@ def plot_shap(model, X, label, output, interim_layer, num_samples, data_iterator
                    vmin=min_border, vmax=max_border)
     ax.axis("off")
 
+    plt.subplots_adjust(left=0, right=1, bottom=0, top=1)
     fig.savefig(output)
     fig.clf()
     plt.close()
