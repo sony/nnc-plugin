@@ -23,7 +23,7 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
 
 ###  後処理プラグイン
 * ユーティリティ
-
+    * [Attention Editor](./manuals/ja/Post_Process/Utils/AttentionEditor.rst)
     * [Cross tabulation](./manuals/ja/Post_Process/Utils/CrossTabulation.rst)
     * [CSV to wav](./manuals/ja/Post_Process/Utils/CSVtoWAV.rst)
     * [Inference](./manuals/ja/Post_Process/Utils/Inference.rst)

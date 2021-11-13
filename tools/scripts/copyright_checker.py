@@ -221,7 +221,8 @@ def main():
     files = list_up_files(os.path.abspath(os.path.join(
         os.path.dirname(os.path.abspath(__file__)), '..', '..')), checkers)
 
-    for fn, c in tqdm(files, ascii=True, ncols=80):
+    # for fn, c in tqdm(files, ascii=True, ncols=80):
+    for fn, c in files:
         if c.type == 'unknown':
             if not c.has_shebang():
                 continue

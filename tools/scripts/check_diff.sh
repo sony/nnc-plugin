@@ -1,5 +1,5 @@
 #! /bin/bash
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 # Run this script to check if formatting is done, after running `make bwd-auto-format` at a clean nnabla-builder repository (submodules must be cloned).
 
 FORMAT_CHECK_ERROR=0

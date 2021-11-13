@@ -19,6 +19,7 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
 
 ###  Post-processing
 * Utils
+    * [Attention Editor](./manuals/Post_Process/Utils/AttentionEditor.rst)
     * [Cross tabulation](./manuals/Post_Process/Utils/CrossTabulation.rst)
     * [CSV to wav](./manuals/Post_Process/Utils/CSVtoWAV.rst)
     * [Inference](./manuals/Post_Process/Utils/Inference.rst)
