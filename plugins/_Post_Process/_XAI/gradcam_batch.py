@@ -11,67 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import os
 import argparse
-import tqdm
 from nnabla import logger
-from nnabla.utils.image_utils import imsave
-from nnabla.utils.data_iterator import data_iterator_csv_dataset
-from gradcam_utils.gradcam import get_gradcam_image
-from gradcam_utils.utils import save_info_to_csv, get_class_index
-from gradcam_utils.setup_model import get_config
 from utils.file import save_info_to_csv
-
-
-def func(args):
-    config = get_config(args)
-    # Load dataset
-    data_iterator = (lambda: data_iterator_csv_dataset(
-        uri=args.input,
-        batch_size=1,
-        shuffle=False,
-        normalize=not config.executor.no_image_normalization,
-        with_memory_cache=False,
-        with_file_cache=False))
-
-    # Prepare output
-    data_output_dir = os.path.splitext(args.output)[0]
-
-    # Data loop
-    with data_iterator() as di:
-        pbar = tqdm.tqdm(total=di.size)
-        index = 0
-        file_names = []
-        while index < di.size:
-            # Load data
-            data = di.next()
-            im = data[di.variables.index(args.input_variable)]
-            label = data[di.variables.index(args.label_variable)]
-            label = label.reshape((label.size,))
-            config.class_index = get_class_index(label, config.is_binary_clsf)
-            result = get_gradcam_image(im[0], config)
-
-            # Output result image
-            file_name = os.path.join(
-                data_output_dir,
-                '{:04d}'.format(index // 1000),
-                '{}.png'.format(index)
-            )
-            directory = os.path.dirname(file_name)
-            try:
-                os.makedirs(directory)
-            except OSError:
-                pass  # python2 does not support exists_ok arg
-            imsave(file_name, result, channel_first=True)
-
-            file_names.append(file_name)
-            index += 1
-            pbar.update(1)
-        pbar.close()
-
-    save_info_to_csv(args.input, args.output,
-                     file_names, column_name='gradcam')
-    logger.log(99, 'Grad-CAM completed successfully.')
+from gradcam_utils.gradcam_func import gradcam_batch_func
 
 
 def main():
@@ -95,11 +38,15 @@ def main():
     # designage if the model contains crop between input and first conv layer.
     parser.add_argument(
         '-cr', '--contains_crop', help=argparse.SUPPRESS, action='store_true')
-    parser.set_defaults(func=func)
+    parser.set_defaults(func=gradcam_batch_func)
 
     args = parser.parse_args()
 
-    args.func(args)
+    file_names = args.func(args)
+
+    save_info_to_csv(args.input, args.output,
+                     file_names, column_name='gradcam')
+    logger.log(99, 'Grad-CAM completed successfully.')
 
 
 if __name__ == '__main__':

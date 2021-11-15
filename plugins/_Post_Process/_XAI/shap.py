@@ -13,38 +13,7 @@
 # limitations under the License.
 import argparse
 from nnabla import logger
-from nnabla.utils.data_iterator import data_iterator_csv_dataset
-from nnabla.utils.image_utils import imread
-from shap_utils.utils import get_executor, red_blue_map, gradient, get_interim_input, plot_shap
-
-
-def func(args):
-    executor = get_executor(args.model)
-
-    # Data source
-    data_iterator = (lambda: data_iterator_csv_dataset(
-        uri=args.input,
-        batch_size=1,
-        shuffle=False,
-        normalize=not executor.no_image_normalization,
-        with_memory_cache=False,
-        with_file_cache=False))
-
-    X = imread(args.image)
-    if not executor.no_image_normalization:
-        X = X / 255.0
-    if len(X.shape) == 3:
-        X = X.transpose(2, 0, 1)
-    else:
-        X = X.reshape((1,) + X.shape)
-
-    plot_shap(model=args.model, X=X,
-              label=args.class_index, output=args.output,
-              interim_layer=args.interim_layer, num_samples=args.num_samples,
-              data_iterator=data_iterator, batch_size=args.batch_size,
-              red_blue_map=red_blue_map, gradient=gradient, get_interim_input=get_interim_input)
-
-    logger.log(99, "SHAP completed successfully")
+from shap_utils.shap_func import shap_func
 
 
 def main():
@@ -71,11 +40,12 @@ def main():
         '-il', '--interim_layer', help='layer input to explain, default=0', required=True, type=int, default=0)
     parser.add_argument(
         '-o', '--output', help='path to output image file (image) default=shap.png', required=True, default='shap.png')
-    parser.set_defaults(func=func)
+    parser.set_defaults(func=shap_func)
 
     args = parser.parse_args()
 
     args.func(args)
+    logger.log(99, "SHAP completed successfully")
 
 
 if __name__ == '__main__':
