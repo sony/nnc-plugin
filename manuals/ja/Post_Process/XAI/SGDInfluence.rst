@@ -34,11 +34,8 @@ Input Information
    * - output
      - 評価結果を出力するCSVファイルのファイル名を指定します
 
-   * - seed
-     -
-        乱数生成のためのseedを指定します
-        
-        input-train で指定されたデータセットのシャッフルに用いられます
+   * - n_trials
+     - 試行回数を指定します。input-train で指定されたデータセットをシャッフルして指定した回数のInfluence計算を繰り返し、その平均値を算出するために用います。
 
    * - model
      -

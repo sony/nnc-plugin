@@ -25,8 +25,8 @@ Input Information
    * - output
      - Specify the name of the CSV file to output the inference results to.
 
-   * - seed
-     - Specify the random seed number to shuffle input-train data.
+   * - n_trials
+     - Specify the number of trials to shuffle input-train data and to calculate the mean value of influence results.
 
    * - model
      - Specify the model file (*.nnp) that will be used in the SGD Influence computation. To perform SGD Influence based on the training result selected in the Evaluation tab, use the default results.nnp.

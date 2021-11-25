@@ -44,7 +44,7 @@ def get_train_infl_args():
     parser.add_argument(
         '-o', '--output', help='path to output csv file (csv) default=influence.csv', default='influence.csv')
     parser.add_argument(
-        '-s', '--seed', help='random seed number default=0', default=0, type=int)
+        '-nt', '--n_trials', help='number or trials default=6', default=6, type=int)
     # path to score csv file
     parser.add_argument(
         '-so', '--score_output', help=argparse.SUPPRESS, default=None)
@@ -78,7 +78,7 @@ def get_train_infl_args_of_inflence_functions():
     parser.add_argument(
         '-o', '--output', help='path to output csv file (csv) default=influence(influence_functions).csv', default='influence(influence_functions).csv')
     parser.add_argument(
-        '-s', '--seed', help='random seed number default=0', default=0, type=int)
+        '-nt', '--n_trials', help='number or trials default=6', default=6, type=int)
     # path to score csv file
     parser.add_argument(
         '-so', '--score_output', help=argparse.SUPPRESS, default=None)
