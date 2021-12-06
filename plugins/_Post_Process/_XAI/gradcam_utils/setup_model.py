@@ -60,7 +60,8 @@ def get_config(args):
     if last_conv_name is None:
         logger.critical('Convolution is not found in the network {}.'.format(
             executor.network.name))
-        return
+        raise RuntimeError(
+            "At least one convolution layer is necessary in the model to use this plugin.")
     logger.log(99, "Using Grad at {}".format(last_conv_name))
 
     # Prepare variables
