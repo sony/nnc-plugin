@@ -132,12 +132,10 @@ def calc_infl(args):
     
     # sort by influence in ascendissng order
     rows = read_csv(args.input_train)
-    # print(rows)
-    rows = [r[:-3] + [r[-2]] for r in rows]
     rows = add_info_to_csv(rows, results['influence'], 'influence', position=0)
     header = rows.pop(0)
     rows = np.array(rows)
-    rows = rows[rows[:, 0].astype(float).argsort()[::-1]]
+    rows = rows[rows[:,0].astype(float).argsort()[::-1]]
     save_to_csv(filename=args.output, header=header,
                 list_to_save=rows, data_type=str)
 
