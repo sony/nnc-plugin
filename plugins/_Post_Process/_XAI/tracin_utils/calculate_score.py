@@ -37,8 +37,8 @@ def categorical_cross_entropy(softmax, label):
     return loss
 
 
-def load_data(input_path):
-    data_source = get_datasource(filename=input_path)
+def load_data(input_path, normalize):
+    data_source = get_datasource(filename=input_path, normalize=normalize)
     num_iteration = data_source.size
     iterator = data_iterator(data_source, 1, None, False, False)
     return iterator, num_iteration
@@ -126,7 +126,7 @@ def get_scores(args, data_iterator, num_iteration):
 def calc_infl(args):
     ctx = get_context(device_id=args.device_id)
     nn.set_default_context(ctx)
-    data_source, num_iteration = load_data(args.input_train)
+    data_source, num_iteration = load_data(args.input_train, args.normalize)
 
     results = get_scores(args, data_source, num_iteration)
     
