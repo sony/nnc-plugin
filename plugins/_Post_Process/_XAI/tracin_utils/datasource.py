@@ -194,12 +194,12 @@ class LabelShuffleCsvDataSource(CsvDataSource):
         save_to_csv(filename, header, _rows, data_type)
 
 
-def get_datasource(filename, shuffle=False, label_shuffle=False):
+def get_datasource(filename, shuffle=False, label_shuffle=False, normalize=False):
     get_datasource = LabelShuffleCsvDataSource(
         label_shuffle=label_shuffle,
         filename=filename,
         shuffle=shuffle,
         rng=None,
-        normalize=True
+        normalize=normalize
     )
     return get_datasource
