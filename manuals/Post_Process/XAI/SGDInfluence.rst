@@ -5,17 +5,12 @@ Using a method called SGD Influence, the influence of the input images on recogn
 
 The SGD Influence calculation in this plugin uses an approximate version of algorithm based on the following three papers.
 
-Data Cleansing for Deep Neural Networks with Storage-efficient Approximation of Influence Functions
-   - Kenji Suzuki, Yoshiyuki Kobayashi, Takuya Narihira
-   - https://arxiv.org/abs/2103.11807
+* `Kenji Suzuki, Yoshiyuki Kobayashi, Takuya Narihira. "Data Cleansing for Deep Neural Networks with Storage-efficient Approximation of Influence Functions". , 2021. <https://arxiv.org/abs/2103.11807>`_
+* `Satoshi Hara, Atsushi Nitanda, Takanori Maehara. "Data Cleansing for Models Trained with SGD". Advances in Neural Information Processing Systems 32, pages 4215–4224, 2019. <https://papers.nips.cc/paper/2019/hash/5f14615696649541a025d3d0f8e0447f-Abstract.html>`_
+* `Pang Wei Koh, Percy Liang. "Understanding black-box predictions via influence functions". Proceedings of the 34th International Conference on Machine Learning, 2017 <http://proceedings.mlr.press/v70/koh17a>`_
 
-Data Cleansing for Models Trained with SGD
-   - Satoshi Hara, Atsushi Nitanda, Takanori Maehara
-   - https://arxiv.org/abs/1906.08473
-
-Understanding Black-box Predictions via Influence Functions
-   - Pang Wei Koh, Percy Liang
-   - https://arxiv.org/abs/1703.04730
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -39,6 +34,23 @@ Understanding Black-box Predictions via Influence Functions
    * - batch_size
      - Specify the batch size to train with the model used in SGD Influence.
 
+Output Information
+===================
+
+The result of this plugin is saved in the designated 'output' path as CSV file.
+The information on the columns of CSV file is as follows.
+The other columns than listed below are the same meaning as those in output_result.csv file that is generated as a result of evaluation.
+
+.. list-table::
+   :widths: 30 70
+   :class: longtable
+
+   * - influence
+     - The influence of the target instance. The order of rows in the output CSV file is sorted with this influence.
+
+   * - datasource_index
+     - The index of the target instance in input-train dataset CSV file. Use this index to retrieve the order of rows as in input-train dataset CSV file.
+
 
 XAI/SGD Influence (tabular)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -47,9 +59,10 @@ Using a method called SGD Influence, the influence of the features in input tabl
 
 **NOTICE** *This plugin can be used for models without dropout layer since grad calculation is not available for the moment.*
 
-Data Cleansing for Models Trained with SGD
-   - Satoshi Hara, Atsushi Nitanda, Takanori Maehara
-   - https://arxiv.org/abs/1906.08473
+`Satoshi Hara, Atsushi Nitanda, Takanori Maehara. "Data Cleansing for Models Trained with SGD". Advances in Neural Information Processing Systems 32, pages 4215–4224, 2019. <https://papers.nips.cc/paper/2019/hash/5f14615696649541a025d3d0f8e0447f-Abstract.html>`_
+
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -78,4 +91,19 @@ Data Cleansing for Models Trained with SGD
    * - seed
      - Specify the random seed number to shuffle input-train data.
 
+Output Information
+===================
 
+The result of this plugin is saved in the designated 'output' path as CSV file.
+The information on the columns of CSV file is as follows.
+The other columns than listed below are the same meaning as those in output_result.csv file that is generated as a result of evaluation.
+
+.. list-table::
+   :widths: 30 70
+   :class: longtable
+
+   * - index
+     - The index of the target instance in input-train dataset CSV file. Use this index to retrieve the order of rows as in input-train dataset CSV file.
+
+   * - influence
+     - The influence of the target instance. The order of rows in the output CSV file is sorted with this influence.

@@ -3,9 +3,10 @@ XAI/SmoothGrad
 
 SmoothGrad と呼ばれる手法を用い、画像分類を行うモデルにおいて、分類結果に影響を及ぼす入力画像の箇所を可視化します。
 
-SmoothGrad: removing noise by adding noise
-   - Daniel Smilkov, Nikhil Thorat, Been Kim, Fernanda Viégas, Martin Wattenberg
-   - https://arxiv.org/abs/1706.03825
+`Daniel Smilkov, Nikhil Thorat, Been Kim, Fernanda Viégas, Martin Wattenberg. "Smoothgrad: removing noise by adding noise". Workshop on Visualization for Deep Learning, ICML, 2017. <https://arxiv.org/abs/1706.03825>`_
+
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -44,14 +45,23 @@ SmoothGrad: removing noise by adding noise
         
         評価タブの評価結果から SmoothGrad を実行した場合、学習結果フォルダに指定したファイル名で可視化結果が保存されます
 
+
+Output Information
+===================
+
+本プラグインの実行結果は 'output' で指定した名前のPNGファイルとして出力されます。
+対象のインスタンスへの本プラグインの適用結果が表示されます。感度マップを意味するグレースケールの画像として表示されます。
+
+
 XAI/SmoothGrad (batch)
 ~~~~~~~~~~~~~~~~~~~~~~
 
 SmoothGrad と呼ばれる手法を用い、画像分類を行うモデルにおいて、分類結果に影響を及ぼす入力画像の箇所を可視化します。SmoothGrad プラグインが 1 枚の画像に対して処理を行うのに対し、SmoothGrad(batch)プラグインは指定するデータセットに含まれる複数枚の画像に一括して処理を行います。
 
-SmoothGrad: removing noise by adding noise
-   - Daniel Smilkov, Nikhil Thorat, Been Kim, Fernanda Viégas, Martin Wattenberg
-   - https://arxiv.org/abs/1706.03825
+`Daniel Smilkov, Nikhil Thorat, Been Kim, Fernanda Viégas, Martin Wattenberg. "Smoothgrad: removing noise by adding noise". Workshop on Visualization for Deep Learning, ICML, 2017. <https://arxiv.org/abs/1706.03825>`_
+
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -92,3 +102,16 @@ SmoothGrad: removing noise by adding noise
 
    * - label_variable
      - input で指定したデータセット CSV ファイルに含まれる変数より、可視化を行うクラスの Index の変数名を指定します
+
+Output Information
+===================
+
+本プラグインの実行結果は 'output' で指定した名前のCSVファイルとして出力されます。
+CSVファイル内の各カラムに関しての情報は以下の通りです（以下のリストに無い名称のカラムは、 '評価' の結果得られる output_result.csvと同様の意味です）。
+
+.. list-table::
+   :widths: 30 70
+   :class: longtable
+
+   * - SmoothGrad
+     - 対象のインスタンスへの本プラグインの適用結果が表示されます。 感度マップを意味するグレースケールの画像として表示されます

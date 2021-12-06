@@ -13,7 +13,8 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
 ## プラグインリスト
 ###  前処理プラグイン
 * データセット作成
-    * [Object detection](./manuals/ja/Pre_Process/Create_Dataset/ObjectDetection.rst)
+    * [Object detection (from Yolo v2 format)](./manuals/ja/Pre_Process/Create_Dataset/ObjectDetection.rst)
+    * [Object detection (for CenterNet from Yolo v2 format)](./manuals/ja/Pre_Process/Create_Dataset/ObjectDetection_CenterNet.rst)
     * [Simple (Japanese) text classification](./manuals/ja/Pre_Process/Create_Dataset/SimpleTextClassification.rst)
     * [String classification](./manuals/ja/Pre_Process/Create_Dataset/StringClassification.rst)
     * [Simple tabular data](./manuals/ja/Pre_Process/Create_Dataset/SimpleTabularDataset.rst)

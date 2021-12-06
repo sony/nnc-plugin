@@ -6,9 +6,10 @@ images on recognition result are evaluated. The dataset and the scores
 are shown in the influential order, which can be referred for data
 cleansing.
 
-Understanding Black-box Predictions via Influence Functions
-  - Pang Wei Koh, Percy Liang
-  - https://arxiv.org/abs/1703.04730
+`Pang Wei Koh, Percy Liang. "Understanding black-box predictions via influence functions". Proceedings of the 34th International Conference on Machine Learning, 2017 <http://proceedings.mlr.press/v70/koh17a>`_
+
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -45,3 +46,20 @@ Understanding Black-box Predictions via Influence Functions
    * - batch_size
      - Specify the batch size to train with the model used in
        Influence Functions.
+
+Output Information
+===================
+
+The result of this plugin is saved in the designated 'output' path as CSV file.
+The information on the columns of CSV file is as follows.
+The other columns than listed below are the same meaning as those in output_result.csv file that is generated as a result of evaluation.
+
+.. list-table::
+   :widths: 30 70
+   :class: longtable
+
+   * - influence
+     - The influence of the target instance. The order of rows in the output CSV file is sorted with this influence.
+
+   * - datasource_index
+     - The index of the target instance in input-train dataset CSV file. Use this index to retrieve the order of rows as in input-train dataset CSV file.

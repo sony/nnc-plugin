@@ -6,9 +6,10 @@ Influence Functionsと呼ばれる方法を用いて、認識結果に対する�
 
 Influence Functions経由でのブラックボックス予測については以下の論文を参照下さい。
 
-Understanding Black-box Predictions via Influence Functions
-  - Pang Wei Koh, Percy Liang
-  - https://arxiv.org/abs/1703.04730
+`Pang Wei Koh, Percy Liang. "Understanding black-box predictions via influence functions". Proceedings of the 34th International Conference on Machine Learning, 2017 <http://proceedings.mlr.press/v70/koh17a>`_
+
+Input Information
+===================
 
 .. list-table::
    :widths: 30 70
@@ -43,3 +44,20 @@ Understanding Black-box Predictions via Influence Functions
    * - batch_size
      - Influence functionsで使用するモデルを使用してトレーニングする
        バッチサイズを指定します。
+
+
+Output Information
+===================
+
+本プラグインの実行結果は 'output' で指定した名前のCSVファイルとして出力されます。
+CSVファイル内の各カラムに関しての情報は以下の通りです（以下のリストに無い名称のカラムは、 '評価' の結果得られる output_result.csvと同様の意味です）。
+
+.. list-table::
+   :widths: 30 70
+   :class: longtable
+
+   * - influence
+     - 本プラグインによって計算された、対象のインスタンスのInfuence値です。本CSVファイルの行はこのInfluence値によってソートされています
+
+   * - datasource_index
+     - 対象のインスタンスの `input-train`のデータセットCSVファイルにおけるインデックスを意味します。再学習の際などに、 `input-train` のデータセットCSVファイルと同じ順番に並べ替える際に利用します

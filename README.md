@@ -9,7 +9,8 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
 ## Current lineup of the plugins
 ###  Pre-processing
 * Create dataset
-    * [Object detection](./manuals/Pre_Process/Create_Dataset/ObjectDetection.rst)
+    * [Object detection (from Yolo v2 format)](./manuals/Pre_Process/Create_Dataset/ObjectDetection.rst)
+    * [Object detection (for CenterNet from Yolo v2 format)](./manuals/Pre_Process/Create_Dataset/ObjectDetection_CenterNet.rst)
     * [Simple  (Japanese) text classification](./manuals/Pre_Process/Create_Dataset/SimpleTextClassification.rst)
     * [String classification](./manuals/Pre_Process/Create_Dataset/StringClassification.rst)
     * [Simple tabular data](./manuals/Pre_Process/Create_Dataset/SimpleTabularDataset.rst)
