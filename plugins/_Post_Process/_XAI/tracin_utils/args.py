@@ -31,7 +31,11 @@ def add_train_args(parser):
                         help='path to training dataset csv file (csv)',
                         required=True)
     # path to validation dataset csv file (csv)
-    parser.add_argument('--model-path',type=str, required=True)
+    parser.add_argument('--model-path',
+                        '-mp',
+                        type=str,
+                        help='pretrained model path (nnp file)',
+                        required=True)
     parser.add_argument('-v',
                         '--input-val',
                         help=argparse.SUPPRESS,
