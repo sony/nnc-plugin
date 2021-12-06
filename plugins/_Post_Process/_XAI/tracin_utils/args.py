@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import argparse
+from collections import defaultdict
 from .utils import ensure_dir
 from distutils.util import strtobool
 
@@ -30,6 +31,7 @@ def add_train_args(parser):
                         help='path to training dataset csv file (csv)',
                         required=True)
     # path to validation dataset csv file (csv)
+    parser.add_argument('--model-path',type=str, required=True)
     parser.add_argument('-v',
                         '--input-val',
                         help=argparse.SUPPRESS,
@@ -70,11 +72,6 @@ def add_basic_args(parser, monitor_path='tracin_infl_results'):
     parser.add_argument('--augmentation', type=strtobool,
                         default=True, help=argparse.SUPPRESS)
 
-    parser.add_argument('--model',
-                        '-md',
-                        type=str,
-                        default='resnet23',
-                        help='model to use calc influence (resnet23 or resnet56) default=resnet23')
     # directory to read saved data and weight
     parser.add_argument('--weight_input',
                         type=str,
@@ -111,11 +108,6 @@ def add_basic_args(parser, monitor_path='tracin_infl_results'):
                         default='float',
                         help=argparse.SUPPRESS)
 
-    parser.add_argument('--train_batch_size',
-                        '-tbs',
-                        type=int,
-                        default=128,
-                        help='Batch size for training (per replica). default=128')
 
     parser.add_argument('--val-iter', type=int,
                         default=100, help=argparse.SUPPRESS)
@@ -124,11 +116,7 @@ def add_basic_args(parser, monitor_path='tracin_infl_results'):
                         type=int,
                         default=128,
                         help=argparse.SUPPRESS)
-    parser.add_argument('--train_epochs',
-                        '-te',
-                        type=bandwidth_limit,
-                        default=100,
-                        help='Number of epochs to train for. default=100')
+    parser.add_argument('--normalize', type=strtobool, default=False, help='Image Normaliztion (1.0/255.0) (True or False)')
     # Number of epochs of warmup.
     parser.add_argument('--warmup_epochs',
                         type=int,
