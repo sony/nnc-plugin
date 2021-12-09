@@ -29,10 +29,10 @@ class LabelShuffleCsvDataSource(CsvDataSource):
         super(LabelShuffleCsvDataSource, self).__init__(**kwargs)
         self._filepath_column_idx = self._get_column_idx('filepath')
         self._label_column_idx = self._get_column_idx('label')
-        self._shuffled_label_column = 'y_shuffled'
+        # self._shuffled_label_column = 'y_shuffled'
         self._shuffled_index_column = 'shuffled_index'
         self._label_shuffle_rate = 0.1
-        self._add_shuffled_label(label_shuffle)
+        # self._add_shuffled_label(label_shuffle)
         self._add_position()
         self._add_shuffled_index()
         self.reset()
