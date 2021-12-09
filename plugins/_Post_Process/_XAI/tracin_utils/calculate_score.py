@@ -48,7 +48,7 @@ def calculate_ckpt_score(data_iterator, num_iteration, image_val, label_val, los
     ckpt_scores = []
     ds_idx_list = []
     img_path_list = []
-
+    last_layer_name = list(nn.get_parameters().keys())[-1].split('/')[0]
     for i in tqdm(range(num_iteration)):
         inputs = data_iterator.next()
         for name, param in nn.get_parameters().items():
@@ -65,7 +65,7 @@ def calculate_ckpt_score(data_iterator, num_iteration, image_val, label_val, los
         loss_val.backward()
 
         for name, param in nn.get_parameters().items():
-            if 'affine' in name:
+            if last_layer_name in name:
                 grads.append(param.grad)
         grad_mul = [F.sum(grad * grad) for grad in grads]
         score = F.add_n(*grad_mul)
@@ -97,10 +97,17 @@ def get_scores(args, data_iterator, num_iteration):
     img_path_list_ckpt = []
 
     nnp = NnpLoader(args.model_path)
-    model = nnp.get_network('Runtime', 1)
-    image_val = model.inputs["Input"]
+    class ForwardConfig:
+        pass
+    config = ForwardConfig
+    info = load.load([args.model_path], prepare_data_iterator=False, batch_size=1)
+    config.executors = info.executors.values()
+    executor = list(config.executors)[0]
+
+    model = nnp.get_network(executor.network.name, 1)
+    image_val = model.inputs[list(model.inputs.keys())[0]]
     label_val = nn.Variable((1, 1))
-    softmax = model.outputs["y'"]
+    softmax = model.outputs[list(model.outputs.keys())[0]]
     loss_val = categorical_cross_entropy(softmax, label_val)
     
     ckpt_influences, ds_idx_list, img_path_list = calculate_ckpt_score(
