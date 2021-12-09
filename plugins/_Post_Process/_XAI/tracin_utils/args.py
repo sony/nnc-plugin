@@ -120,7 +120,11 @@ def add_basic_args(parser, monitor_path='tracin_infl_results'):
                         type=int,
                         default=128,
                         help=argparse.SUPPRESS)
-    parser.add_argument('--normalize', type=strtobool, default=False, help='Image Normaliztion (1.0/255.0) (True or False)')
+    parser.add_argument('--normalize',
+                        '-n',
+                        type=strtobool,
+                        default=False,
+                        help='Image Normaliztion (1.0/255.0) (True or False)')
     # Number of epochs of warmup.
     parser.add_argument('--warmup_epochs',
                         type=int,
