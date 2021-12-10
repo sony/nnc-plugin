@@ -33,6 +33,7 @@ def main():
         '\n' +
         'SmoothGrad: removing noise by adding noise\n' +
         'Daniel Smilkov, Nikhil Thorat, Been Kim, Fernanda Viegas, Martin Wattenberg\n' +
+        'Workshop on Visualization for Deep Learning, ICML, 2017.\n' +
         'https://arxiv.org/abs/1706.03825\n' +
         '', formatter_class=argparse.RawTextHelpFormatter)
     args = get_single_image_args(parser)

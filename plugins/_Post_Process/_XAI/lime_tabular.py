@@ -199,9 +199,10 @@ def main():
     parser = argparse.ArgumentParser(
         description='LIME (tabular)\n'
                     '\n'
-                    '"Why Should I Trust You?": Explaining the Predictions of Any Classifier\n'
-                    'Marco Tulio Ribeiro, Sameer Singh, Carlos Guestrin\n'
-                    'https://arxiv.org/abs/1602.04938\n'
+                    '"Why Should I Trust You?": Explaining the Predictions of Any Classifier\n' +
+                    'Marco Tulio Ribeiro, Sameer Singh, Carlos Guestrin\n' +
+                    'Knowledge Discovery and Data Mining, 2016.\n' +
+                    'https://dl.acm.org/doi/abs/10.1145/2939672.2939778\n' +
                     '', formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         '-m', '--model', help='path to model nnp file (model), default=results.nnp', required=True, default='results.nnp')

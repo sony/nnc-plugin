@@ -51,9 +51,10 @@ def main():
     parser = argparse.ArgumentParser(
         description='SHAP\n'
                     '\n'
-                    'A Unified Approach to Interpreting Model Predictions'
-                    'Scott Lundberg, Su-In Lee'
-                    'https://arxiv.org/abs/1705.07874\n'
+                    'A Unified Approach to Interpreting Model Predictions\n' +
+                    'Scott Lundberg, Su-In Lee\n' +
+                    'Proceedings of the 31st International Conference on Neural Information Processing Systems, 2017.\n' +
+                    'https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html\n' +
                     '', formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         '-i', '--image', help='path to input image file (image)', required=True)

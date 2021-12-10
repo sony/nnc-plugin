@@ -100,9 +100,10 @@ def main():
     parser = argparse.ArgumentParser(
         description='SHAP(batch)\n'
                     '\n'
-                    'A Unified Approach to Interpreting Model Predictions'
-                    'Scott Lundberg, Su-In Lee'
-                    'https://arxiv.org/abs/1705.07874\n'
+                    'A Unified Approach to Interpreting Model Predictions\n' +
+                    'Scott Lundberg, Su-In Lee\n' +
+                    'Proceedings of the 31st International Conference on Neural Information Processing Systems, 2017.\n' +
+                    'https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html\n' +
                     '', formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         '-in', '--input', help='path to input csv file (csv) default=output_result.csv', required=True, default='output_result.csv')
