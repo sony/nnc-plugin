@@ -17,18 +17,15 @@ Estimating Training Data Influence by Tracing Gradient Descent
    * - input-train
      - Specify the dataset CSV file containing image files for which TracIn scores are calculated.
 
-   * - model
-     - Specify the model used for TracIn calculation (resnet23 or resnet56).
+   * - model-path
+     - Specify the pretrained model path (nnp file).
 
    * - output
      - Specify the name of the CSV file to output the inference results to.
-
-   * - train_batch_size
-     - Specify the batch size to train with the model used in TracIn.
-
-   * - train_epochs
-     - Specify the epoch size to train with the model used in TracIn.
-
+     
+   * - normalize
+     - Specify the image normaliztion. (True of False)
+   
    * - seed
      - Specify the random seed number for data augmentation.
 
@@ -46,9 +43,17 @@ The other columns than listed below are the same meaning as those in output_resu
 
    * - influence
      - The influence of the target instance. The order of rows in the output CSV file is sorted with this influence.
+   
 
-   * - datasource_index
-     - The index of the target instance in input-train dataset CSV file. Use this index to retrieve the order of rows as in input-train dataset CSV file.
+   * - x:image
+     - The image path of the training data.
+     
+   * - y:label
+     - The randomly shuffled label of the training data.
+     
+   * - original_label
+     - The true (non-shuffled) label of the training data.
+   
 
 Link
 ========
