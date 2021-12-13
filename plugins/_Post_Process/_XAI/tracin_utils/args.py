@@ -112,7 +112,6 @@ def add_basic_args(parser, monitor_path='tracin_infl_results'):
                         default='float',
                         help=argparse.SUPPRESS)
 
-
     parser.add_argument('--val-iter', type=int,
                         default=100, help=argparse.SUPPRESS)
     # Batch size for eval. (per replica)

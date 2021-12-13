@@ -32,6 +32,7 @@ par_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if par_dir not in sys.path:
     sys.path.append(par_dir)
 
+
 def categorical_cross_entropy(softmax, label):
     loss = F.mean(F.categorical_cross_entropy(softmax, label))
     return loss
@@ -97,10 +98,12 @@ def get_scores(args, data_iterator, num_iteration):
     img_path_list_ckpt = []
 
     nnp = NnpLoader(args.model_path)
+
     class ForwardConfig:
         pass
     config = ForwardConfig
-    info = load.load([args.model_path], prepare_data_iterator=False, batch_size=1)
+    info = load.load([args.model_path],
+                     prepare_data_iterator=False, batch_size=1)
     config.executors = info.executors.values()
     executor = list(config.executors)[0]
 
@@ -109,7 +112,7 @@ def get_scores(args, data_iterator, num_iteration):
     label_val = nn.Variable((1, 1))
     softmax = model.outputs[list(model.outputs.keys())[0]]
     loss_val = categorical_cross_entropy(softmax, label_val)
-    
+
     ckpt_influences, ds_idx_list, img_path_list = calculate_ckpt_score(
         data_iterator, num_iteration, image_val, label_val, loss_val, softmax)
 
@@ -136,13 +139,13 @@ def calc_infl(args):
     data_source, num_iteration = load_data(args.input_train, args.normalize)
 
     results = get_scores(args, data_source, num_iteration)
-    
+
     # sort by influence in ascendissng order
     rows = read_csv(args.input_train)
     rows = add_info_to_csv(rows, results['influence'], 'influence', position=0)
     header = rows.pop(0)
     rows = np.array(rows)
-    rows = rows[rows[:,0].astype(float).argsort()[::-1]]
+    rows = rows[rows[:, 0].astype(float).argsort()[::-1]]
     save_to_csv(filename=args.output, header=header,
                 list_to_save=rows, data_type=str)
 
