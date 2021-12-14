@@ -29,10 +29,10 @@ class LabelShuffleCsvDataSource(CsvDataSource):
         super(LabelShuffleCsvDataSource, self).__init__(**kwargs)
         self._filepath_column_idx = self._get_column_idx('filepath')
         self._label_column_idx = self._get_column_idx('label')
-        self._shuffled_label_column = 'y_shuffled'
+        # self._shuffled_label_column = 'y_shuffled'
         self._shuffled_index_column = 'shuffled_index'
         self._label_shuffle_rate = 0.1
-        self._add_shuffled_label(label_shuffle)
+        # self._add_shuffled_label(label_shuffle)
         self._add_position()
         self._add_shuffled_index()
         self.reset()
@@ -194,12 +194,12 @@ class LabelShuffleCsvDataSource(CsvDataSource):
         save_to_csv(filename, header, _rows, data_type)
 
 
-def get_datasource(filename, shuffle=False, label_shuffle=False):
+def get_datasource(filename, shuffle=False, label_shuffle=False, normalize=False):
     get_datasource = LabelShuffleCsvDataSource(
         label_shuffle=label_shuffle,
         filename=filename,
         shuffle=shuffle,
         rng=None,
-        normalize=True
+        normalize=normalize
     )
     return get_datasource
