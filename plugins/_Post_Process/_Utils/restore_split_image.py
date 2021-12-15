@@ -89,7 +89,7 @@ def func(args):
     result_table = []
     table.sort(key=lambda x: x[1])
     current_path = os.getcwd()
-    output_path = os.path.dirname(args.output_csv)
+    output_path = os.path.dirname(args.output)
 
     # Input CSV file line loop
     last_index = -1
@@ -105,7 +105,7 @@ def func(args):
         for col_index in inherit_col_indexes:
             result_line.append(lines[0][col_index])
 
-        os.chdir(input_csv_path)
+        os.chdir(input_csv_path if input_csv_path else current_path)
         for line in lines:
             im = load_image(line[variable_index])
             top = int(line[top_variable_index]) + overlap_size
@@ -118,9 +118,12 @@ def func(args):
             out_im[top:top + patch_height, left:left + patch_width, ::] = im[overlap_size:overlap_size +
                                                                              patch_height, overlap_size:overlap_size + patch_width, ::]
         out_im_csv_file_name = os.path.join(
-            f'{last_index//1000:08}', f'{last_index % 1000:03}.png')
+            'restore_split_image',
+            f'{last_index//1000:04}', f'{last_index % 1000:03}.png')
         out_im_file_name = os.path.join(output_path, out_im_csv_file_name)
         os.chdir(current_path)
+        if not os.path.exists(os.path.dirname(out_im_file_name)):
+            os.makedirs(os.path.dirname(out_im_file_name))
         imsave(out_im_file_name, out_im)
         result_line.append(out_im_csv_file_name)
         result_table.append(result_line)
@@ -138,7 +141,7 @@ def func(args):
         restore_image(tmp_lines)
 
     logger.log(99, 'Saving CSV file...')
-    with open(os.path.join(args.output_csv), 'w', newline="\n", encoding='utf-8') as f:
+    with open(os.path.join(args.output), 'w', newline="\n", encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerow(result_header)
         writer.writerows(result_table)
@@ -197,9 +200,9 @@ def main():
         help='left coordinate variable (variable) default=y_left',
         required=True)
     parser.add_argument(
-        '-o', '--output-csv', help='output csv file (file) default=restored_images.csv', required=True)
+        '-o', '--output', help='output csv file (file) default=restored_images.csv', required=True)
     parser.add_argument(
-        '-t', '--inherit-cols', help='variables to inherit from input CSV to output CSV (variables) default=# y')
+        '-t', '--inherit-cols', help='variables to inherit from input CSV to output CSV (variables) default=# x')
     parser.set_defaults(func=func)
 
     args = parser.parse_args()

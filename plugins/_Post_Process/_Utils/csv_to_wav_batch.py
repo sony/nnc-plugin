@@ -50,7 +50,7 @@ def func(args):
     logger.log(99, 'Processing CSV files ...')
     header.append(header[variable_index] + '_wav')
     os.chdir(input_csv_path)
-    output_path = os.path.dirname(args.output_csv)
+    output_path = os.path.dirname(args.output)
 
     # Input CSV file line loop
     for i, line in enumerate(tqdm(table)):
@@ -64,7 +64,7 @@ def func(args):
         line.append(wav_file_name)
 
     logger.log(99, 'Saving CSV file...')
-    with open(os.path.join(args.output_csv), 'w', newline="\n", encoding='utf-8') as f:
+    with open(os.path.join(args.output), 'w', newline="\n", encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerow(header)
         writer.writerows(table)
@@ -94,7 +94,7 @@ def main():
         required=True,
         type=int)
     parser.add_argument(
-        '-o', '--output-csv', help='output csv file (file) default=wav_files.csv', required=True)
+        '-o', '--output', help='output csv file (file) default=wav_files.csv', required=True)
     parser.set_defaults(func=func)
 
     args = parser.parse_args()
