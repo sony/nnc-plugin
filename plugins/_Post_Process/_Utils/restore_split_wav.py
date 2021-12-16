@@ -74,14 +74,14 @@ def func(args):
     result_table = []
     table.sort(key=lambda x: x[1])
     current_path = os.getcwd()
-    output_path = os.path.dirname(args.output_csv)
+    output_path = os.path.dirname(args.output)
 
     # Input CSV file line loop
     last_index = -1
     tmp_lines = []
 
     def restore_wav(lines):
-        os.chdir(input_csv_path)
+        os.chdir(input_csv_path if input_csv_path else current_path)
         sampling_freq, wav_data = load_wav(
             lines[0][variable_index], args.default_sampling_freq)
         ch = 1 if len(wav_data.shape) == 1 else wav_data.shape[1]
@@ -119,7 +119,8 @@ def func(args):
                 out_wav_data[pos:pos + size,
                              ::] = wav_data[overlap_size:overlap_size + size, ::]
         out_wav_csv_file_name = os.path.join(
-            f'{last_index//1000:08}', f'{last_index % 1000:03}.wav')
+            'restore_split_wav',
+            f'{last_index//1000:04}', f'{last_index % 1000:03}.wav')
         out_wav_file_name = os.path.join(output_path, out_wav_csv_file_name)
         os.chdir(current_path)
         if not os.path.exists(os.path.dirname(out_wav_file_name)):
@@ -141,7 +142,7 @@ def func(args):
         restore_wav(tmp_lines)
 
     logger.log(99, 'Saving CSV file...')
-    with open(os.path.join(args.output_csv), 'w', newline="\n", encoding='utf-8') as f:
+    with open(os.path.join(args.output), 'w', newline="\n", encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerow(result_header)
         writer.writerows(result_table)
@@ -200,9 +201,9 @@ def main():
         help='default sampling frequency when loading CSV file (int) default=44100',
         type=int)
     parser.add_argument(
-        '-o', '--output-csv', help='output csv file (file) default=restored_wav_files.csv', required=True)
+        '-o', '--output', help='output csv file (file) default=restored_wav_files.csv', required=True)
     parser.add_argument(
-        '-t', '--inherit-cols', help='variables to inherit from input CSV to output CSV (variables) default=# y')
+        '-t', '--inherit-cols', help='variables to inherit from input CSV to output CSV (variables) default=# x')
     parser.set_defaults(func=func)
 
     args = parser.parse_args()
