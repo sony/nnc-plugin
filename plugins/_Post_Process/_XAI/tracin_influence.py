@@ -24,6 +24,7 @@ def main():
     os.environ['NNABLA_CUDNN_DETERMINISTIC'] = '1'
     os.environ['NNABLA_CUDNN_ALGORITHM_BY_HEURISTIC'] = '1'
     try:
+        train(args)
         calc_infl(args)
         logger.log(99, 'TracIn completed successfully.')
     except KeyboardInterrupt:

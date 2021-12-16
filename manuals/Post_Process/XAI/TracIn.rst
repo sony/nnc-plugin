@@ -1,7 +1,6 @@
 XAI/TracIn
 ~~~~~~~~~~
 
-<<<<<<< HEAD
 Using a method called TracIn, the influence of the input images on recognition result are evaluated. The dataset and the scores are shown in the influential order, which can be referred for data cleansing. This plugin runs when using GPU.  
 
 
@@ -10,16 +9,6 @@ Using a method called TracIn, the influence of the input images on recognition r
 
 Input Information
 ===================
-=======
-Using a method called TracIn, the influence of the input images on recognition result are evaluated. The dataset and the scores are shown in the influential order, which can be referred for data cleansing. This plugin runs when using GPU.
-Please see below for the detailed explanation of algorithm.
-https://github.com/sony/nnabla-examples/tree/master/responsible_ai/tracin#overview
-
-
-Estimating Training Data Influence by Tracing Gradient Descent
-   - Garima Pruthi, Frederick Liu, Mukund Sundararajan, Satyen Kale
-   - https://papers.nips.cc/paper/2020/file/e6385d39ec9394f2f3a354d9d2b88eec-Paper.pdf
->>>>>>> 0242433 (added links and change paper link)
 
 .. list-table::
    :widths: 30 70
@@ -28,15 +17,18 @@ Estimating Training Data Influence by Tracing Gradient Descent
    * - input-train
      - Specify the dataset CSV file containing image files for which TracIn scores are calculated.
 
-   * - model-path
-     - Specify the pretrained model path (nnp file).
+   * - model
+     - Specify the model used for TracIn calculation (resnet23 or resnet56).
 
    * - output
      - Specify the name of the CSV file to output the inference results to.
-     
-   * - normalize
-     - Specify the image normaliztion. (True of False)
-   
+
+   * - train_batch_size
+     - Specify the batch size to train with the model used in TracIn.
+
+   * - train_epochs
+     - Specify the epoch size to train with the model used in TracIn.
+
    * - seed
      - Specify the random seed number for data augmentation.
 
@@ -54,17 +46,9 @@ The other columns than listed below are the same meaning as those in output_resu
 
    * - influence
      - The influence of the target instance. The order of rows in the output CSV file is sorted with this influence.
-   
 
-   * - x:image
-     - The image path of the training data.
-     
-   * - y:label
-     - The randomly shuffled label of the training data.
-     
-   * - original_label
-     - The true (non-shuffled) label of the training data.
-   
+   * - datasource_index
+     - The index of the target instance in input-train dataset CSV file. Use this index to retrieve the order of rows as in input-train dataset CSV file.
 
 Link
 ========
