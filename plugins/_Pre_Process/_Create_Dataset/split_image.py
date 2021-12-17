@@ -62,6 +62,8 @@ def func(args):
         table = [row for row in reader]
     variables = [v.split(':')[0] for v in header]
     input_csv_path = os.path.dirname(args.input_csv)
+    image_path = 'split_' + \
+        os.path.splitext(os.path.basename(args.input_csv))[0]
 
     # Settings for each variable
     variable_indexes = [[], []]
@@ -102,13 +104,14 @@ def func(args):
         result_lines = []
         extra_lines = []
         im_output_path = os.path.join(
-            output_path, f'{org_data_index//1000:08}')
+            output_path, image_path, f'{org_data_index//1000:04}')
         if not os.path.exists(im_output_path):
-            os.mkdir(im_output_path)
+            os.makedirs(im_output_path)
         for i in range(2):  # Variable 1 and 2
             for vi in variable_indexes[i]:
                 base_size = patch_sizes[i] - overlap_sizes[i] * 2
                 im = load_image(line[vi])
+                line[vi] = os.path.join(input_csv_path, line[vi])
                 patch_num_x = (im.shape[0] - 1) // base_size + 1
                 patch_num_y = (im.shape[1] - 1) // base_size + 1
                 patch_index = 0
@@ -148,7 +151,8 @@ def func(args):
                             result_lines.append([])
                             extra_lines.append([])
                         out_im_csv_file_name = os.path.join(
-                            f'{org_data_index//1000:08}', f'{variables[vi]}_{org_data_index % 1000:03}_{patch_index:08}.png')
+                            image_path,
+                            f'{org_data_index//1000:04}', f'{variables[vi]}_{org_data_index % 1000:03}_{patch_index:04}.png')
                         out_im_file_name = os.path.join(
                             output_path, out_im_csv_file_name)
                         imsave(out_im_file_name, out_im)

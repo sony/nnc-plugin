@@ -43,6 +43,7 @@ def func(args):
         table = [row for row in reader]
     variables = [v.split(':')[0] for v in header]
     input_csv_path = os.path.dirname(args.input_csv)
+    wav_path = 'split_' + os.path.splitext(os.path.basename(args.input_csv))[0]
 
     # Settings for each variable
     variable_indexes = [[], []]
@@ -83,13 +84,14 @@ def func(args):
         result_lines = []
         extra_lines = []
         wav_output_path = os.path.join(
-            output_path, f'{org_data_index//1000:08}')
+            output_path, wav_path, f'{org_data_index//1000:04}')
         if not os.path.exists(wav_output_path):
-            os.mkdir(wav_output_path)
+            os.makedirs(wav_output_path)
         for i in range(2):  # Variable 1 and 2
             for vi in variable_indexes[i]:
                 base_size = window_sizes[i] - overlap_sizes[i] * 2
                 sampling_freq, wav_data = wavfile.read(line[vi])
+                line[vi] = os.path.join(input_csv_path, line[vi])
                 window_num = (wav_data.shape[0] - 1) // base_size + 1
                 window_index = 0
                 # Window loop
@@ -119,7 +121,8 @@ def func(args):
                         result_lines.append([])
                         extra_lines.append([])
                     out_wav_csv_file_name = os.path.join(
-                        f'{org_data_index//1000:08}', f'{variables[vi]}_{org_data_index % 1000:03}_{window_index:08}.wav')
+                        wav_path,
+                        f'{org_data_index//1000:04}', f'{variables[vi]}_{org_data_index % 1000:03}_{window_index:04}.wav')
                     out_wav_file_name = os.path.join(
                         output_path, out_wav_csv_file_name)
                     wavfile.write(out_wav_file_name,
