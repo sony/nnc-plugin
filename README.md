@@ -48,8 +48,8 @@ The plugins run on Neural Network Console. If you do not have Neural Network Con
 2. Extract the zip files on your PC.
 3. Delete the existing plugins folder. You can find it from neural_network_console > libs > **plugins**. 
 * **NOTE** If you do not want to turn off some plugins, please leave them.
-
 4. Put the downloaded **plugins** folders in the same place, neural_network_console > libs > **plugins**.  
+5. Restart Neural Network Console.
 
 ###  Pre-processing
 * To execute the plugins of the pre-processing, select the "DATASET" on the left of the top screen. Then  click "Create Dataset", you can select the plugins of the pre-processing.
@@ -64,4 +64,12 @@ The plugins run on Neural Network Console. If you do not have Neural Network Con
 <img src="./img/postprocessing.png" width="400px">  
 </p>
 
+## Sample projects
+* [Attention branch network](.\samples\xai) resnet-110-attention-branch-network.sdcproj
+* [TracIn](.\samples\xai) TracIn-resnet56.sdcproj
 
+### How to use the latest sample projects
+The sample projects run on Neural Network Console. 
+1. Download the zip files from this repository. 
+2. Extract the zip files on your PC.
+3. You can place the downloaded **sample projects** anywhere, but it must be a folder without double-byte characters.
