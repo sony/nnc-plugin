@@ -16,7 +16,7 @@ jobs:
       - name: Check
         run: |
           python3 -m pip install autopep8 tqdm
-          python3 tools/scripts/copyright_checker.py
+          python3 tools/scripts/copyright_checker.py --check-only
           bash tools/scripts/check_diff.sh
 
       - name: Upload artifact
