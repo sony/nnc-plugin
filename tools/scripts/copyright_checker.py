@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
 import os
 import pathlib
 import re
 import subprocess
+import sys
 from tqdm import tqdm
 from contextlib import contextmanager
 
@@ -36,7 +36,7 @@ def retrieve_commit_dates(filepath):
     parent = str(filepath.parent)
     os.chdir(parent)
     result = execute_command(
-        ['git', 'log', '--format="format:%ci"', '--reverse', filepath.name])
+        ['git', 'log', '--format="%ci %f %h"', '--reverse', filepath.name])
     os.chdir(current_dir)
     dates = _date_extract_regex.findall(result)
     return dates
@@ -209,6 +209,8 @@ def list_up_files(root_dir, checkers):
 
 
 def main():
+    check_only = '--check-only' in sys.argv
+
     types = {
         "script": ([".py", ".cfg", ".ini", ".sh", ".mk", ".cmake", "CMakeLists.txt", "Dockerfile"],  "#"),
         "c": ([".c", ".cpp", ".h", ".hpp"], "//"),
@@ -229,8 +231,9 @@ def main():
             continue
         with c.read_file(str(fn)):
             old_header = c.extract_file_header()
-            if new_header == old_header:
-                continue
+            if old_header is not None:
+                if new_header == old_header or check_only:
+                    continue
             with open(str(fn), "w", encoding='utf-8') as fh:
                 fh.write(c.replace_file_header(old_header, new_header))
 
