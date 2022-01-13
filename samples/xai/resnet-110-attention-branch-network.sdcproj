@@ -2714,14 +2714,14 @@ Num=2
 MainIndex=0
 [Dataset_0]
 Name=Training
-URI=C:\Users\Kenji.B.Suzuki\Downloads\sdeep_console_prototype211013\samples\sample_dataset\CIFAR10\cifar10_training.csv
+URI=C:\Neural_Network_Console\sdeep_console_prototype_cpu\samples\sample_dataset\CIFAR10\cifar10_training.csv
 Shuffle=1
 EnableCache=1
 ImageNormalization=0
 NumData=50000
 [Dataset_1]
 Name=Validation
-URI=C:\Users\Kenji.B.Suzuki\Downloads\sdeep_console_prototype211013\samples\sample_dataset\CIFAR10\cifar10_test.csv
+URI=C:\Neural_Network_Console\sdeep_console_prototype_cpu\samples\sample_dataset\CIFAR10\cifar10_test.csv
 Shuffle=0
 EnableCache=1
 ImageNormalization=0
