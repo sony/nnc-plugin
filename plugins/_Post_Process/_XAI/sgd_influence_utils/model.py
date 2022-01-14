@@ -160,7 +160,7 @@ def get_config(args, is_eval=False):
                 'lr': lr,
                 'batch_size': cfg.batch_size,
                 'device_id': cfg.device_id,
-                'seed': cfg.seed,
+                # 'seed': cfg.seed,
                 'net_func': cifarnet,
             }
 

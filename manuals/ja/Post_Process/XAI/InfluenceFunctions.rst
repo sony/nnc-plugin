@@ -33,8 +33,8 @@ Input Information
    * - output
      - 推論結果を出力するCSVファイル名を指定します。
 
-   * - seed
-     - 入力列データをシャッフルするための乱数種を指定します。
+   * - n_trials
+     - 試行回数を指定します。input-train で指定されたデータセットをシャッフルして指定した回数のInfluence計算を繰り返し、その平均値を算出するために用います。
 
    * - model
      - Influence functionsの計算で使用するモデルファイル (*.nnp) を指

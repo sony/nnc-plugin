@@ -13,11 +13,36 @@
 # limitations under the License.
 import os
 import csv
+import copy
 import numpy as np
 import nnabla as nn
 from nnabla.ext_utils import get_extension_context
 from nnabla.utils.load import load
 from shutil import rmtree
+
+
+def calc_result_mean(infl_result_paths: list):
+    tables = []
+    for infl_result_path in infl_result_paths:
+        with open(infl_result_path, 'r', encoding='utf-8-sig') as f:
+            reader = csv.reader(f)
+            header = next(reader)
+            table = [row for row in reader]
+        table = np.array(table)
+        table = table[np.argsort(table[:, -1].astype(int))]
+        tables.append(table)
+    temp = None
+    for table in tables:
+        if temp is None:
+            temp = table[:, -2].astype(float)
+        else:
+            temp += table[:, -2].astype(float)
+    temp = temp / len(tables)
+    ret = copy.deepcopy(tables[0])
+    ret[:, -2] = temp
+    ret = ret[np.argsort(ret[:, -2].astype(float))]
+    ret = ret.tolist()
+    return ret, header
 
 
 def delete_file(file_name):
