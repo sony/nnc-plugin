@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import argparse
+from collections import defaultdict
 from .utils import ensure_dir
 from distutils.util import strtobool
 
@@ -32,11 +33,23 @@ def add_train_args(parser):
         required=True,
     )
     # path to validation dataset csv file (csv)
+<<<<<<< HEAD
     parser.add_argument(
         "--model-path", "-mp", type=str, help="pretrained nnp (file)", required=True
     )
     parser.add_argument("-v", "--input-val",
                         help=argparse.SUPPRESS, required=False)
+=======
+    parser.add_argument('--model-path',
+                        '-mp',
+                        type=str,
+                        help='pretrained model path (nnp file)',
+                        required=True)
+    parser.add_argument('-v',
+                        '--input-val',
+                        help=argparse.SUPPRESS,
+                        required=False)
+>>>>>>> 53d54ed (added links and change paper link)
     return parser
 
 
@@ -98,6 +111,7 @@ def add_basic_args(parser, monitor_path="tracin_infl_results"):
         "--device_id", "-d", type=str, default="0", help=argparse.SUPPRESS
     )
     # Type of computation. e.g. "float", "half".
+<<<<<<< HEAD
     parser.add_argument(
         "--type_config", type=str, default="float", help=argparse.SUPPRESS
     )
@@ -115,6 +129,25 @@ def add_basic_args(parser, monitor_path="tracin_infl_results"):
         default=False,
         help="Image Normaliztion (1.0/255.0) (bool)",
     )
+=======
+    parser.add_argument("--type_config",
+                        type=str,
+                        default='float',
+                        help=argparse.SUPPRESS)
+
+    parser.add_argument('--val-iter', type=int,
+                        default=100, help=argparse.SUPPRESS)
+    # Batch size for eval. (per replica)
+    parser.add_argument('--val_batch_size',
+                        type=int,
+                        default=128,
+                        help=argparse.SUPPRESS)
+    parser.add_argument('--normalize',
+                        '-n',
+                        type=strtobool,
+                        default=False,
+                        help='Image Normaliztion (1.0/255.0) (True or False)')
+>>>>>>> 53d54ed (added links and change paper link)
     # Number of epochs of warmup.
     parser.add_argument("--warmup_epochs", type=int,
                         default=15, help=argparse.SUPPRESS)
