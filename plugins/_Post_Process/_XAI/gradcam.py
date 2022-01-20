@@ -33,7 +33,8 @@ def main():
         '\n' +
         'Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization\n' +
         'Ramprasaath R. Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam, Devi Parikh, Dhruv Batra\n' +
-        'https://arxiv.org/abs/1610.02391\n' +
+        'Proceedings of the IEEE International Conference on Computer Vision, 2017.\n' +
+        'https://openaccess.thecvf.com/content_iccv_2017/html/Selvaraju_Grad-CAM_Visual_Explanations_ICCV_2017_paper.html\n' +
         '', formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         '-m', '--model', help='path to model nnp file (model) default=results.nnp', required=True, default='results.nnp')
