@@ -13,18 +13,8 @@
 # limitations under the License.
 import argparse
 from nnabla import logger
-from nnabla.utils.image_utils import imsave, imread
-from gradcam_utils.gradcam import get_gradcam_image
-from gradcam_utils.setup_model import get_config
-
-
-def func(args):
-    config = get_config(args)
-    _h, _w = config.input_shape
-    input_image = imread(args.image, size=(_w, _h), channel_first=True)
-    result = get_gradcam_image(input_image, config)
-    imsave(args.output, result, channel_first=True)
-    logger.log(99, 'Grad-CAM completed successfully.')
+from nnabla.utils.image_utils import imsave
+from gradcam_utils.gradcam_func import gradcam_func
 
 
 def main():
@@ -47,11 +37,14 @@ def main():
     # designage if the model contains crop between input and first conv layer.
     parser.add_argument(
         '-cr', '--contains_crop', help=argparse.SUPPRESS, action='store_true')
-    parser.set_defaults(func=func)
+    parser.set_defaults(func=gradcam_func)
 
     args = parser.parse_args()
 
-    args.func(args)
+    result = args.func(args)
+
+    imsave(args.output, result, channel_first=True)
+    logger.log(99, 'Grad-CAM completed successfully.')
 
 
 if __name__ == '__main__':

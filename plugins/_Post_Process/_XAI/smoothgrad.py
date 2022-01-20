@@ -13,18 +13,9 @@
 # limitations under the License.
 import argparse
 from nnabla import logger
-from nnabla.utils.image_utils import imsave, imread
-from smoothgrad_utils.smoothgrad import get_smoothgrad_image, get_config
+from nnabla.utils.image_utils import imsave
+from smoothgrad_utils.smoothgrad_func import smoothgrad_func
 from smoothgrad_utils.args import get_single_image_args
-
-
-def func(args):
-    config = get_config(args)
-    _h, _w = config.input_shape
-    input_image = imread(args.image, size=(_w, _h), channel_first=True)
-    result = get_smoothgrad_image(input_image, config)
-    imsave(args.output, result, channel_first=True)
-    logger.log(99, 'SmoothGrad completed successfully.')
 
 
 def main():
@@ -37,7 +28,9 @@ def main():
         'https://arxiv.org/abs/1706.03825\n' +
         '', formatter_class=argparse.RawTextHelpFormatter)
     args = get_single_image_args(parser)
-    func(args)
+    result = smoothgrad_func(args)
+    imsave(args.output, result, channel_first=True)
+    logger.log(99, 'SmoothGrad completed successfully.')
 
 
 if __name__ == '__main__':
