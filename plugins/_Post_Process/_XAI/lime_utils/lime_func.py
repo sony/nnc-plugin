@@ -73,7 +73,7 @@ def lime_func(args):
     executor = list(config.executors)[0]
     if len(config.executors) > 1:
         logger.log(
-            99, 'Only the first executor {} is used in the Grad-CAM calculation.'.format(executor.name))
+            99, 'Only the first executor {} is used in the LIME calculation.'.format(executor.name))
 
     if executor.network.name in info.networks.keys():
         config.networks.append(info.networks[executor.network.name])
@@ -207,9 +207,9 @@ def lime_batch_func(args):
             # Load data
             data = di.next()
             im = data[di.variables.index(args.input_variable)]
-            im = im.reshape((im.shape[1], im.shape[2], im.shape[3]))
-            slic = skimage.segmentation.slic(
-                im[0], n_segments=args.num_segments)
+            im = im[0].transpose(1, 2, 0)
+            slic = skimage.segmentation.slic(im, n_segments=args.num_segments)
+            im = im.transpose(2, 0, 1)
             if is_binary_classification:
                 label = 0
             else:
