@@ -44,5 +44,5 @@ jobs:
       - name: Check
         run: |
           python3 -m pip install nnabla
-          python3 -m pip install --only-binary :all: janome nltk scikit-learn plotly matplotlib scikit-image opencv-python
+          python3 -m pip install --only-binary :all: janome nltk scikit-learn plotly matplotlib scikit-image opencv-python psutil
           python3 tools/scripts/check_plugin_help.py

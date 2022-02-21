@@ -17,7 +17,7 @@ import argparse
 import csv
 from nnabla import logger
 import os
-from shap_tabular_utils.calculate import KernelSHAP, check_datasize
+from shap_tabular_utils.calculate import KernelSHAP, check_executable
 from shap_tabular_utils.visualize import visualize
 
 
@@ -32,10 +32,7 @@ def func(args):
         feature_names = next(reader)[:-1]
         data = np.array([[float(r) for r in row] for row in reader])[:, :-1]
 
-    is_executable_size = check_datasize(data)
-    if not is_executable_size:
-        raise Exception(
-            f'dataset size of {data.shape} might be too large to execute shap computation.')
+    check_executable(data, args.memory_limit)
 
     kernel_shap = KernelSHAP(data, args.model, X, args.alpha)
     shap_values, expected_values = kernel_shap.calculate_shap()
@@ -83,6 +80,8 @@ def main():
         '-c2', '--class_index', help='class index (int), default=0', required=True, default=0, type=int)
     parser.add_argument(
         '-o', '--output', help='path to output csv file (csv), default=shap_tabular.csv', required=True, default='shap_tabular.csv')
+    parser.add_argument(
+        '-ml', '--memory_limit', type=int, help='memory limit to process dataset')
     parser.set_defaults(func=func)
     args = parser.parse_args()
 
