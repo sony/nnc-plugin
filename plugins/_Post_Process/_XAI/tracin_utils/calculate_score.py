@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2022 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -45,21 +45,27 @@ def load_data(input_path, normalize):
     return iterator, num_iteration
 
 
-def calculate_ckpt_score(data_iterator, num_iteration, image_val, label_val, loss_val, softmax):
+def calculate_ckpt_score(
+    data_iterator, num_iteration, image_val, label_val, loss_val, softmax
+):
     ckpt_scores = []
     ds_idx_list = []
     img_path_list = []
-    last_layer_name = list(nn.get_parameters().keys())[-1].split('/')[0]
+    last_layer_name = list(nn.get_parameters().keys())[-1].split("/")[0]
     for i in tqdm(range(num_iteration)):
         inputs = data_iterator.next()
         for name, param in nn.get_parameters().items():
             param.grad.zero()  # grad initialize
-            if 'affine' not in name:
+            if "affine" not in name:
                 param.need_grad = False
 
         grads = []
         images, labels, *_extra_info = inputs
-        shuffled_labels, ds_idxes, _shuffled_idxes = _extra_info
+        try:
+            shuffled_labels, ds_idxes, _shuffled_idxes = _extra_info
+        except ValueError:
+            ds_idxes, _shuffled_idxes = _extra_info
+            shuffled_labels = labels
         image_val.d, label_val.d = images, shuffled_labels
 
         loss_val.forward()
@@ -101,6 +107,7 @@ def get_scores(args, data_iterator, num_iteration):
 
     class ForwardConfig:
         pass
+
     config = ForwardConfig
     info = load.load([args.model_path],
                      prepare_data_iterator=False, batch_size=1)
@@ -114,7 +121,8 @@ def get_scores(args, data_iterator, num_iteration):
     loss_val = categorical_cross_entropy(softmax, label_val)
 
     ckpt_influences, ds_idx_list, img_path_list = calculate_ckpt_score(
-        data_iterator, num_iteration, image_val, label_val, loss_val, softmax)
+        data_iterator, num_iteration, image_val, label_val, loss_val, softmax
+    )
 
     ckpt_scores.append(ckpt_influences)
     ds_idx_list_ckpt.append(ds_idx_list)
@@ -127,9 +135,9 @@ def get_scores(args, data_iterator, num_iteration):
         sum_ckpt_scores.append(tmp)
     check_sum_direction(ds_idx_list_ckpt)
     return {
-        'img_path': img_path_list_ckpt[0],
-        'influence': sum_ckpt_scores,
-        'datasource_index': ds_idx_list_ckpt[0],
+        "img_path": img_path_list_ckpt[0],
+        "influence": sum_ckpt_scores,
+        "datasource_index": ds_idx_list_ckpt[0],
     }
 
 
@@ -142,7 +150,7 @@ def calc_infl(args):
 
     # sort by influence in ascendissng order
     rows = read_csv(args.input_train)
-    rows = add_info_to_csv(rows, results['influence'], 'influence', position=0)
+    rows = add_info_to_csv(rows, results["influence"], "influence", position=0)
     header = rows.pop(0)
     rows = np.array(rows)
     rows = rows[rows[:, 0].astype(float).argsort()[::-1]]
