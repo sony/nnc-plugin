@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -51,8 +51,6 @@ def add_train_infl_args(parser):
         '-v', '--input-val', help='path to validation dataset csv file (csv)', required=True)
     parser.add_argument(
         '-o', '--output', help='path to output csv file (csv) default=sgd_influence_tabular.csv', default='sgd_influence_tabular.csv')
-    parser.add_argument(
-        '-s', '--seed', help='random seed number default=0', default=0, type=int)
     return parser
 
 
@@ -99,6 +97,8 @@ def get_train_infl_args():
         '  Satoshi Hara, Atsushi Nitanda, and Takanori Maehara (2019)\n' +
         'https://papers.nips.cc/paper/8674-data-cleansing-for-models-trained-with-sgd\n' +
         '', formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument(
+        '-nt', '--n_trials', help='number or trials ', default=6, type=int)
     parser = add_basic_args(parser)
     parser = add_train_infl_args(parser)
     return parser.parse_args()

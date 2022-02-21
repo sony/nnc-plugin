@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ from nnabla import logger
 from sgd_influence_tabular_utils.network import get_config
 from sgd_influence_tabular_utils.train import train
 from sgd_influence_tabular_utils.infl import infl_sgd
-from sgd_influence_utils.utils import delete_dir, get_context, ensure_dir
+from sgd_influence_utils.utils import delete_dir, get_context, ensure_dir, save_to_csv, calc_result_mean
 from sgd_influence_tabular_utils.args import get_train_infl_args
 
 
@@ -33,12 +33,26 @@ def func(args):
     nn.set_default_context(ctx)
     temp_dir = config.temp_dir
     ensure_dir(temp_dir)
+    seeds = [i for i in range(args.n_trials)]
+    base_infl_filename, ext = os.path.splitext(os.path.basename(args.output))
+    infl_result_paths = []
 
     try:
-        # train
-        train(config)
-        # calc influence
-        infl_sgd(config)
+        for seed in seeds:
+            infl_result_path = os.path.join(
+                temp_dir, f'{base_infl_filename}_{seed}{ext}')
+            infl_result_paths.append(infl_result_path)
+            config.infl_filepath = infl_result_path
+            # train
+            train(config, seed)
+            # calc influence
+            infl_sgd(config, seed)
+        # calc average(calc_result_meanの実装)
+        infl, header = calc_result_mean(infl_result_paths)
+        # save average(save_to_csv)
+        data_type = 'int,float,int'
+        save_to_csv(filename=args.output, header=header,
+                    list_to_save=infl, data_type=data_type)
         logger.log(99, 'SGD influence completed successfully.')
     except KeyboardInterrupt:
         pass

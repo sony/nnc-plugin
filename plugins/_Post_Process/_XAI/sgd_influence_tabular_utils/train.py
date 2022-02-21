@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -66,9 +66,8 @@ def save_weight(weight, weight_dir, filename):
     )
 
 
-def train(cfg):
+def train(cfg, seed):
     device_id = cfg.device_id
-    seed = cfg.seed
     batch_size = cfg.batch_size
     infl_end_epoch = cfg.infl_end_epoch
     lr = cfg.lr
