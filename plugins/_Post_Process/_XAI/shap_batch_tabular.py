@@ -17,11 +17,12 @@ import csv
 from nnabla import logger
 from shap_tabular_utils.calculate import KernelSHAP, check_executable
 from shap_tabular_utils.visualize import visualize
-from nnabla.utils.data_source_implements import CsvDataSource
 
 
 def func(args):
+<<<<<<< HEAD
     d_input = CsvDataSource(args.input)
+<<<<<<< HEAD
     X = np.array([[float(r) for r in row] for row in d_input._rows])[:, :-1]
 
     d_train = CsvDataSource(args.train)
@@ -31,6 +32,24 @@ def func(args):
         feature_name = '{}__{}:'.format(x, i) + name['label']
         feature_names.append(feature_name)
     data = np.array([[float(r) for r in row] for row in d_train._rows])[:, :-1]
+=======
+=======
+>>>>>>> 816041a (Revert "not to read csv comment columns in plugin")
+    with open(args.input, 'r') as f:
+        reader = csv.reader(f)
+        _ = next(reader)
+        X = np.array([[float(r) for r in row] for row in reader])[:, :-1]
+    with open(args.train, 'r') as f:
+        reader = csv.reader(f)
+        feature_names = next(reader)[:-1]
+<<<<<<< HEAD
+        rows = d_train._rows
+        d_train._remove_comment_cols(feature_names, rows)
+        data = np.array([[float(r) for r in row] for row in rows])
+>>>>>>> 5a5211e (not to read csv comment columns in plugin)
+=======
+        data = np.array([[float(r) for r in row] for row in reader])[:, :-1]
+>>>>>>> 816041a (Revert "not to read csv comment columns in plugin")
 
     check_executable(data, args.memory_limit)
 
