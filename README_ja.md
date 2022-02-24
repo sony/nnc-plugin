@@ -49,7 +49,7 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
 
 ## 最新のプラグインを利用するには
 
-プラグインはNeural Network Consoleで動作します。もしNeural Network Consoleをお持ちでない場合には、こちら(https://dl.sony.com/)からダウンロードしてください。
+プラグインは、Neural Network Consoleで動作します。もしNeural Network Consoleをお持ちでない場合には、こちら(https://dl.sony.com/)からダウンロードしてください。
 
 1. このリポジトリからzipファイルをダウンロードします。
 2. PC上でzipファイルを解凍します。
@@ -57,6 +57,7 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
 * **注意**いくつかのプラグインをオフにしたくない場合は、そのままにしておいてください。
 
 4. ダウンロードした**plugins**フォルダをneural_network_console>libs>**plugins **.の同じ場所に置きます。
+5. Neural Network Consoleを再起動してください。
 
 ###  前処理プラグイン
 
@@ -74,3 +75,14 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
 <p align="center">
 <img src="./img/postprocessing.png" width="400px">  
 </p>
+
+## サンプルプロジェクト
+* [Attention branch network](.\samples\xai) resnet-110-attention-branch-network.sdcproj
+* [TracIn](.\samples\xai) TracIn-resnet56.sdcproj
+
+### 最新のサンプルプロジェクトを利用するには
+
+サンプルプロジェクトは、 Neural Network Consoleで動作します。
+1. このリポジトリからzipファイルをダウンロードします。
+2. PC上でzipファイルを解凍します。
+3. ダウンロードした**サンプルプロジェクト**は、どこに置いても構いません。だだし、2バイト文字を含まないフォルダ名にしなければなりません。
