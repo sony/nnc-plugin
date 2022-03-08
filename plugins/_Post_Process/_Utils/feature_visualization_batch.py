@@ -27,27 +27,10 @@ from nnabla.utils import nnabla_pb2
 
 def func(args):
     tmp_dir = os.path.splitext(args.output)[0]
-    input_csv_file_name = os.path.join(tmp_dir, 'input.csv')
     if os.path.exists(args.output):
         os.remove(args.output)
     if not os.path.exists(tmp_dir):
         os.makedirs(tmp_dir)
-
-    # Create input CSV file
-    input_csv = [[], []]
-    if os.path.exists(args.input_data) or ',' not in args.input_data:
-        # File or scaler input
-        input_csv[0].append(args.input_variable)
-        input_csv[1].append(args.input_data)
-    else:
-        # Vector input
-        for i, data in enumerate(args.input_data.split(',')):
-            input_csv[0].append('{}__{}'.format(args.input_variable, i))
-            input_csv[1].append(data)
-
-    with open(input_csv_file_name, 'w', encoding='utf-8') as f:
-        writer = csv.writer(f, lineterminator='\n')
-        writer.writerows(input_csv)
 
     # Copy model to the tmp dir
     model_file = os.path.join(tmp_dir, args.model)
@@ -80,7 +63,7 @@ def func(args):
          '-c',
          model_file,
          '-d',
-         input_csv_file_name,
+         args.input,
          '-o',
          tmp_dir,
          '-f',
@@ -109,10 +92,12 @@ def func(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Feature Visualization\n' +
+        description='Feature Visualization (batch)\n' +
         '\n' +
-        'Visualize intermediate activation of the model with a single piece of data.\n' +
+        'Visualize intermediate activation of the model for all the data contained in the dataset.\n' +
         '', formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument(
+        '-i', '--input', help='path to input csv file (csv) default=output_result.csv', required=True, default='output_result.csv')
     parser.add_argument(
         '-m',
         '--model',
@@ -120,20 +105,13 @@ def main():
         required=True,
         default='results.nnp')
     parser.add_argument(
-        '-v',
-        '--input-variable',
-        help='input variable name (variable) default=x',
-        required=True)
-    parser.add_argument(
-        '-i', '--input-data', help='path to input data (file)', required=True)
-    parser.add_argument(
         '-l', '--layer-name', help='layer name to visualize (text) default=Convolution', required=True)
     parser.add_argument(
         '-o',
         '--output',
-        help='path to output csv file (csv) default=feature_visualization.csv',
+        help='path to output csv file (csv) default=feature_visualization_batch.csv',
         required=True,
-        default='feature_visualization.csv')
+        default='feature_visualization_batch.csv')
     parser.set_defaults(func=func)
 
     args = parser.parse_args()
