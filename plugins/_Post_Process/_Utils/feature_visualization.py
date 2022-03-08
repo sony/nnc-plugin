@@ -65,6 +65,7 @@ def func(args):
                     while len(e.output_variable) > 1:
                         del e.output_variable[1]
                     e.output_variable[0].variable_name = args.layer_name
+                    e.output_variable[0].data_name = args.layer_name
                 edited_nntxt = os.path.join(tmp_dir, name)
                 break
     with open(edited_nntxt, mode='w') as f:
