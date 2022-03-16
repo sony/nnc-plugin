@@ -6,7 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone NNC Plugin
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
@@ -15,8 +17,10 @@ jobs:
 
       - name: Check
         run: |
+          git remote -v
+          git status
           python3 -m pip install autopep8 tqdm
-          python3 tools/scripts/copyright_checker.py --check-only
+          python3 tools/scripts/copyright_checker.py
           bash tools/scripts/check_diff.sh
 
       - name: Upload artifact
