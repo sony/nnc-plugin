@@ -268,7 +268,7 @@ def main():
         train_csv = data_iterator_to_csv(
             path,
             "cifar10_training_shuffle.csv",
-            os.path.join(os.getcwd(), "training"),
+            "./training",
             train_di,
             shuffle=args.label_shuffle,
         )
@@ -276,7 +276,7 @@ def main():
         train_csv = data_iterator_to_csv(
             path,
             "cifar10_training.csv",
-            os.path.join(os.getcwd(), "training"),
+            "./training",
             train_di,
             shuffle=False,
         )
@@ -287,7 +287,7 @@ def main():
     test_csv = data_iterator_to_csv(
         path,
         "cifar10_test.csv",
-        os.path.join(os.getcwd(), "validation"),
+        "./validation",
         validation_di,
         shuffle=False,
     )
