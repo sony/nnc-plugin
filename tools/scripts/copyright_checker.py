@@ -21,7 +21,8 @@ import sys
 from tqdm import tqdm
 from contextlib import contextmanager
 
-_exclude_dirs = ['.git', '.egg', 'cache', '.vscode']
+_exclude_dirs = ['.git', '.egg', 'cache',
+                 '.vscode', 'node_modules', 'dist_electron']
 _exclude_files = [".gitignore", "LICENSE", "NOTICE"]
 _date_extract_regex = re.compile('(\\d{4}-\\d{2}-\\d{2})')
 _shebang = re.compile('#!.+')
@@ -209,11 +210,9 @@ def list_up_files(root_dir, checkers):
 
 
 def main():
-    check_only = '--check-only' in sys.argv
-
     types = {
         "script": ([".py", ".cfg", ".ini", ".sh", ".mk", ".cmake", "CMakeLists.txt", "Dockerfile"],  "#"),
-        "c": ([".c", ".cpp", ".h", ".hpp"], "//"),
+        "c": ([".c", ".cpp", ".h", ".hpp", ".js", ".ts"], "//"),
         "bat": ([".bat"], "REM")}
     checkers = {}
     for k, v in types.items():
@@ -232,7 +231,7 @@ def main():
         with c.read_file(str(fn)):
             old_header = c.extract_file_header()
             if old_header is not None:
-                if new_header == old_header or check_only:
+                if new_header == old_header:
                     continue
             with open(str(fn), "w", encoding='utf-8') as fh:
                 fh.write(c.replace_file_header(old_header, new_header))
