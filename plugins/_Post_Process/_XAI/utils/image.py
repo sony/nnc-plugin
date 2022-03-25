@@ -81,3 +81,11 @@ def get_gray_image(img, percentile=99):
     vmin = np.percentile(ret, 100 - percentile)
     ret = np.clip((ret - vmin) / (vmax - vmin), 0, 1)
     return (ret * 255).astype(np.uint8)
+
+
+def normalize_image(layer):
+    ret = layer.mean(axis=(0, 1))
+    max_v, min_v = np.max(ret), np.min(ret)
+    if max_v != min_v:
+        ret = (ret - min_v) / (max_v - min_v)
+    return ret

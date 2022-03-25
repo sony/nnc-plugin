@@ -26,6 +26,11 @@ def get_num_classes(input_path, label_variable):
     return num_classes
 
 
+def get_dataset_size(input_path):
+    csv_file = np.loadtxt(input_path, dtype=str)
+    return len(csv_file)-1
+
+
 def is_binary_classification(num_classes, output_classes):
     return num_classes != output_classes
 
