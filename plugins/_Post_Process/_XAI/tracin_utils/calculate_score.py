@@ -45,7 +45,6 @@ def load_data(input_path, normalize):
     return iterator, num_iteration
 
 
-<<<<<<< HEAD
 def calculate_ckpt_score(
     data_iterator, num_iteration, image_val, label_val, loss_val, softmax
 ):
@@ -53,13 +52,6 @@ def calculate_ckpt_score(
     ds_idx_list = []
     img_path_list = []
     last_layer_name = list(nn.get_parameters().keys())[-1].split("/")[0]
-=======
-def calculate_ckpt_score(data_iterator, num_iteration, image_val, label_val, loss_val, softmax):
-    ckpt_scores = []
-    ds_idx_list = []
-    img_path_list = []
-    last_layer_name = list(nn.get_parameters().keys())[-1].split('/')[0]
->>>>>>> 53d54ed (added links and change paper link)
     for i in tqdm(range(num_iteration)):
         inputs = data_iterator.next()
         for name, param in nn.get_parameters().items():
@@ -115,10 +107,7 @@ def get_scores(args, data_iterator, num_iteration):
 
     class ForwardConfig:
         pass
-<<<<<<< HEAD
 
-=======
->>>>>>> 53d54ed (added links and change paper link)
     config = ForwardConfig
     info = load.load([args.model_path],
                      prepare_data_iterator=False, batch_size=1)
@@ -132,12 +121,8 @@ def get_scores(args, data_iterator, num_iteration):
     loss_val = categorical_cross_entropy(softmax, label_val)
 
     ckpt_influences, ds_idx_list, img_path_list = calculate_ckpt_score(
-<<<<<<< HEAD
         data_iterator, num_iteration, image_val, label_val, loss_val, softmax
     )
-=======
-        data_iterator, num_iteration, image_val, label_val, loss_val, softmax)
->>>>>>> 53d54ed (added links and change paper link)
 
     ckpt_scores.append(ckpt_influences)
     ds_idx_list_ckpt.append(ds_idx_list)
@@ -165,11 +150,7 @@ def calc_infl(args):
 
     # sort by influence in ascendissng order
     rows = read_csv(args.input_train)
-<<<<<<< HEAD
     rows = add_info_to_csv(rows, results["influence"], "influence", position=0)
-=======
-    rows = add_info_to_csv(rows, results['influence'], 'influence', position=0)
->>>>>>> 53d54ed (added links and change paper link)
     header = rows.pop(0)
     rows = np.array(rows)
     rows = rows[rows[:, 0].astype(float).argsort()[::-1]]
