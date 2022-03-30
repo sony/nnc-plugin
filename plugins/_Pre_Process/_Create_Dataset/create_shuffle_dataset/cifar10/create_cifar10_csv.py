@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -268,7 +268,7 @@ def main():
         train_csv = data_iterator_to_csv(
             path,
             "cifar10_training_shuffle.csv",
-            "./training",
+            os.path.join(os.getcwd(), "training"),
             train_di,
             shuffle=args.label_shuffle,
         )
@@ -276,7 +276,7 @@ def main():
         train_csv = data_iterator_to_csv(
             path,
             "cifar10_training.csv",
-            "./training",
+            os.path.join(os.getcwd(), "training"),
             train_di,
             shuffle=False,
         )
@@ -287,7 +287,7 @@ def main():
     test_csv = data_iterator_to_csv(
         path,
         "cifar10_test.csv",
-        "./validation",
+        os.path.join(os.getcwd(), "validation"),
         validation_di,
         shuffle=False,
     )
