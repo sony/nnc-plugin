@@ -15,11 +15,14 @@
 
 # python -m pip install fastapi uvicorn
 
+import io
 import json
 import os
+import re
 import signal
 import sys
 import time
+import zipfile
 
 from nnabla import logger
 
@@ -38,6 +41,9 @@ def signal_handler(signum, frame):
 def server(args, queue):
     try:
         server_func(args, queue)
+    except Exception as e:
+        logger.log(99, f'Error {type(e)} [{e}]')
+        raise
     finally:
         queue.put(None)
     return True
@@ -64,8 +70,16 @@ def server_func(args, queue):
 
     image = nn.utils.data_source_loader.load_image(args.image)
 
-    nnp_info = load.load(args.model, prepare_data_iterator=False, batch_size=1)
-    nnp = NnpLoader(args.model)
+    def conv_model(model_string, bytesio):
+        new = []
+        for l in model_string.splitlines():
+            l = l.rstrip().decode()
+            l = re.sub(r'([^\\])\\([^\\])', r'\1\\\\\2', l)
+            bytesio.write((l + '\n').encode())
+
+    model = args.model
+    nnp_info = load.load(model, prepare_data_iterator=False, batch_size=1)
+    nnp = NnpLoader(model)
 
     callback = NnpNetworkPass()
     callback.set_batch_normalization_batch_stat_all(False)
@@ -247,12 +261,12 @@ def main():
     #     help='Specify port number',
     #     default=0)
 
-    parser.add_argument(
-        '-e',
-        '--editor',
-        type=str,
-        help='Path to editor executable.',
-        default=None)
+    # parser.add_argument(
+    #     '-e',
+    #     '--editor',
+    #     type=str,
+    #     help='Path to editor executable.',
+    #     default=None)
 
     args = parser.parse_args()
 
@@ -272,8 +286,8 @@ def main():
         editor = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                               'attention_editor_binary',
                               'attention-editor.exe')
-        if args.editor is not None:
-            editor = args.editor
+        # if args.editor is not None:
+        #     editor = args.editor
 
         os.environ['AE_SERVICE_ADDR'] = f"http://{settings['host']}:{settings['port']}/"
         proc = subprocess.run([editor])

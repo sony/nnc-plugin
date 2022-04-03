@@ -1,12 +1,12 @@
-Utils/Attention Editor
-~~~~~~~~~~~~~~~~~~~~~~
+XAI/Attention Editor
+~~~~~~~~~~~~~~~~~~~~
 
 Attention Branch NetworkにおけるAttention Mapをインタラクティブに編集して
 推論結果がどのように変化するのかを確認することができます。
 
 NNCに同梱されている `resnet-110-attention-branch-network.sdcproj` プロジェクトにて簡単に試すことが可能です。
 
-推論結果の画像を左クリックして、Plugin → Utils → Attention Editor(image)を選択するとエディタが起動します。
+推論結果の画像を左クリックして、Plugin →XAs → Attention Editor(image)を選択するとエディタが起動します。
 左側のペインでAttention Mapの修正を行い、右側のペインで推論結果を確認することができます。
 
 .. image:: figures/AttentionEditor.png

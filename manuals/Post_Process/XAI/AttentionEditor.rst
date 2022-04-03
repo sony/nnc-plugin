@@ -1,5 +1,5 @@
-Utils/Attention Editor
-~~~~~~~~~~~~~~~~~~~~~~
+XAI/Attention Editor
+~~~~~~~~~~~~~~~~~~~~
 
 Interactively editing the Attention Map on the Attention Branch Network.
 You can see how the inference results change.
@@ -9,7 +9,7 @@ You can try it easily with the `resnet -110 attention-branch-network.sdcproj` pr
 that included in NNC.
 
 
-Left-click on the inference result image and select Plugin - Utils - Attention Editor (image) to launch the editor.
+Left-click on the inference result image and select Plugin - XAI - Attention Editor (image) to launch the editor.
 You can modify the Attention Map in the left pane and view the inference results in the right pane.
 
 .. image:: figures/AttentionEditor.png
