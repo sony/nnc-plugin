@@ -7549,14 +7549,14 @@ Num=2
 MainIndex=0
 [Dataset_0]
 Name=Training
-URI=C:\Users\ubiquser\Desktop\nnc_youtube\neural_network_console\libs\plugins\_Pre_Process\_Create_Dataset\create_shuffle_dataset\cifar10\cifar10_training.csv
+URI={SDCPATH}samples\sample_dataset\CIFAR10\cifar10_training.csv
 Shuffle=1
 EnableCache=0
 ImageNormalization=1
 NumData=50000
 [Dataset_1]
 Name=Validation
-URI=C:\Users\ubiquser\Desktop\nnc_youtube\neural_network_console\libs\plugins\_Pre_Process\_Create_Dataset\create_shuffle_dataset\cifar10\cifar10_test.csv
+URI={SDCPATH}samples\sample_dataset\CIFAR10\cifar10_test.csv
 Shuffle=1
 EnableCache=0
 ImageNormalization=1
