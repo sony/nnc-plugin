@@ -65,8 +65,8 @@ The plugins run on Neural Network Console. If you do not have Neural Network Con
 </p>
 
 ## Sample projects
-* [Attention branch network](./samples/xai) resnet-110-attention-branch-network.sdcproj
-* [TracIn](./samples/xai) TracIn-resnet56.sdcproj
+* [Attention branch network](./samples/xai) resnet110-attention-branch-network.sdcproj
+* [TracIn](./samples/xai) resnet56-tracin.sdcproj
 
 ### How to use the latest sample projects
 The sample projects run on Neural Network Console. 

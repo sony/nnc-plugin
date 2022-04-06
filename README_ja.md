@@ -77,8 +77,8 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
 </p>
 
 ## サンプルプロジェクト
-* [Attention branch network](.\samples\xai\README.md) resnet-110-attention-branch-network.sdcproj
-* [TracIn](.\samples\xai\README.md) TracIn-resnet56.sdcproj
+* [Attention branch network](.\samples\xai\README.md) resnet110-attention-branch-network.sdcproj
+* [TracIn](.\samples\xai\README.md) resnet56-tracin.sdcproj
 
 ### 最新のサンプルプロジェクトを利用するには
 
