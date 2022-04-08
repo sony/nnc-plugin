@@ -33,6 +33,7 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
     * [Tile images](./manuals/Post_Process/Visualization/TileImages.rst)
 
 * eXplainable AI (XAI)
+    * [Attention Editor](./manuals/Post_Process/XAI/AttentionEditor.rst)
     * [SGD influence](./manuals/Post_Process/XAI/SGDInfluence.rst)
     * [Influence Functions](./manuals/Post_Process/XAI/InfluenceFunctions.rst)
     * [Face evaluation](./manuals/Post_Process/XAI/FaceEvaluation.rst)

@@ -23,7 +23,6 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
 
 ###  後処理プラグイン
 * ユーティリティ
-
     * [Cross tabulation](./manuals/ja/Post_Process/Utils/CrossTabulation.rst)
     * [CSV to wav](./manuals/ja/Post_Process/Utils/CSVtoWAV.rst)
     * [Inference](./manuals/ja/Post_Process/Utils/Inference.rst)
@@ -38,6 +37,7 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
     * [Tile images](./manuals/ja/Post_Process/Visualization/TileImages.rst)
 
 * 説明可能なAI (XAI)
+    * [Attention Editor](./manuals/ja/Post_Process/XAI/AttentionEditor.rst)
     * [SGD influence](./manuals/ja/Post_Process/XAI/SGDInfluence.rst)
     * [Influence Functions](./manuals/ja/Post_Process/XAI/InfluenceFunctions.rst)
     * [Face evaluation](./manuals/ja/Post_Process/XAI/FaceEvaluation.rst)
