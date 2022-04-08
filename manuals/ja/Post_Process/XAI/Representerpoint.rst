@@ -1,4 +1,4 @@
-I/RepresenterPointSelection
+XAI/RepresenterPointSelection
 ~~~~~~~~~
 Representer Point Selectionと呼ばれる手法を用い，テストデータの予測において訓練データが与えた影響を算出します。
 あるテストデータの推論において上位(または下位)k個の最も良い(悪い)影響を与えた訓練サンプルを提示します。
@@ -9,7 +9,7 @@ Representer Point Selection for Explaining Deep Neural Networks
    - https://proceedings.neurips.cc/paper/2018/file/8a7129b8f3edd95b7d969dfc2c8e9d9d-Paper.pdf
 
 .. list-table::
-      :widths: 30 70
+   :widths: 30 70
    :class: longtable
 
    * - top_k
@@ -46,7 +46,7 @@ Output Information
 本プラグインの実行結果は 'output' で指定した名前のCSVファイルとして出力されます。 CSVファイル内の各カラムに関しての情報は以下の通りです
 
 .. list-table::
-      :widths: 30 70
+   :widths: 30 70
    :class: longtable
 
    * - test_sample
