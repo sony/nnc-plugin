@@ -42,7 +42,8 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
     * [SHAP](./manuals/Post_Process/XAI/SHAP.rst)
     * [Smooth Grad](./manuals/Post_Process/XAI/SmoothGrad.rst)
     * [TracIn](./manuals/Post_Process/XAI/TracIn.rst)
-
+    * [RepresenterPoint](./manuals/ja/Post_Process/XAI/Representerpoint.rst)
+    
 ## How to use the latest plugins
 The plugins run on Neural Network Console. If you do not have Neural Network Console, please download from here (https://dl.sony.com/).
 1. Download the zip files from this repository. 
@@ -68,6 +69,7 @@ The plugins run on Neural Network Console. If you do not have Neural Network Con
 ## Sample projects
 * [Attention branch network](./samples/xai) resnet110-attention-branch-network.sdcproj
 * [TracIn](./samples/xai) resnet56-tracin.sdcproj
+* [RepresenterPoint](.\samples\xai\README.md) vgg16-representer-point.sdcproj
 
 ### How to use the latest sample projects
 The sample projects run on Neural Network Console. 
