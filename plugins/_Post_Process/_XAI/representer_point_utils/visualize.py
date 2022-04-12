@@ -52,6 +52,11 @@ def visuallize_infl(args, info):
         val_label = hf["label"]["test"][:]
         val_input_path = hf["input"]["test"][:]
 
+    if isinstance(train_input_path[0], bytes):
+        train_input_path = [p.decode() for p in train_input_path]
+    if isinstance(val_input_path[0], bytes):
+        val_input_path = [p.decode() for p in val_input_path]
+
     weight_matrix = np.load(os.path.join(
         args.monitor_path, "weight_matrix.npy"))
 
