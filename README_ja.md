@@ -46,6 +46,8 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
     * [SHAP](./manuals/ja/Post_Process/XAI/SHAP.rst)
     * [Smooth Grad](./manuals/ja/Post_Process/XAI/SmoothGrad.rst)
     * [TracIn](./manuals/ja/Post_Process/XAI/TracIn.rst)
+    * [RepresenterPoint](./manuals/ja/Post_Process/XAI/Representerpoint.rst)
+
 
 ## 最新のプラグインを利用するには
 
@@ -79,6 +81,7 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
 ## サンプルプロジェクト
 * [Attention branch network](.\samples\xai\README.md) resnet110-attention-branch-network.sdcproj
 * [TracIn](.\samples\xai\README.md) resnet56-tracin.sdcproj
+* [RepresenterPoint](.\samples\xai\README.md) vgg16-representer-point.sdcproj
 
 ### 最新のサンプルプロジェクトを利用するには
 
