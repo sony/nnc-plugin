@@ -42,8 +42,13 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
     * [SHAP](./manuals/Post_Process/XAI/SHAP.rst)
     * [Smooth Grad](./manuals/Post_Process/XAI/SmoothGrad.rst)
     * [TracIn](./manuals/Post_Process/XAI/TracIn.rst)
+<<<<<<< HEAD
     * [RepresenterPoint](./manuals/ja/Post_Process/XAI/Representerpoint.rst)
     
+=======
+    * [Attention Map Visualization](manuals/Post_Process/XAI/AttentionMapVisualization.rst)
+
+>>>>>>> 0898e57 (fix readme)
 ## How to use the latest plugins
 The plugins run on Neural Network Console. If you do not have Neural Network Console, please download from here (https://dl.sony.com/).
 1. Download the zip files from this repository. 
