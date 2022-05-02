@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -249,7 +249,6 @@ class Config:
         self.need_evaluate = True
 
     def _init_for_train_infl(self, args):
-        self.seed = args.seed
         self.train_csv = args.input_train
         self.val_csv = args.input_val
         self.infl_filepath = args.output
