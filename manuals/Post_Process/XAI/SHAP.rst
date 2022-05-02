@@ -145,6 +145,9 @@ Input Information
    * - output
      - Specify the name of the CSV file to output the inference results to.
 
+   * - memory_limit
+     - Specify the limit of memory based on which the process is stopped before memory error happens after a long period during plugin execution. The process stops when dataset size is expected to exceed the limit. By default, the limit value is speculated by calculation.
+
 Output Information
 ===================
 
@@ -195,6 +198,9 @@ Input Information
 
    * - output
      - Specify the name of the CSV file to output the inference results to.
+
+   * - memory_limit
+     - Specify the limit of memory based on which the process is stopped before memory error happens after a long period during plugin execution. The process stops when dataset size is expected to exceed the limit. By default, the limit value is speculated by calculation.
 
 Output Information
 ===================

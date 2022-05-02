@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,18 +15,38 @@
 import numpy as np
 from scipy.special import binom
 import copy
+import psutil
 import itertools
 from nnabla import logger
 import nnabla.utils.load as load
+
+
+def check_executable(data: np.array, memory_limit: int):
+    if memory_limit is None:
+        mem_limit = calc_memory_limit(memory_limit)
+    else:
+        mem_limit = memory_limit
+    is_executable_size = check_datasize(data, std=mem_limit)
+    if not is_executable_size:
+        raise Exception(
+            f'dataset size of {data.shape} might be too large to execute shap computation.')
+
+
+def calc_memory_limit(mem_limit):
+    if mem_limit is None:
+        mem_limit = psutil.virtual_memory().available * 2 // 3
+        gib_mem_limit = mem_limit / (1024 ** 3)
+    logger.log(99, f'Current memory limit is {gib_mem_limit} gib')
+    return gib_mem_limit
 
 
 def check_datasize(data: np.array, std: int = 10):
     num_samples, num_features = data.shape
     m = 2**11 + 2 * num_features
     bites_per_element = 8
-    estimated_size_gb = (num_samples * num_features * m) * \
+    estimated_size_gib = (num_samples * num_features * m) * \
         bites_per_element / (1024**3)
-    return estimated_size_gb < std
+    return estimated_size_gib < std
 
 
 class Ridge:
