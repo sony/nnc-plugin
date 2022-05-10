@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -55,10 +55,10 @@ def create_dataset(args, tokenizer):
             99,
             '{} words are found in the input dataset.'.format(
                 len(count)))
-        count = [x for x in count if x[1] >= args.min_occurences]
+        count = [x for x in count if x[1] >= args.min_occurrences]
         logger.log(
             99, '{} words have appeared more than {} times.'.format(
-                len(count), args.min_occurences))
+                len(count), args.min_occurrences))
         count = list(sorted(count, key=lambda x: x[1], reverse=True))
         count = count[: args.max_words - 2]
         dictionary = [[0, '(EOS)'], [1, '(others)']]

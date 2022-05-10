@@ -46,13 +46,13 @@ The CSV file input by this plugin has almost the same format as the dataset CSV 
         
         Other words are combined into one word called “Others”.
 
-   * - min-occurences
+   * - min-occurrences
      -
         Specify the minimum frequency of occurrence of words to index.
         
-        Of the words contained in the input CSV file, the words that occur less than min-occurences are combined into one word called “Others”.
+        Of the words contained in the input CSV file, the words that occur less than min-occurrences are combined into one word called “Others”.
         
-        The final indexed number of words will be the smaller of the numbers determined by max-words and min-occurences.
+        The final indexed number of words will be the smaller of the numbers determined by max-words and min-occurrences.
 
    * - normalize
      - Performs normalization processing to unify the same characters with different character codes.
@@ -104,7 +104,7 @@ The CSV file input by this plugin has almost the same format as the dataset CSV 
 
 The text classification dataset created using this plugin can be trained by using the 20newsgroups_classification sample project.
 
-For training, set the Size property of Input layer to the value specified by max-length, set NumClass property of Embed layer to number of words determined by max-words or m in-occurences, set OutShape property of Affine layer to number of classification classes, respectively.
+For training, set the Size property of Input layer to the value specified by max-length, set NumClass property of Embed layer to number of words determined by max-words or m in-occurrences, set OutShape property of Affine layer to number of classification classes, respectively.
 
 
 Simple Japanese Text Classification
