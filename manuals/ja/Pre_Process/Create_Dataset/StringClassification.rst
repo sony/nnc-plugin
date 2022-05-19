@@ -48,13 +48,13 @@ String Classification
         
         その他の文字はOthersという1つの文字にまとめられます
 
-   * - min-occurences
+   * - min-occurrences
      -
         Index化する文字の最小出現頻度を指定します
         
-        入力CSVファイルに含まれる文字のうち、min-occurencesより小さい出現回数であった文字はOthersという1つの文字にまとめられます
+        入力CSVファイルに含まれる文字のうち、min-occurrencesより小さい出現回数であった文字はOthersという1つの文字にまとめられます
         
-        最終的にIndex化される文字の数は、max-characters、min-occurencesによって決まる数のうちの小さい方になります
+        最終的にIndex化される文字の数は、max-characters、min-occurrencesによって決まる数のうちの小さい方になります
 
    * - normalize
      - 文字コードの異なる同じ文字を統一する正規化処理を行います
