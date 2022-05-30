@@ -21,6 +21,7 @@ import collections
 from nnabla import logger
 import nnabla.utils.load as load
 from nnabla.utils.cli.utility import let_data_to_variable
+from utils.file import remove_comment_cols
 
 
 def func(args):
@@ -58,12 +59,15 @@ def func(args):
     with open(args.input, 'r') as f:
         reader = csv.reader(f)
         _ = next(reader)
-        samples = np.array([[float(r) for r in row] for row in reader])[:, :-1]
+        samples = [[float(r) for r in row] for row in reader]
+    remove_comment_cols(_, samples)
+    samples = np.array(samples)[:, :-1]
     with open(args.train, 'r') as f:
         reader = csv.reader(f)
         feature_names = next(reader)[:-1]
-        train = np.array([[float(r) for r in row] for row in reader])[:, :-1]
-
+        train = [[float(r) for r in row] for row in reader]
+    remove_comment_cols(feature_names, train)
+    train = np.array(train)[:, :-1]
     categorical_features = ''.join(args.categorical.split())
     categorical_features = [
         int(x) for x in categorical_features.split(',') if x != '']

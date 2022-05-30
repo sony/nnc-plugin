@@ -16,6 +16,12 @@ import csv
 import numpy as np
 from shutil import rmtree
 
+def remove_comment_cols(header, rows):
+    for col_index in reversed(range(len(header))):
+        if header[col_index][0] == '#':
+            del header[col_index]
+            for row in rows:
+                del row[col_index]
 
 def add_info_to_csv(rows, vals_to_add, column_name, position=-1):
     header = rows.pop(0)
