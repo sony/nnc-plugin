@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 import os
 import pathlib
 import re
@@ -203,7 +204,7 @@ def list_up_files(root_dir, checkers):
                     break
             if f.suffix == '':
                 if os.path.basename(str(f)) not in _exclude_files:
-                    c = checkers['script']
+                    c = copy.deepcopy(checkers['script'])
                     c.type = 'unknown'
                     files.append((f, c))
     return files
@@ -223,13 +224,13 @@ def main():
 
     # for fn, c in tqdm(files, ascii=True, ncols=80):
     for fn, c in files:
-        if c.type == 'unknown':
-            if not c.has_shebang():
-                continue
-        new_header = c.create_file_header(fn)
-        if new_header is None:
-            continue
         with c.read_file(str(fn)):
+            if c.type == 'unknown':
+                if not c.has_shebang():
+                    continue
+            new_header = c.create_file_header(fn)
+            if new_header is None:
+                continue
             old_header = c.extract_file_header()
             if old_header is not None:
                 if new_header == old_header:

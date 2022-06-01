@@ -48,13 +48,13 @@ Simple Text Classification
         
         その他の単語はOthersという1つの単語にまとめられます
 
-   * - min-occurences
+   * - min-occurrences
      -
         Index化する単語の最小出現頻度を指定します
         
-        入力CSVファイルに含まれる単語のうち、min-occurencesより小さい出現回数であった単語はOthersという1つの単語にまとめられます
+        入力CSVファイルに含まれる単語のうち、min-occurrencesより小さい出現回数であった単語はOthersという1つの単語にまとめられます
         
-        最終的にIndex化される単語の数は、max-words、min-occurencesによって決まる数のうちの小さい方になります
+        最終的にIndex化される単語の数は、max-words、min-occurrencesによって決まる数のうちの小さい方になります
 
    * - normalize
      - 文字コードの異なる同じ文字を統一する正規化処理を行います
@@ -104,7 +104,7 @@ Simple Text Classification
 
 **ご参考**
 
-本プラグインを用いて作成した文章分類データセットは、20newsgroups_classificationサンプルプロジェクトを用い、InputレイヤーのSizeプロパティにmax_lengthで指定した値を、EmbedレイヤーのNumClassプロパティにmax_wordsあるいはmin_occurencesにより決まる単語数を、AffineレイヤーのOutShapeプロパティに分類クラス数を指定することでひとまず学習を試行することができます。
+本プラグインを用いて作成した文章分類データセットは、20newsgroups_classificationサンプルプロジェクトを用い、InputレイヤーのSizeプロパティにmax_lengthで指定した値を、EmbedレイヤーのNumClassプロパティにmax_wordsあるいはmin_occurrencesにより決まる単語数を、AffineレイヤーのOutShapeプロパティに分類クラス数を指定することでひとまず学習を試行することができます。
 
 Simple Japanese Text Classification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

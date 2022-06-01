@@ -38,7 +38,8 @@ def func(args):
     nn.set_default_context(ctx)
     ensure_dir(save_dir)
     seeds = [i for i in range(args.n_trials)]
-    base_infl_filename, ext = os.path.splitext(file_dir_dict['infl_filename'])
+    base_infl_filename, ext = os.path.splitext(
+        os.path.basename(file_dir_dict['infl_filename']))
     save_dir = file_dir_dict['save_dir']
     infl_result_paths = []
     try:
@@ -57,7 +58,7 @@ def func(args):
         infl, header = calc_result_mean(infl_result_paths)
         # save
         data_type = 'object,int,float,int'
-        save_to_csv(filename=f'{base_infl_filename}{ext}', header=header,
+        save_to_csv(filename=file_dir_dict['infl_filename'], header=header,
                     list_to_save=infl, data_type=data_type)
         logger.log(99, 'SGD influence completed successfully.')
     except KeyboardInterrupt:

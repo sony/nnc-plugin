@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -62,9 +62,8 @@ def compute_gradient(bs_adjuster, grad_model, solver, dataset, batch_size, idx_l
     return u
 
 
-def infl_sgd(cfg):
+def infl_sgd(cfg, seed):
     device_id = cfg.device_id
-    seed = cfg.seed
     batch_size = cfg.batch_size
     bsa = cfg.bs_adjuster
     lr = cfg.lr
@@ -162,10 +161,10 @@ def infl_sgd(cfg):
                 u[key].d -= lr * p.g / len(X)
     # save
     # sort by influence score
-    infl_list = [[k] + [v] for k, v in infl_dict.items()]
+    infl_list = [[k] + [v] + [k] for k, v in infl_dict.items()]
     infl_list = sorted(infl_list, key=lambda x: (x[-1]))
-    data_type = 'int,float'
-    header = ['index', 'influence']
+    data_type = 'int,float,int'
+    header = ['index', 'influence', 'datasource_index']
     save_to_csv(filename=infl_filename, header=header,
                 list_to_save=infl_list, data_type=data_type)
 

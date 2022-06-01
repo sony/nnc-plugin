@@ -48,13 +48,13 @@ The CSV file input by this plugin has almost the same format as the dataset CSV 
         
         Other characters are combined into one character called “Others”.
 
-   * - min-occurences
+   * - min-occurrences
      -
         Specify the minimum frequency of occurrence of characters to index.
         
-        Of the characters contained in the input CSV file, the characters that occur less than min-occurences are combined into one character called “Others”.
+        Of the characters contained in the input CSV file, the characters that occur less than min-occurrences are combined into one character called “Others”.
         
-        The final indexed number of characters will be the smaller of the numbers determined by max-characters and min-occurences.
+        The final indexed number of characters will be the smaller of the numbers determined by max-characters and min-occurrences.
 
    * - normalize
      - Performs normalization processing to unify the same characters with different character codes.

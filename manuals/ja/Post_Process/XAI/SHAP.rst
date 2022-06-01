@@ -176,6 +176,9 @@ Input Information
    * - output
      - 結果を出力するCSVファイルのファイル名を指定します。デフォルトでは shap_tabular.csv です。
 
+   * - memory_limit
+     - 利用可能なmemoryの上限を設定します。データセットサイズから推測される必要なmemory値を推測し、それが上限を超える場合には処理を事前に止めることで長時間経過後の処理中断を防ぎます。デフォルトでは 上限値を計算で推測します。
+
 Output Information
 ===================
 
@@ -225,6 +228,9 @@ Input Information
 
    * - output
      - 結果を出力するCSVファイルのファイル名を指定します。デフォルトでは shap_tabular.csv です。
+
+   * - memory_limit
+     - 利用可能なmemoryの上限を設定します。データセットサイズから推測される必要なmemory値を推測し、それが上限を超える場合には処理を事前に止めることで長時間経過後の処理中断を防ぎます。デフォルトでは 上限値を計算で推測します。
 
 Output Information
 ===================
