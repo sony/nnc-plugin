@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import os
-import math
 import numpy as np
 from tqdm import tqdm
 import skimage.segmentation
@@ -22,37 +21,16 @@ import nnabla.utils.load as load
 from nnabla.utils.image_utils import imread, imsave
 from nnabla.utils.cli.utility import let_data_to_variable
 from nnabla.utils.data_iterator import data_iterator_csv_dataset
-import nnabla as nn
-import nnabla.functions as F
-import nnabla.parametric_functions as PF
-import nnabla.solvers as S
+from sklearn.linear_model import Ridge
 
 
-def ridge(dataset):
-    import nnabla_ext.cpu
-    ctx = nnabla_ext.cpu.context()
-    with nn.context_scope(ctx):
-        dataset = np.array(dataset)
-        nn.clear_parameters()
-        x = nn.Variable((int(math.sqrt(dataset.shape[0])), dataset[0][0].size))
-        t = nn.Variable((x.shape[0], 1))
-        y = PF.affine(x, 1, name='affine')
-        loss = F.squared_error(y, t)
-        mean_loss = F.mean(loss)
-
-        solver = S.Momentum()
-        solver.set_parameters(nn.get_parameters())
-        for iter in range(100 * int(math.sqrt(dataset.shape[0]))):  # 100 epoch
-            np.random.shuffle(dataset)
-            x.d = np.stack(dataset[:x.shape[0], 0]).reshape(x.shape)
-            t.d = np.stack(dataset[:x.shape[0], 1]).reshape(t.shape)
-            solver.zero_grad()
-            mean_loss.forward()
-            mean_loss.backward()
-            solver.weight_decay(0.01)
-            solver.update()
-
-    return nn.get_parameters()['affine/affine/W'].d.flatten()
+def ridge(dataset, alpha=1.0):
+    X = [dataset[i][0] for i in range(len(dataset))]
+    y = [dataset[i][1] for i in range(len(dataset))]
+    ridge = Ridge(alpha=alpha)
+    ridge.fit(X, y)
+    weight = ridge.coef_
+    return weight
 
 
 def lime_func(args):
@@ -123,6 +101,7 @@ def lime_func(args):
             executor.forward_target.forward(clear_buffer=True)
 
             for m, probability in zip(mask, output_variable.variable_instance.d):
+                m = m.astype(np.int)
                 mask_and_result.append([m, probability[args.class_index]])
 
             pbar.update(x.shape[0])
