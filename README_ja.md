@@ -50,7 +50,24 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
 
 * 公平性
     * [CV Score](./manuals/ja/Post_Process/Fairness/calders_verwer_score.rst)
+<<<<<<< HEAD
     * [Reweighing](./manuals/ja/Post_Process/Fairness/Reweighing.rst)
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> e2aed67 (update fairness order)
+    * [Demogrphic Parity](./manuals/ja/Post_Process/Fairness/demographic_parity.rst)
+    * [Disparate Impact](./manuals/ja/Post_Process/Fairness/disparate_impact.rst)
+    * [Equal Opportunity](./manuals/ja/Post_Process/Fairness/equal_opportunity.rst)
+    * [Equalised Odds](./manuals/ja/Post_Process/Fairness/equalised_odd.rst)
+    * [Theil Index](./manuals/ja/Post_Process/Fairness/theil_index.rst)
+<<<<<<< HEAD
+>>>>>>> 42d7dec (update fairness threshold descriptions)
+=======
+    
+    * [Reweighing](./manuals/ja/Post_Process/Fairness/Reweighing.rst)
+
+>>>>>>> e2aed67 (update fairness order)
 
 ## 最新のプラグインを利用するには
 
