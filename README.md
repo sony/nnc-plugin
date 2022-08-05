@@ -45,6 +45,8 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
     * [RepresenterPoint](./manuals/ja/Post_Process/XAI/Representerpoint.rst)
     * [Attention Map Visualization](./manuals/Post_Process/XAI/AttentionMapVisualization.rst)
 
+* Fairness
+    * [CV Score](./manuals/Post_Process/Fairness/calders_verwer_score.rst)
 
 ## How to use the latest plugins
 The plugins run on Neural Network Console. If you do not have Neural Network Console, please download from here (https://dl.sony.com/).
@@ -69,9 +71,13 @@ The plugins run on Neural Network Console. If you do not have Neural Network Con
 </p>
 
 ## Sample projects
+### XAI
 * [Attention branch network](./samples/xai) resnet110-attention-branch-network.sdcproj
 * [TracIn](./samples/xai) resnet56-tracin.sdcproj
 * [RepresenterPoint](.\samples\xai\README.md) vgg16-representer-point.sdcproj
+
+### Fairness
+* [Prejudice Remover Regularizer](./samples/fairness/prejudice-remover-regularizer/README.md) prejudice_remover_regularizer.sdcproj
 
 ### How to use the latest sample projects
 The sample projects run on Neural Network Console. 

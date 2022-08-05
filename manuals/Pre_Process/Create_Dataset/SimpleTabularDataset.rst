@@ -59,6 +59,12 @@ This plugin converts multiple explanatory variables contained in tabular data in
 
    * - objective-variables
      - Specifiy the name of each column in the original CSV file to use as the objective variable.
+     
+   * - sensitive-variables
+     -
+        Specifiy the name of each column in the original CSV file to use as the sensitive/protected variable (an attribute that partitions a population into groups with parity) , separated by commas.
+        
+        If nothing is specified, all columns except those specified by exclude-variables and objective-variables will be used as explanatory variables.
 
    * - standardize
      - Specify whether to standardize the value of the numeric attribute of the original CSV file to mean 0 variance 1.

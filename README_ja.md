@@ -48,6 +48,9 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
     * [TracIn](./manuals/ja/Post_Process/XAI/TracIn.rst)
     * [RepresenterPoint](./manuals/ja/Post_Process/XAI/Representerpoint.rst)
 
+* 公平性
+    * [CV Score](./manuals/ja/Post_Process/Fairness/calders_verwer_score.rst)
+
 
 ## 最新のプラグインを利用するには
 
@@ -79,9 +82,13 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
 </p>
 
 ## サンプルプロジェクト
-* [Attention branch network](.\samples\xai\README.md) resnet110-attention-branch-network.sdcproj
-* [TracIn](.\samples\xai\README.md) resnet56-tracin.sdcproj
+### 説明可能なAI (XAI)
+* [Attention branch network](./samples/xai) resnet110-attention-branch-network.sdcproj
+* [TracIn](./samples/xai) resnet56-tracin.sdcproj
 * [RepresenterPoint](.\samples\xai\README.md) vgg16-representer-point.sdcproj
+
+### 公平性
+* [Prejudice Remover Regularizer](./samples/fairness/prejudice-remover-regularizer/README_ja.md) prejudice_remover_regularizer.sdcproj
 
 ### 最新のサンプルプロジェクトを利用するには
 
