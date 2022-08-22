@@ -19,7 +19,6 @@ import tqdm
 import numpy as np
 from PIL import Image, ImageOps
 from nnabla.utils.image_utils import imresize, imsave
-
 from nnabla.logger import logger
 from nnabla.utils.data_source_loader import download
 
