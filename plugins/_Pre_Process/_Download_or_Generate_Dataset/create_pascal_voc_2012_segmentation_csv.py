@@ -43,7 +43,7 @@ def convert_image(args):
         if len(im.shape) == 3:
             pad = pad + ((0, 0),)
         im = np.pad(im, pad, 'constant', constant_values=0)
-        assert(im.shape[0] == 500 and im.shape[1] == 500)
+        assert (im.shape[0] == 500 and im.shape[1] == 500)
 
         return im
 
@@ -58,17 +58,17 @@ def convert_image(args):
             "VOCdevkit/VOC2012/JPEGImages/" + img_id + ".jpg")
         with tar_file.extractfile(img_file_info) as f:
             img = np.asarray(Image.open(f))
-        assert(len(img.shape) == 3)
-        assert(img.shape[2] == 3)
-        assert(img.shape[0] <= 500 and img.shape[1] <= 500)
+        assert (len(img.shape) == 3)
+        assert (img.shape[2] == 3)
+        assert (img.shape[0] <= 500 and img.shape[1] <= 500)
 
         # open source label
         label_file_info = tar_file.getmember(
             "VOCdevkit/VOC2012/SegmentationClass/" + img_id + ".png")
         with tar_file.extractfile(label_file_info) as f:
             label = np.asarray(Image.open(f))
-        assert(len(label.shape) == 2)
-        assert(label.shape[0] <= 500 and label.shape[1] <= 500)
+        assert (len(label.shape) == 2)
+        assert (label.shape[0] <= 500 and label.shape[1] <= 500)
 
         # save 500px image
         img = pad_image(img)

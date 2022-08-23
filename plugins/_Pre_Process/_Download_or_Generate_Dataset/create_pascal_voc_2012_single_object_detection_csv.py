@@ -49,7 +49,7 @@ def pad_image(im):
     if len(im.shape) == 3:
         pad = pad + ((0, 0),)
     im = np.pad(im, pad, 'constant', constant_values=0)
-    assert(im.shape[0] == 500 and im.shape[1] == 500)
+    assert (im.shape[0] == 500 and im.shape[1] == 500)
 
     return im, pad
 
@@ -98,9 +98,9 @@ def convert_image_and_create_csv(tar_file, img_ids, resolution, target_dir, csv_
                     "VOCdevkit/VOC2012/JPEGImages/" + img_id + ".jpg")
                 with tar_file.extractfile(img_file_info) as f:
                     img = np.asarray(Image.open(f))
-                assert(len(img.shape) == 3)
-                assert(img.shape[2] == 3)
-                assert(img.shape[0] <= 500 and img.shape[1] <= 500)
+                assert (len(img.shape) == 3)
+                assert (img.shape[2] == 3)
+                assert (img.shape[0] <= 500 and img.shape[1] <= 500)
 
                 # Image
                 img, pad = pad_image(img)
