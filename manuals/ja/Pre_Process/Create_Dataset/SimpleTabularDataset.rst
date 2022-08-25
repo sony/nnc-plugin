@@ -65,6 +65,11 @@ Simple Tabular Dataset
    * - objective-variables
      - 元のCSVファイルの各列の名前のうち、目的変数として使用する列の名前を指定します
 
+   * - sensitive-variables
+     - 元のCSVファイルの各列の名前のうち、センシティブ/保護された変数として使用する列の名前をカンマ区切りで指定します (母集団を公正なグループに分割する属性)
+       
+       何も指定しない場合、exclude-variablesとobjective-variablesで指定する以外の全ての列が説明変数として利用されます
+
    * - standardize
      - 元のCSVファイルの数値属性の値を平均0分散1に標準化するかどうかを指定します
 

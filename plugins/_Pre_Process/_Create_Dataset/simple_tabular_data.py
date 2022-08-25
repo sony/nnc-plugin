@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -66,17 +66,19 @@ def func(args):
     include_cols = enum_cols('include-variables', args.include_variables)
     exclude_cols = enum_cols('exclude-variables', args.exclude_variables)
     objective_cols = enum_cols('objective-variables', args.objective_variables)
+    sensitive_cols = enum_cols('sensitive-variables', args.sensitive_variables)
 
     if len(include_cols):
         explanatory_cols = include_cols
     else:
         explanatory_cols = copy.deepcopy(in_header)
-        for ext_col in comment_cols + exclude_cols + objective_cols:
+        for ext_col in comment_cols + exclude_cols + objective_cols + sensitive_cols:
             if ext_col in explanatory_cols:
                 explanatory_cols.remove(ext_col)
 
     logger.log(99, 'Explanatory Cols : {}'.format(explanatory_cols))
     logger.log(99, 'Objective Cols : {}'.format(objective_cols))
+    logger.log(99, 'Sensitive Cols : {}'.format(sensitive_cols))
 
     # Prepare output table
     out_header = []
@@ -110,9 +112,11 @@ def func(args):
         return True, result, with_value
 
     col_index = 0
-    for col in explanatory_cols + objective_cols:
-        variable_name = 'y' if col in objective_cols else 'x'
+    for col in explanatory_cols + objective_cols + sensitive_cols:
+        variable_name = 'y' if col in objective_cols else 'z' if col in sensitive_cols else 'x'
         if len(objective_cols) and objective_cols[0] == col:
+            col_index = 0
+        if len(sensitive_cols) and sensitive_cols[0] == col:
             col_index = 0
 
         values = extract_col(col)
@@ -197,6 +201,13 @@ def func(args):
                         logger.critical(
                             'Unknown category {} found in {}, index {}.'.format(
                                 values[i], col, i))
+            elif col in sensitive_cols:
+                out_header.extend(['z__{}:{}={}'.format(
+                    j + col_index, col, category) for j, category in enumerate(categories)])
+                col_index += len(categories)
+                for i in range(len(in_table)):
+                    out_table[i].extend(
+                        [1 if categories[j] == values[i] else 0 for j in range(len(categories))])
             else:
                 out_header.extend(['x__{}:{}={}'.format(
                     j + col_index, col, category) for j, category in enumerate(categories)])
@@ -262,6 +273,10 @@ def main():
         '-b',
         '--objective-variables',
         help='specify variables to be included in the objective variables separated by commas (text)')
+    parser.add_argument(
+        '-z',
+        '--sensitive-variables',
+        help='specify variables to be included in the sensitive variables separated by commas (text)')
     parser.add_argument(
         '-t',
         '--standardize',
