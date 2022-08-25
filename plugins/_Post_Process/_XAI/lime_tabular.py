@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import argparse
+from asyncore import read
 import numpy as np
 from scipy import stats
 from sklearn.linear_model import Ridge
@@ -21,6 +22,7 @@ import collections
 from nnabla import logger
 import nnabla.utils.load as load
 from nnabla.utils.cli.utility import let_data_to_variable
+from nnabla.utils.data_source_implements import CsvDataSource
 
 
 def func(args):
@@ -57,15 +59,18 @@ def func(args):
     #logger.log(99, input_variable)
 
     # Load csv
-    with open(args.input, 'r') as f:
-        reader = csv.reader(f)
-        _ = next(reader)
-        table = np.array([[float(r) for r in row] for row in reader])
-        sample = table[args.index - 1][:-1]
-    with open(args.train, 'r') as f:
-        reader = csv.reader(f)
-        feature_names = next(reader)[:-1]
-        train = np.array([[float(r) for r in row] for row in reader])[:, :-1]
+    d_input = CsvDataSource(args.input)
+    table = np.array([[float(r) for r in row] for row in d_input._rows])
+    sample = table[args.index - 1][:-1]
+
+    d_train = CsvDataSource(args.train)
+    feature_names = []
+    x = d_train.variables[0]
+    for i, name in enumerate((d_train._variables_dict[x])):
+        feature_name = '{}__{}:'.format(x, i) + name['label']
+        feature_names.append(feature_name)
+    train = np.array([[float(r) for r in row]
+                     for row in d_train._rows])[:, :-1]
 
     categorical_features = ''.join(args.categorical.split())
     categorical_features = [
