@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 import numpy as np
 import argparse
 import csv
@@ -19,18 +18,20 @@ from nnabla import logger
 import os
 from shap_tabular_utils.calculate import KernelSHAP, check_executable
 from shap_tabular_utils.visualize import visualize
+from nnabla.utils.data_source_implements import CsvDataSource
 
 
 def func(args):
-    with open(args.input, 'r') as f:
-        reader = csv.reader(f)
-        _ = next(reader)
-        X = np.array([[float(r) for r in row]
-                      for row in reader])[args.index][:-1]
-    with open(args.train, 'r') as f:
-        reader = csv.reader(f)
-        feature_names = next(reader)[:-1]
-        data = np.array([[float(r) for r in row] for row in reader])[:, :-1]
+    d_input = CsvDataSource(args.input)
+    X = np.array([[float(r) for r in row] for row in d_input._rows])[:, :-1]
+
+    d_train = CsvDataSource(args.train)
+    feature_names = []
+    x = d_train.variables[0]
+    for i, name in enumerate((d_train._variables_dict[x])):
+        feature_name = '{}__{}:'.format(x, i) + name['label']
+        feature_names.append(feature_name)
+    data = np.array([[float(r) for r in row] for row in d_train._rows])[:, :-1]
 
     check_executable(data, args.memory_limit)
 
