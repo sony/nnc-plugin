@@ -54,7 +54,7 @@ Input Information
     
    * - num_samples_lime
      - LIME 処理の際に、入力画像と認識結果の関係をサンプリングする回数を指定します。
-　　
+
    * - num_samples_shap
      - SHAP 処理の際に、入力画像と認識結果の関係をサンプリングする回数を指定します。
 
@@ -84,11 +84,25 @@ Input Information
         
         この標準偏差は SmoothGrad の演算に用いるガウシアンノイズを生成するために用いられます。
 
+   * - GradCAM
+     - Grad-CAMの実行の有無を指定します。
+
+   * - SmoothGrad
+     - SmoothGradの実行の有無を指定します。
+
+   * - LIME
+     - LIMEの実行の有無を指定します。
+
+   * - SHAP
+     - SHAPの実行の有無を指定します。
+
 Output Information
 ===================
 
 本プラグインの実行結果は 'output' で指定した名前のCSVファイルとして出力されます。
 CSVファイル内の各カラムに関しての情報は以下の通りです（以下のリストに無い名称のカラムは、 '評価' の結果得られる output_result.csvと同様の意味です）。
+Neural Network Console上で本プラグインを実行する際は、Grad-CAMとSmoothGradがデフォルトで実行されます。
+一方、command line実行の際にはGrad-CAM、SmoothGrad、LIME、SHAPのいずれもデフォルトでは実行されずエラーが出力されます。実行する手法を明示的にオプション指定してください。
 
 .. list-table::
    :widths: 30 70
@@ -163,7 +177,7 @@ Input Information
 
    * - num_samples_lime
      - LIME 処理の際に、入力画像と認識結果の関係をサンプリングする回数を指定します。
-　　
+
    * - num_samples_shap
      - SHAP 処理の際に、入力画像と認識結果の関係をサンプリングする回数を指定します。
 
@@ -187,11 +201,25 @@ Input Information
         
         この標準偏差は SmoothGrad の演算に用いるガウシアンノイズを生成するために用いられます。
 
+   * - GradCAM
+     - Grad-CAMの実行の有無を指定します。
+
+   * - SmoothGrad
+     - SmoothGradの実行の有無を指定します。
+
+   * - LIME
+     - LIMEの実行の有無を指定します。
+
+   * - SHAP
+     - SHAPの実行の有無を指定します。
+
 Output Information
 ===================
 
 本プラグインの実行結果は 'output' で指定した名前のCSVファイルとして出力されます。
 CSVファイル内の各カラムに関しての情報は以下の通りです（以下のリストに無い名称のカラムは、 '評価' の結果得られる output_result.csvと同様の意味です）。
+Neural Network Console上で本プラグインを実行する際は、Grad-CAMとSmoothGradがデフォルトで実行されます。
+一方、command line実行の際にはGrad-CAM、SmoothGrad、LIME、SHAPのいずれもデフォルトでは実行されずエラーが出力されます。実行する手法を明示的にオプション指定してください。
 
 .. list-table::
    :widths: 30 70

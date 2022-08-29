@@ -23,60 +23,81 @@ from smoothgrad_utils.smoothgrad_func import smoothgrad_func
 
 
 def func(args):
+    if (not args.GradCAM) and (not args.LIME) and (not args.SHAP) and (not args.SmoothGrad):
+        logger.critical('Task to run is not found.')
+        raise RuntimeError(
+            "At least one task (Grad-CAM, LIME, SHAP, SmoothGrad) is necessary to use this plugin.")
+
     data_output_dir = os.path.splitext(args.output)[0]
 
     class Args:
         pass
 
-    gradcam_args = Args()
-    gradcam_args.model = args.model
-    gradcam_args.image = args.image
-    gradcam_args.class_index = args.class_index
-    gradcam_args.output = data_output_dir + '_' + 'gradcam.png'
-    gradcam_args.contains_crop = args.contains_crop
-    gradcam_result = gradcam_func(gradcam_args)
-    imsave(gradcam_args.output, gradcam_result, channel_first=True)
+    header = ['Original']
+    rows = {'Original': args.image}
 
-    lime_args = Args()
-    lime_args.model = args.model
-    lime_args.image = args.image
-    lime_args.class_index = args.class_index
-    lime_args.num_samples = args.num_samples_lime
-    lime_args.num_segments = args.num_segments
-    lime_args.num_segments_2 = args.num_segments_2
-    lime_args.output = data_output_dir + '_' + 'lime.png'
-    lime_result = lime_func(lime_args)
-    imsave(lime_args.output, lime_result)
+    if args.GradCAM:
+        gradcam_args = Args()
+        gradcam_args.model = args.model
+        gradcam_args.image = args.image
+        gradcam_args.class_index = args.class_index
+        gradcam_args.output = data_output_dir + '_' + 'gradcam.png'
+        gradcam_args.contains_crop = args.contains_crop
+        gradcam_result = gradcam_func(gradcam_args)
+        imsave(gradcam_args.output, gradcam_result, channel_first=True)
+        header.append('Grad-CAM')
+        grad_cam_row = {'Grad-CAM': gradcam_args.output}
+        rows.update(grad_cam_row)
 
-    shap_args = Args()
-    shap_args.image = args.image
-    shap_args.input = args.input
-    shap_args.model = args.model
-    shap_args.class_index = args.class_index
-    shap_args.num_samples = args.num_samples_shap
-    shap_args.batch_size = args.batch_size
-    shap_args.interim_layer = args.interim_layer
-    shap_args.output = data_output_dir + '_' + 'shap.png'
-    shap_func(shap_args)
+    if args.SmoothGrad:
+        smoothgrad_args = Args()
+        smoothgrad_args.model = args.model
+        smoothgrad_args.noise_level = args.noise_level
+        smoothgrad_args.num_samples = args.num_samples_smoothgrad
+        smoothgrad_args.layer_index = args.layer_index
+        smoothgrad_args.image = args.image
+        smoothgrad_args.class_index = args.class_index
+        smoothgrad_args.output = data_output_dir + '_' + 'smoothgrad.png'
+        smoothgrad_result = smoothgrad_func(smoothgrad_args)
+        imsave(smoothgrad_args.output, smoothgrad_result, channel_first=True)
+        header.append('SmoothGrad')
+        smoothgrad_row = {'SmoothGrad': smoothgrad_args.output}
+        rows.update(smoothgrad_row)
 
-    smoothgrad_args = Args()
-    smoothgrad_args.model = args.model
-    smoothgrad_args.noise_level = args.noise_level
-    smoothgrad_args.num_samples = args.num_samples_smoothgrad
-    smoothgrad_args.layer_index = args.layer_index
-    smoothgrad_args.image = args.image
-    smoothgrad_args.class_index = args.class_index
-    smoothgrad_args.output = data_output_dir + '_' + 'smoothgrad.png'
-    smoothgrad_result = smoothgrad_func(smoothgrad_args)
-    imsave(smoothgrad_args.output, smoothgrad_result, channel_first=True)
+    if args.LIME:
+        lime_args = Args()
+        lime_args.model = args.model
+        lime_args.image = args.image
+        lime_args.class_index = args.class_index
+        lime_args.num_samples = args.num_samples_lime
+        lime_args.num_segments = args.num_segments
+        lime_args.num_segments_2 = args.num_segments_2
+        lime_args.output = data_output_dir + '_' + 'lime.png'
+        lime_result = lime_func(lime_args)
+        imsave(lime_args.output, lime_result)
+        header.append('LIME')
+        lime_row = {'LIME': lime_args.output}
+        rows.update(lime_row)
+
+    if args.SHAP:
+        shap_args = Args()
+        shap_args.image = args.image
+        shap_args.input = args.input
+        shap_args.model = args.model
+        shap_args.class_index = args.class_index
+        shap_args.num_samples = args.num_samples_shap
+        shap_args.batch_size = args.batch_size
+        shap_args.interim_layer = args.interim_layer
+        shap_args.output = data_output_dir + '_' + 'shap.png'
+        shap_func(shap_args)
+        header.append('SHAP')
+        shap_row = {'SHAP': shap_args.output}
+        rows.update(shap_row)
 
     with open(args.output, 'w') as f:
-        header = ['Original', 'Grad-CAM', 'LIME', 'SHAP', 'SmoothGrad']
         writer = csv.DictWriter(f, fieldnames=header)
         writer.writeheader()
-        writer.writerow({'Original': args.image, 'Grad-CAM': gradcam_args.output,
-                         'LIME': lime_args.output, 'SHAP': shap_args.output,
-                         'SmoothGrad': smoothgrad_args.output})
+        writer.writerow(rows)
 
 
 def main():
@@ -139,9 +160,17 @@ def main():
     parser.add_argument(
         '-il', '--interim_layer', help='(SHAP) layer input to explain, default=0', required=True, type=int, default=0)
     parser.add_argument(
-        '-nl', '--noise_level', help='(SmoothGrad) noise level(0.0 to 1.0) to calculate standard deviation for input image, default=0.15', type=float, default=0.15)
+        '-nl', '--noise_level', help='noise level(0.0 to 1.0) to calculate standard deviation for input image, default=0.15', type=float, default=0.15)
     parser.add_argument(
         '-li', '--layer_index', help=argparse.SUPPRESS, type=int, default=0)
+    parser.add_argument(
+        '-g', '--GradCAM', action='store_true', help='Grad-CAM (bool), default=True')
+    parser.add_argument(
+        '-sm', '--SmoothGrad', action='store_true', help='SmoothGrad (bool), default=True')
+    parser.add_argument(
+        '-l', '--LIME', action='store_true', help='LIME(image) (bool), default=True')
+    parser.add_argument(
+        '-sh', '--SHAP', action='store_true', help='SHAP (bool), default=True')
 
     args = parser.parse_args()
     func(args)

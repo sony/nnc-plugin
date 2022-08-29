@@ -73,12 +73,25 @@ Input Information
    * - noise_level
      - For SmoothGrad processing, specify the noise level (0.0 to 1.0) to calculate standard deviation used for generating gausian noise.
 
+   * - GradCAM
+     - Execute Grad-CAM if designated (By default, not executed).
+
+   * - SmoothGrad
+     - Execute SmoothGrad if designated (By default, not executed).
+
+   * - LIME
+     - Execute LIME if designated (By default, not executed).
+
+   * - SHAP
+     - Execute SHAP if designated (By default, not executed).
+
 Output Information
 ===================
 
 The result of this plugin is saved in the designated 'output' path as CSV file.
 The information on the columns of CSV file is as follows.
 The other columns than listed below are the same meaning as those in output_result.csv file that is generated as a result of evaluation.
+None of the 4 tasks (Grad-CAM, SmoothGrad, LIME, SHAP) are executed by default when called from command line, while Grad-CAM and SmoothGrad are executed by default when called from Neural Network Console.
 
 .. list-table::
    :widths: 30 70
@@ -173,12 +186,25 @@ Input Information
    * - noise_level
      - For SmoothGrad processing, specify the noise level (0.0 to 1.0) to calculate standard deviation used for generating gausian noise.
 
+   * - GradCAM
+     - Execute Grad-CAM if designated (By default, not executed).
+
+   * - SmoothGrad
+     - Execute SmoothGrad if designated (By default, not executed).
+
+   * - LIME
+     - Execute LIME if designated (By default, not executed).
+
+   * - SHAP
+     - Execute SHAP if designated (By default, not executed).
+
 Output Information
 ===================
 
 The result of this plugin is saved in the designated 'output' path as CSV file.
 The information on the columns of CSV file is as follows.
 The other columns than listed below are the same meaning as those in output_result.csv file that is generated as a result of evaluation.
+None of the 4 tasks (Grad-CAM, SmoothGrad, LIME, SHAP) are executed by default when called from command line, while Grad-CAM and SmoothGrad are executed by default when called from Neural Network Console.
 
 .. list-table::
    :widths: 30 70
