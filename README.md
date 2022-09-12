@@ -48,8 +48,12 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
 <<<<<<< HEAD
 * Fairness
     * [CV Score](./manuals/Post_Process/Fairness/calders_verwer_score.rst)
+<<<<<<< HEAD
 =======
 >>>>>>> 6b0549e (not to read csv comment columns)
+=======
+    * [Reweighing](./manuals/Post_Process/Fairness/Reweighing.rst)
+>>>>>>> 5cb2945 (fix README.md to refer to Reweighing plugin)
 
 ## How to use the latest plugins
 The plugins run on Neural Network Console. If you do not have Neural Network Console, please download from here (https://dl.sony.com/).
