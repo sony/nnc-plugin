@@ -11,17 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import os
 import numpy as np
 import tqdm
-import os
+import nnabla.utils.load as load
 from nnabla.utils.data_iterator import data_iterator_csv_dataset
 from nnabla.utils.image_utils import imread
-from .utils import get_executor, red_blue_map, gradient, get_interim_input, plot_shap
+from .utils import get_executor, red_blue_map, gradient, \
+    get_interim_input, plot_shap
 
 
 def shap_func(args):
     executor = get_executor(args.model)
+
+    # Load model
+    info = load.load([args.model], prepare_data_iterator=False,
+                     batch_size=args.batch_size)
 
     # Data source
     data_iterator = (lambda: data_iterator_csv_dataset(
@@ -40,16 +45,23 @@ def shap_func(args):
     else:
         X = X.reshape((1,) + X.shape)
 
-    plot_shap(model=args.model, X=X,
-              label=args.class_index, output=args.output,
-              interim_layer=args.interim_layer, num_samples=args.num_samples,
-              data_iterator=data_iterator, batch_size=args.batch_size,
-              red_blue_map=red_blue_map, gradient=gradient, get_interim_input=get_interim_input)
+    with data_iterator() as di:
+        plot_shap(model=args.model, info=info, X=X,
+                  label=args.class_index, output=args.output,
+                  interim_layer=args.interim_layer,
+                  num_samples=args.num_samples,
+                  data_iterator=di, batch_size=args.batch_size,
+                  red_blue_map=red_blue_map, gradient=gradient,
+                  get_interim_input=get_interim_input)
 
 
 def shap_batch_func(args):
 
     executor = get_executor(args.model)
+
+    # Load model
+    info = load.load([args.model], prepare_data_iterator=False,
+                     batch_size=args.batch_size)
 
     # Prepare variable
     output_variable = list(executor.output_assign.keys())[0]
@@ -103,10 +115,11 @@ def shap_batch_func(args):
             if index == 0:
                 pbar = tqdm.tqdm(total=di.size)
 
-            plot_shap(model=args.model, X=im, label=label,
+            plot_shap(model=args.model, info=info, X=im, label=label,
                       output=file_name, interim_layer=args.interim_layer,
-                      num_samples=args.num_samples, data_iterator=data_iterator,
-                      batch_size=args.batch_size, red_blue_map=red_blue_map, gradient=gradient,
+                      num_samples=args.num_samples, data_iterator=di,
+                      batch_size=args.batch_size,
+                      red_blue_map=red_blue_map, gradient=gradient,
                       get_interim_input=get_interim_input)
 
             file_names.append(file_name)
