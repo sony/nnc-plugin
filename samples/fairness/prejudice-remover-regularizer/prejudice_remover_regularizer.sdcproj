@@ -1728,7 +1728,7 @@ Position_1=552
 Position_2=240
 Position_3=48
 Property_0_Name=Name
-Property_0_Value=Sigmoid
+Property_0_Value=y'
 NumProperty=1
 [Runtime_Layer_2]
 ID=2
@@ -2013,14 +2013,14 @@ Num=2
 MainIndex=0
 [Dataset_0]
 Name=Training
-URI=C:\Users\7000030346\NNC\02_05\sdeep_console_prototype_cpu\samples\sample_dataset\Structured\Classification\adult_prr\adult_data.csv
+URI={SDCPATH}samples\sample_dataset\Structured\Classification\adult_prr\adult_data.csv
 Shuffle=1
 EnableCache=0
 ImageNormalization=0
 NumData=32561
 [Dataset_1]
 Name=Validation
-URI=C:\Users\7000030346\NNC\02_05\sdeep_console_prototype_cpu\samples\sample_dataset\Structured\Classification\adult_prr\adult_test.csv
+URI={SDCPATH}samples\sample_dataset\Structured\Classification\adult_prr\adult_test.csv
 Shuffle=0
 EnableCache=0
 ImageNormalization=0
