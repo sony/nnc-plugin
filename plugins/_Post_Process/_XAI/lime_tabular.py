@@ -17,10 +17,10 @@ from scipy import stats
 from sklearn.linear_model import Ridge
 import csv
 import collections
-
 from nnabla import logger
 import nnabla.utils.load as load
 from nnabla.utils.cli.utility import let_data_to_variable
+from nnabla.utils.data_source_implements import CsvDataSource
 
 
 def func(args):
@@ -57,9 +57,7 @@ def func(args):
     #logger.log(99, input_variable)
 
     # Load csv
-<<<<<<< HEAD
     d_input = CsvDataSource(args.input)
-<<<<<<< HEAD
     table = np.array([[float(r) for r in row] for row in d_input._rows])
     sample = table[args.index - 1][:-1]
 
@@ -71,25 +69,6 @@ def func(args):
         feature_names.append(feature_name)
     train = np.array([[float(r) for r in row]
                      for row in d_train._rows])[:, :-1]
-=======
-=======
->>>>>>> 816041a (Revert "not to read csv comment columns in plugin")
-    with open(args.input, 'r') as f:
-        reader = csv.reader(f)
-        _ = next(reader)
-        table = np.array([[float(r) for r in row] for row in reader])
-        sample = table[args.index - 1][:-1]
-    with open(args.train, 'r') as f:
-        reader = csv.reader(f)
-        feature_names = next(reader)[:-1]
-<<<<<<< HEAD
-        rows = d_train._rows
-        d_train._remove_comment_cols(feature_names, rows)
-        train = np.array([[float(r) for r in row] for row in rows])
->>>>>>> 5a5211e (not to read csv comment columns in plugin)
-=======
-        train = np.array([[float(r) for r in row] for row in reader])[:, :-1]
->>>>>>> 816041a (Revert "not to read csv comment columns in plugin")
 
     categorical_features = ''.join(args.categorical.split())
     categorical_features = [
