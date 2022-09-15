@@ -50,7 +50,7 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
 
 * 公平性
     * [CV Score](./manuals/ja/Post_Process/Fairness/calders_verwer_score.rst)
-
+    * [Reweighing](./manuals/ja/Post_Process/Fairness/Reweighing.rst)
 
 ## 最新のプラグインを利用するには
 

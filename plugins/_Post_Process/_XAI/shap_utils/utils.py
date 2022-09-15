@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,13 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import nnabla.utils.load as load
 from nnabla.utils.cli.utility import let_data_to_variable
-from matplotlib.colors import LinearSegmentedColormap
-import matplotlib.pyplot as plt
-import numpy as np
 import nnabla as nn
 from nnabla import logger
-import nnabla.utils.load as load
+import numpy as np
+from matplotlib.colors import LinearSegmentedColormap
+import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
 
@@ -39,8 +39,8 @@ def get_executor(model):
         return
     executor = list(config.executors)[0]
     if len(config.executors) > 1:
-        logger.log(99, 'Only the first executor {} is used in the SHAP calculation.'.format(
-            executor.name))
+        logger.log(99, 'Only the first executor {} is '
+                   'used in the SHAP calculation.'.format(executor.name))
 
     if executor.network.name in info.networks.keys():
         config.networks.append(info.networks[executor.network.name])
@@ -60,13 +60,10 @@ def red_blue_map():
     return LinearSegmentedColormap.from_list("red_transparent_blue", colors)
 
 
-def gradient(model, idx, inputs, batch_size, interim_layer):
+def gradient(model, info, idx, inputs, interim_layer):
 
     class ForwardConfig:
         pass
-    # Load model
-    info = load.load([model], prepare_data_iterator=False,
-                     batch_size=batch_size)
 
     config = ForwardConfig
     config.global_config = info.global_config
@@ -79,8 +76,9 @@ def gradient(model, idx, inputs, batch_size, interim_layer):
         return
     executor = list(config.executors)[0]
     if len(config.executors) > 1:
-        logger.log(99, 'Only the first executor {} is used in the SHAP calculation.'.format(
-            executor.name))
+        logger.log(99, 'Only the first executor {} is '
+                   'used in the SHAP calculation.'.format(
+                       executor.name))
 
     if executor.network.name in info.networks.keys():
         config.networks.append(info.networks[executor.network.name])
@@ -99,9 +97,10 @@ def gradient(model, idx, inputs, batch_size, interim_layer):
 
     # input image
     let_data_to_variable(input_variable.variable_instance,
-                         np.reshape(
-                             inputs, input_variable.variable_instance.d.shape),
-                         data_name=data_name, variable_name=input_variable.name)
+                         np.reshape(inputs,
+                                    input_variable.variable_instance.d.shape),
+                         data_name=data_name,
+                         variable_name=input_variable.name)
     input_variable.variable_instance.need_grad = True
 
     # Forward
@@ -131,18 +130,10 @@ def gradient(model, idx, inputs, batch_size, interim_layer):
     return grads
 
 
-def get_interim_input(model, inputs, interim_layer):
-
-    if len(inputs.shape) == 3:
-        batch_size = 1
-    else:
-        batch_size = len(inputs)
+def get_interim_input(model, info, inputs, interim_layer):
 
     class ForwardConfig:
         pass
-    # Load model
-    info = load.load([model], prepare_data_iterator=False,
-                     batch_size=batch_size)
 
     config = ForwardConfig
     config.global_config = info.global_config
@@ -155,8 +146,9 @@ def get_interim_input(model, inputs, interim_layer):
         return
     executor = list(config.executors)[0]
     if len(config.executors) > 1:
-        logger.log(99, 'Only the first executor {} is used in the SHAP calculation.'.format(
-            executor.name))
+        logger.log(99, 'Only the first executor {} '
+                   'is used in the SHAP calculation.'.format(
+                       executor.name))
 
     if executor.network.name in info.networks.keys():
         config.networks.append(info.networks[executor.network.name])
@@ -174,9 +166,10 @@ def get_interim_input(model, inputs, interim_layer):
 
     # input image
     let_data_to_variable(input_variable.variable_instance,
-                         np.reshape(
-                             inputs, input_variable.variable_instance.d.shape),
-                         data_name=data_name, variable_name=input_variable.name)
+                         np.reshape(inputs,
+                                    input_variable.variable_instance.d.shape),
+                         data_name=data_name,
+                         variable_name=input_variable.name)
 
     # Forward
     output_variable.variable_instance.forward()
@@ -198,20 +191,23 @@ def get_interim_input(model, inputs, interim_layer):
             continue
 
 
-def plot_shap(model, X, label, output, interim_layer, num_samples, data_iterator,
+def plot_shap(model, info, X, label, output, interim_layer,
+              num_samples, data_iterator,
               batch_size, red_blue_map, gradient, get_interim_input):
     output_phis = []
     if interim_layer == 0:
         data = X.reshape((1,) + X.shape)
     else:
-        data = get_interim_input(model, X, interim_layer)
+        data = get_interim_input(model, info, X, interim_layer)
         if data is None:
             logger.log(
-                99, 'The interim layer should be an integer between 1 and the number of layers of the model!')
+                99, 'The interim layer should be an integer '
+                'between 1 and the number of layers of the model!')
             return
         if len(data.shape) != 4:
             logger.log(
-                99, 'The input of the interim layer must have the shape of (samples x channels x width x height)')
+                99, 'The input of the interim layer must have '
+                'the shape of (samples x channels x width x height)')
             return
 
     samples_input = [np.zeros((num_samples, ) + X.shape)]
@@ -223,24 +219,24 @@ def plot_shap(model, X, label, output, interim_layer, num_samples, data_iterator
     # phi_vars = [np.zeros((output_batch,) + X.shape)]
     for j in range(1):
         for k in range(num_samples):
-            rind = np.random.choice(data_iterator().size)
+            rind = np.random.choice(data_iterator.size)
             t = np.random.uniform()
-            im = data_iterator()._data_source._get_data(rind)[0]
+            im = data_iterator._data_source._get_data(rind)[0]
             x = X.copy()
             samples_input[0][k] = (t * x + (1 - t) * im.copy()).copy()
             if interim_layer == 0:
                 samples_delta[0][k] = (x - im.copy()).copy()
             else:
                 samples_delta[0][k] = get_interim_input(
-                    model, samples_input[0][k], interim_layer)[0]
+                    model, info, samples_input[0][k], interim_layer)[0]
 
         grads = []
 
         for b in range(0, num_samples, batch_size):
             batch_last = min(b + batch_size, num_samples)
             batch = samples_input[0][b:batch_last].copy()
-            grads.append(gradient(model, label, batch,
-                                  batch_last - b, interim_layer))
+            grads.append(gradient(model, info, label, batch,
+                                  interim_layer))
         grad = [np.concatenate([g[0] for g in grads], 0)]
         samples = grad[0] * samples_delta[0]
         phis[0][j] = samples.mean(0)
