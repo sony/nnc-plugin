@@ -7,6 +7,12 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
 
 
 ## Current lineup of the plugins
+
+###  Dataset
+* Fairness
+    * [Demographic Parity Difference](./manuals/Dataset/Fairness/demographic_parity.rst)
+    * [Disparate Impact](./manuals/Dataset/Fairness/disparate_impact.rst)
+
 ###  Pre-processing
 * Create dataset
     * [Object detection (from Yolo v2 format)](./manuals/Pre_Process/Create_Dataset/ObjectDetection.rst)
@@ -44,9 +50,14 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
     * [TracIn](./manuals/Post_Process/XAI/TracIn.rst)
     * [RepresenterPoint](./manuals/ja/Post_Process/XAI/Representerpoint.rst)
     * [Attention Map Visualization](./manuals/Post_Process/XAI/AttentionMapVisualization.rst)
-
+    
 * Fairness
     * [CV Score](./manuals/Post_Process/Fairness/calders_verwer_score.rst)
+    * [Demogrphic Parity](./manuals/Post_Process/Fairness/demographic_parity.rst)
+    * [Disparate Impact](./manuals/Post_Process/Fairness/disparate_impact.rst)
+    * [Equal Opportunity](./manuals/Post_Process/Fairness/equal_opportunity.rst)
+    * [Equalised Odds](./manuals/Post_Process/Fairness/equalised_odd.rst)
+    * [Theil Index](./manuals/Post_Process/Fairness/theil_index.rst)
     * [Reweighing](./manuals/Post_Process/Fairness/Reweighing.rst)
 
 ## How to use the latest plugins
