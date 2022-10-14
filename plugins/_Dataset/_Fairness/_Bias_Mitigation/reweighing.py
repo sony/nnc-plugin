@@ -137,14 +137,14 @@ def func(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='reweighing\n' +
+        description='Reweighing\n' +
         '\n' +
         'Data preprocessing techniques for classification without discrimination\n' +
         'Kamiran, Faisal and Calders, Toon.\n' +
         'Knowledge and Information Systems, 33(1):1-33, 2012\n' +
         '', formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
-        '-t', '--input-train', help='path to training dataset csv file (csv)', required=True)
+        '-t', '--input-train', help='path to dataset csv file (csv)', required=True)
     parser.add_argument(
         '-l', '--label-name', help='target label', required=True)
     parser.add_argument(

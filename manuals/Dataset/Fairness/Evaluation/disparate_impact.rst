@@ -28,6 +28,9 @@ Input Information
 
    * - unprivileged_variable
      - Specify the name of the column in the input CSV file to use as the unprivileged variable (Class in the protected attribute with minority is called unprivileged class).
+   
+   * - reweighing_weight
+     - Specify the name of the column in the input CSV file to use as reweighing weights that are assigned to individual samples.Default is NA. So each sample is given a unit weight. 
 
    * - num_samples
      - Specify the number of samples to compute the `Disparate Impact`, by default num_samples is "all", which means compute the `Disparate Impact` of all the samples in the input file.

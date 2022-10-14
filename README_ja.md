@@ -11,6 +11,15 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
 て独自のプラグインを開発することができます。
 
 ## プラグインリスト
+###  Dataset
+* 公平性
+    * 公平性スコア
+        * [Demographic Parity Difference](./manuals/ja/Dataset/Fairness/Evaluation/demographic_parity.rst)
+        * [Disparate Impact](./manuals/ja/Dataset/Fairness/Evaluation/disparate_impact.rst)
+    * 公平性アルゴリズム
+        * [Reweighing](./manuals/ja/Dataset/Fairness/Bias_Mitigation/Reweighing.rst)
+
+
 ###  前処理プラグイン
 * データセット作成
     * [Object detection (from Yolo v2 format)](./manuals/ja/Pre_Process/Create_Dataset/ObjectDetection.rst)
@@ -40,7 +49,6 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
     * [Attention Editor](./manuals/ja/Post_Process/XAI/AttentionEditor.rst)
     * [SGD influence](./manuals/ja/Post_Process/XAI/SGDInfluence.rst)
     * [Influence Functions](./manuals/ja/Post_Process/XAI/InfluenceFunctions.rst)
-    * [Face evaluation](./manuals/ja/Post_Process/XAI/FaceEvaluation.rst)
     * [Grad-CAM](./manuals/ja/Post_Process/XAI/GradCAM.rst)
     * [LIME](./manuals/ja/Post_Process/XAI/LIME.rst)
     * [SHAP](./manuals/ja/Post_Process/XAI/SHAP.rst)
@@ -49,25 +57,16 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
     * [RepresenterPoint](./manuals/ja/Post_Process/XAI/Representerpoint.rst)
 
 * 公平性
-    * [CV Score](./manuals/ja/Post_Process/Fairness/calders_verwer_score.rst)
-<<<<<<< HEAD
-    * [Reweighing](./manuals/ja/Post_Process/Fairness/Reweighing.rst)
-<<<<<<< HEAD
-=======
-=======
->>>>>>> e2aed67 (update fairness order)
-    * [Demogrphic Parity](./manuals/ja/Post_Process/Fairness/demographic_parity.rst)
-    * [Disparate Impact](./manuals/ja/Post_Process/Fairness/disparate_impact.rst)
-    * [Equal Opportunity](./manuals/ja/Post_Process/Fairness/equal_opportunity.rst)
-    * [Equalised Odds](./manuals/ja/Post_Process/Fairness/equalised_odd.rst)
-    * [Theil Index](./manuals/ja/Post_Process/Fairness/theil_index.rst)
-<<<<<<< HEAD
->>>>>>> 42d7dec (update fairness threshold descriptions)
-=======
-    
-    * [Reweighing](./manuals/ja/Post_Process/Fairness/Reweighing.rst)
-
->>>>>>> e2aed67 (update fairness order)
+    * 公平性スコア
+        * [CV Score](./manuals/ja/Post_Process/Fairness/calders_verwer_score.rst)
+        * [Demogrphic Parity](./manuals/ja/Post_Process/Fairness/demographic_parity.rst)
+        * [Disparate Impact](./manuals/ja/Post_Process/Fairness/disparate_impact.rst)
+        * [Equal Opportunity](./manuals/ja/Post_Process/Fairness/equal_opportunity.rst)
+        * [Equalised Odds](./manuals/ja/Post_Process/Fairness/equalised_odd.rst)
+        * [Theil Index](./manuals/ja/Post_Process/Fairness/theil_index.rst)
+        * [Bias Amplification](./manuals/ja/Post_Process/Fairness/Evaluation/bias_amplification.rst) 
+        * [KL Divergence](./manuals/ja/Post_Process/Fairness/Evaluation/kl_divergence.rst)
+        * [Face evaluation](./manuals/ja/Post_Process/XAI/FaceEvaluation.rst)
 
 ## 最新のプラグインを利用するには
 

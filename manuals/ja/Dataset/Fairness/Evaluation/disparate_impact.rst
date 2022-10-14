@@ -22,13 +22,16 @@ Input Information
      - Disparate Impactが計算されるデータを含むCSVファイルを指定します．"評価"タブに表示される結果を出力するには，デフォルトの output_result.csv を使用します．
 
    * - target_variable
-     - Specify the name of the column in the input CSV file to use as the target(label) variable.
+     - inputで指定したCSVファイルから，ターゲットラベルとして使用する列名を指定します．
 
    * - privileged_variable
      - inputで指定したCSVファイルから，'privileged'属性として使用する列名を指定します．(バイアスが現れる可能性のある属性において多数派は'privileged'クラスと呼ばれます．)
 
    * - unprivileged_variable
      - inputで指定したCSVファイルから，'unprivileged'属性として使用する列名を指定します． (バイアスが現れる可能性のある属性において少数派は'unprivileged'クラスと呼ばれます．)
+   
+   * - reweighing_weight
+     - inputで指定したCSVファイルから，入力データに再重み付けの重みとして使用する列名を指定します．デフォルトは NA です．したがって，各サンプルは何も重み付けされません．
 
    * - num_samples
      - `Disparate Impact`を計算するサンブル数を指定します．デフォルトでは'all'が設定されており，入力ファイルの全てのサンプルで`Disparate Impact`を計算します．

@@ -10,8 +10,11 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
 
 ###  Dataset
 * Fairness
-    * [Demographic Parity Difference](./manuals/Dataset/Fairness/demographic_parity.rst)
-    * [Disparate Impact](./manuals/Dataset/Fairness/disparate_impact.rst)
+   * Fairness Scores
+       * [Demographic Parity Difference](./manuals/Dataset/Fairness/Evaluation/demographic_parity.rst)
+       * [Disparate Impact](./manuals/Dataset/Fairness/Evaluation/disparate_impact.rst)
+   * Fairness Algorithms
+       * [Reweighing](./manuals/Dataset/Fairness/Bias_Mitigation/Reweighing.rst)
 
 ###  Pre-processing
 * Create dataset
@@ -42,7 +45,6 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
     * [Attention Editor](./manuals/Post_Process/XAI/AttentionEditor.rst)
     * [SGD influence](./manuals/Post_Process/XAI/SGDInfluence.rst)
     * [Influence Functions](./manuals/Post_Process/XAI/InfluenceFunctions.rst)
-    * [Face evaluation](./manuals/Post_Process/XAI/FaceEvaluation.rst)
     * [Grad-CAM](./manuals/Post_Process/XAI/GradCAM.rst)
     * [LIME](./manuals/Post_Process/XAI/LIME.rst)
     * [SHAP](./manuals/Post_Process/XAI/SHAP.rst)
@@ -52,13 +54,16 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
     * [Attention Map Visualization](./manuals/Post_Process/XAI/AttentionMapVisualization.rst)
     
 * Fairness
-    * [CV Score](./manuals/Post_Process/Fairness/calders_verwer_score.rst)
-    * [Demogrphic Parity](./manuals/Post_Process/Fairness/demographic_parity.rst)
-    * [Disparate Impact](./manuals/Post_Process/Fairness/disparate_impact.rst)
-    * [Equal Opportunity](./manuals/Post_Process/Fairness/equal_opportunity.rst)
-    * [Equalised Odds](./manuals/Post_Process/Fairness/equalised_odd.rst)
-    * [Theil Index](./manuals/Post_Process/Fairness/theil_index.rst)
-    * [Reweighing](./manuals/Post_Process/Fairness/Reweighing.rst)
+    * Fairness Scores
+       * [CV Score](./manuals/Post_Process/Fairness/Evaluation/calders_verwer_score.rst)
+       * [Demogrphic Parity](./manuals/Post_Process/Fairness/Evaluation/demographic_parity.rst)
+       * [Disparate Impact](./manuals/Post_Process/Fairness/Evaluation/disparate_impact.rst)
+       * [Equal Opportunity](./manuals/Post_Process/Fairness/Evaluation/equal_opportunity.rst)
+       * [Equalised Odds](./manuals/Post_Process/Fairness/Evaluation/equalised_odd.rst)
+       * [Theil Index](./manuals/Post_Process/Fairness/Evaluation/theil_index.rst)
+       * [Bias Amplification](./manuals/Post_Process/Fairness/Evaluation/bias_amplification.rst)
+       * [KL Divergence](./manuals/Post_Process/Fairness/Evaluation/kl_divergence.rst)
+       * [Face evaluation](./manuals/Post_Process/Fairness/Evaluation/FaceEvaluation.rst)
 
 ## How to use the latest plugins
 The plugins run on Neural Network Console. If you do not have Neural Network Console, please download from here (https://dl.sony.com/).

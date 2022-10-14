@@ -36,11 +36,14 @@ Input Information
    * - unprivileged_variable
      - inputで指定したCSVファイルから，'unprivileged'属性として使用する列名を指定します． (バイアスが現れる可能性のある属性において少数派は'unprivileged'クラスと呼ばれます．)
 
+   * - reweighing_weight
+     - inputで指定したCSVファイルから，入力データに再重み付けの重みとして使用する列名を指定します．デフォルトは NA です．したがって，各サンプルは何も重み付けされません．
+
    * - fair_threshold
      - 公平性のしきい値を決定します．デフォルト値は0.10です．したがって，-0.1と0.1の間のすべての結果は"公平"であり，範囲外は"不公平"であると確認することができます．
 
    * - num_samples
-     - 	Demographic Parityを計算するサンブル数を指定します．デフォルトでは'all'が設定されており，入力ファイルの全てのサンプルでDemographic Parityを計算します．
+     - Demographic Parityを計算するサンブル数を指定します．デフォルトでは'all'が設定されており，入力ファイルの全てのサンプルでDemographic Parityを計算します．
 
    * - output
      - Demographic parity(DPD)の結果を保存するCSVファイルの名前を指定します.
