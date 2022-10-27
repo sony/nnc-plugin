@@ -37,6 +37,8 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
 * Visualization
     * [Scatter plot](./manuals/Post_Process/Visualization/ScatterPlot.rst)
     * [Tile images](./manuals/Post_Process/Visualization/TileImages.rst)
+    * [Precision Recall curve](./manuals/Post_Process/Visualization/precision_recall_curve.rst)
+    * [ROC AUC curve](./manuals/Post_Process/Visualization/roc_auc.rst)
 
 * eXplainable AI (XAI)
     * [Attention Editor](./manuals/Post_Process/XAI/AttentionEditor.rst)
