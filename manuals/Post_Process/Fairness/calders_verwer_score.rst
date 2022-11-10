@@ -20,17 +20,23 @@ Input Information
    * - input
      - Specify the dataset CSV file containing the data to analyze. To compute the CV score, output result shown in the 'Evaluation' tab, use the default output_result.csv.
 
-   * - label_variable
-     - Specify the name of the column in the input CSV file to use as the label variable
+   * - target_variable
+     - Specify the name of the column in the input CSV file to use as the target variable.
 
    * - output_variable
-     - Specify the name of the column in the input CSV file to use as the output variable(classification output, in this case, Sigmoid as output)
+     - Specify the name of the column in the input CSV file to use as the output variable(classification output , by default y' as output variable)
 
    * - privileged_variable
-     - Specify the name of the column in the input CSV file to use as the privileged variable, to compute the discrimination score. Class in the protected attribute with the majority is called privileged class. By default, 'female' is the privileged variable.
+     - Specify the name of the column in the input CSV file to use as the privileged variable, to compute the discrimination score. Class in the protected attribute with the majority is called privileged class.
 
    * - unprivileged_variable
-     - Specify the name of the column in the input CSV file to use as the unprivileged variable, to compute the discrimination score. Class in the protected attribute with minority is called unprivileged class. By default, 'male' is the unprivileged variable.
+     - Specify the name of the column in the input CSV file to use as the unprivileged variable, to compute the discrimination score. Class in the protected attribute with minority is called unprivileged class.
+
+   * - clf_threshold
+     - Specify the best optimal classification threshold.The default threshold for interpreting probabilities to class labels is 0.5.
+
+   * - fair_threshold
+     - Specify fairness threshold, between 0 & 1.0. Based on this value, model outputs whether outcome is "fair" or "unfair". Default value is 0.10. So, all outcomes between 0.0 and 0.1 are "fair".
 
    * - num_samples
      - Specify the number of samples to compute the CV score, by default num_samples is "all", which means compute the CV score of all the samples in the input file.
@@ -48,20 +54,8 @@ The information on the columns of CSV file is as follows.
    :widths: 30 70
    :class: longtable
 
-   * - Object Variable
-     - Specified label variable while computing the CV score.
-
-   * - Output variable
-     - Specified classifier output variable while computing the CV score.
-
-   * - Privileged variable
-     - Specified privileged variable to compute the discrimination score.
-
-   * - Unprivileged variable
-     - Specified unprivileged variable to compute the discrimination score.
-
-   * - Number of samples
-     - Number of samples taken to compute the CV score of the model.
+   * - Fairness Plot
+     - Plot fairness check enables us to look how the fairness between privileged and unprivileged groups with respect to the fairness definition. If the bar plot reaches out of the green zone it means that for this subgroup fairness goal is not satisfied.
 
    * - CV score
      - Low CV score values mean a fair model - desirable, while high values mean the model is not fair.
