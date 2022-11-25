@@ -8,9 +8,9 @@ This metric is computed as the difference between the rate of positive outcomes 
 
 `Sam Corbett-Davies, Emma Pierson, Avi Feller, Sharad Goel, and Aziz Huq. 2017.Algorithmic decision making and the cost of fairness. In Proceedings of KDD <https://dl.acm.org/doi/abs/10.1145/3097983.3098095>`_
 
-`Cynthia Dwork, Moritz Hardt, Toniann Pitassi, Omer Reingold, and Richard Zemel. 2012. Fairness through awareness. In Proceedings of the 3rd Innovations in Theoretical Computer Science Conference (ITCS). 214–226<https://dl.acm.org/doi/abs/10.1145/2090236.2090255>`_
+`Cynthia Dwork, Moritz Hardt, Toniann Pitassi, Omer Reingold, and Richard Zemel. 2012. Fairness through awareness. In Proceedings of the 3rd Innovations in Theoretical Computer Science Conference (ITCS). 214–226 <https://dl.acm.org/doi/abs/10.1145/2090236.2090255>`_
 
-`Jon Kleinberg, Sendhil Mullainathan, and Manish Raghavan. 2017. Inherent Trade-Offs in the Fair Determination of Risk Scores. In Proceedings of ITCS.<https://arxiv.org/abs/1609.05807>`_
+`Jon Kleinberg, Sendhil Mullainathan, and Manish Raghavan. 2017. Inherent Trade-Offs in the Fair Determination of Risk Scores. In Proceedings of ITCS. <https://arxiv.org/abs/1609.05807>`_
 
 
 Input Information
@@ -35,6 +35,9 @@ Input Information
 
    * - unprivileged_variable
      - Specify the name of the column in the input CSV file to use as the unprivileged variable (Class in the protected attribute with minority is called unprivileged class).
+   
+   * - reweighing_weight
+     - Specify the name of the column in the input CSV file to use as reweighing weights that are assigned to individual samples.Default is NA. So each sample is given a unit weight. 
 
    * - fair_threshold
      - Specify fairness threshold, between -1.0 & 1.0. Based on this value, model outputs whether outcome is "fair" or "unfair". Default value is 0.10. So, all outcomes between -0.1 and 0.1 are "fair".
