@@ -56,15 +56,8 @@ def func(args):
     output_variable = list(executor.output_assign.keys())[0]
 
     # Load csv
-<<<<<<< HEAD
     d_input = CsvDataSource(args.input)
     samples = np.array([[float(r) for r in row]
-=======
-<< << << < HEAD
-   d_input = CsvDataSource(args.input)
-<< << << < HEAD
-   samples = np.array([[float(r) for r in row]
->>>>>>> 88f5fb8 (run copylight checker)
                        for row in d_input._rows])[:, :-1]
 
     d_train = CsvDataSource(args.train)
@@ -75,29 +68,8 @@ def func(args):
         feature_names.append(feature_name)
     train = np.array([[float(r) for r in row]
                      for row in d_train._rows])[:, :-1]
-<<<<<<< HEAD
-=======
-== == == =
-== == == =
->>>>>> > 816041a(Revert "not to read csv comment columns in plugin")
-   with open(args.input, 'r') as f:
-        reader = csv.reader(f)
-        _ = next(reader)
-        samples = np.array([[float(r) for r in row] for row in reader])[:, :-1]
-    with open(args.train, 'r') as f:
-        reader = csv.reader(f)
-        feature_names = next(reader)[:-1]
-<<<<<< < HEAD
-   rows = d_train._rows
-    d_train._remove_comment_cols(feature_names, rows)
-    train = np.array([[float(r) for r in row] for row in rows])
->>>>>> > 5a5211e (not to read csv comment columns in plugin)
-== =====
-   train = np.array([[float(r) for r in row] for row in reader])[:, :-1]
->>>>>> > 816041a (Revert "not to read csv comment columns in plugin")
->>>>>>> 88f5fb8 (run copylight checker)
 
-   categorical_features = ''.join(args.categorical.split())
+    categorical_features = ''.join(args.categorical.split())
     categorical_features = [
         int(x) for x in categorical_features.split(',') if x != '']
 
