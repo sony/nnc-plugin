@@ -20,17 +20,8 @@ from nnabla.utils.data_source_implements import CsvDataSource
 
 
 def func(args):
-<<<<<<< HEAD:plugins/_Post_Process/_XAI/shap_tabular_batch.py
     d_input = CsvDataSource(args.input)
     X = np.array([[float(r) for r in row] for row in d_input._rows])[:, :-1]
-=======
-
-
-<< << << < HEAD
-   d_input = CsvDataSource(args.input)
-<< << << < HEAD
-   X = np.array([[float(r) for r in row] for row in d_input._rows])[:, :-1]
->>>>>>> 88f5fb8 (run copylight checker):plugins/_Post_Process/_XAI/shap_batch_tabular.py
 
     d_train = CsvDataSource(args.train)
     feature_names = []
@@ -39,29 +30,8 @@ def func(args):
         feature_name = '{}__{}:'.format(x, i) + name['label']
         feature_names.append(feature_name)
     data = np.array([[float(r) for r in row] for row in d_train._rows])[:, :-1]
-<<<<<<< HEAD:plugins/_Post_Process/_XAI/shap_tabular_batch.py
-=======
-== == == =
-== == == =
->>>>>> > 816041a(Revert "not to read csv comment columns in plugin")
-   with open(args.input, 'r') as f:
-        reader = csv.reader(f)
-        _ = next(reader)
-        X = np.array([[float(r) for r in row] for row in reader])[:, :-1]
-    with open(args.train, 'r') as f:
-        reader = csv.reader(f)
-        feature_names = next(reader)[:-1]
-<<<<<< < HEAD
-   rows = d_train._rows
-    d_train._remove_comment_cols(feature_names, rows)
-    data = np.array([[float(r) for r in row] for row in rows])
->>>>>> > 5a5211e (not to read csv comment columns in plugin)
-== =====
-   data = np.array([[float(r) for r in row] for row in reader])[:, :-1]
->>>>>> > 816041a (Revert "not to read csv comment columns in plugin")
->>>>>>> 88f5fb8 (run copylight checker):plugins/_Post_Process/_XAI/shap_batch_tabular.py
 
-   check_executable(data, args.memory_limit)
+    check_executable(data, args.memory_limit)
 
     kernel_shap = KernelSHAP(data, args.model, X, args.alpha)
     shap_values, _ = kernel_shap.calculate_shap()
