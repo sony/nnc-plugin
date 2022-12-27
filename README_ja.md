@@ -57,6 +57,7 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
     * [RepresenterPoint](./manuals/ja/Post_Process/XAI/Representerpoint.rst)
 
 * 公平性
+<<<<<<< HEAD
     * 公平性スコア
         * [CV Score](./manuals/ja/Post_Process/Fairness/calders_verwer_score.rst)
         * [Demogrphic Parity](./manuals/ja/Post_Process/Fairness/demographic_parity.rst)
@@ -67,6 +68,21 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
         * [Bias Amplification](./manuals/ja/Post_Process/Fairness/Evaluation/bias_amplification.rst) 
         * [KL Divergence](./manuals/ja/Post_Process/Fairness/Evaluation/kl_divergence.rst)
         * [Face evaluation](./manuals/ja/Post_Process/XAI/FaceEvaluation.rst)
+=======
+    * バイアス緩和
+      * [Reject Option-Based Classification](./manuals/ja/Post_Process/Fairness/Bias_Mitgation/reject_option_based_classification.rst)
+    * 公平性指標
+       * [CV Score](./manuals/ja/Post_Process/Fairness/Evaluation/calders_verwer_score.rst)
+       * [Demogrphic Parity](./manuals/ja/Post_Process/Fairness/Evaluation/demographic_parity.rst)
+       * [Disparate Impact](./manuals/ja/Post_Process/Fairness/Evaluation/disparate_impact.rst)
+       * [Equal Opportunity](./manuals/ja/Post_Process/Fairness/Evaluation/equal_opportunity.rst)
+       * [Equalised Odds](./manuals/ja/Post_Process/Fairness/Evaluation/equalised_odd.rst)
+       * [Theil Index](./manuals/ja/Post_Process/Fairness/Evaluation/theil_index.rst)
+       * [Bias Amplification](./manuals/ja/Post_Process/Fairness/Evaluation/bias_amplification.rst)
+       * [KL Divergence](./manuals/ja/Post_Process/Fairness/Evaluation/kl_divergence.rst)
+       * [Face evaluation](./manuals/ja/Post_Process/Fairness/Evaluation/FaceEvaluation.rst)
+
+>>>>>>> dcde71c (resolving conflicts)
 
 ## 最新のプラグインを利用するには
 

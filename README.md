@@ -70,6 +70,7 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
 =======
     * Bias Mitigation
       * [Reject Option-Based Classification](./manuals/Post_Process/Fairness/Bias_Mitgation/reject_option_based_classification.rst)
+<<<<<<< HEAD
     * [CV Score](./manuals/Post_Process/Fairness/calders_verwer_score.rst)
     * [Demogrphic Parity](./manuals/Post_Process/Fairness/demographic_parity.rst)
     * [Disparate Impact](./manuals/Post_Process/Fairness/disparate_impact.rst)
@@ -78,6 +79,18 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
     * [Theil Index](./manuals/Post_Process/Fairness/theil_index.rst)
     * [Reweighing](./manuals/Post_Process/Fairness/Reweighing.rst)
 >>>>>>> 6791e67 (update readme)
+=======
+    * Fairness Scores
+       * [CV Score](./manuals/Post_Process/Fairness/Evaluation/calders_verwer_score.rst)
+       * [Demogrphic Parity](./manuals/Post_Process/Fairness/Evaluation/demographic_parity.rst)
+       * [Disparate Impact](./manuals/Post_Process/Fairness/Evaluation/disparate_impact.rst)
+       * [Equal Opportunity](./manuals/Post_Process/Fairness/Evaluation/equal_opportunity.rst)
+       * [Equalised Odds](./manuals/Post_Process/Fairness/Evaluation/equalised_odd.rst)
+       * [Theil Index](./manuals/Post_Process/Fairness/Evaluation/theil_index.rst)
+       * [Bias Amplification](./manuals/Post_Process/Fairness/Evaluation/bias_amplification.rst)
+       * [KL Divergence](./manuals/Post_Process/Fairness/Evaluation/kl_divergence.rst)
+       * [Face evaluation](./manuals/Post_Process/Fairness/Evaluation/FaceEvaluation.rst)
+>>>>>>> dcde71c (resolving conflicts)
 
 ## How to use the latest plugins
 The plugins run on Neural Network Console. If you do not have Neural Network Console, please download from here (https://dl.sony.com/).
