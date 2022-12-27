@@ -28,7 +28,7 @@ def reject_option_classification(y_true, y_predicted_score,
     mitigate the bias at the model prediction stage, enhancing the favourable 
     outcomes to the unprivileged groups and unfavorable outcomes to privileged 
     groups in a confidence band arround the decision boundary with highest uncertainty.
-    
+
     Args:
         y_true (numpy.ndarray) : ground truth (correct) target values.
         y_predicted_score (numpy.ndarray) : estimated probability predictions (targets scores)
@@ -53,9 +53,11 @@ def reject_option_classification(y_true, y_predicted_score,
     high_classification_threshold = 0.99  # highest classification threshold
     # number of classification threshold b/w low class threshold and high class threshold
     number_classification_threshold = 100
-    number_ROC_margin = 50  # number of relevant ROC margins to be used in the optimization search
+    # number of relevant ROC margins to be used in the optimization search
+    number_ROC_margin = 50
 
-    fair_metric_array = np.zeros(number_classification_threshold * number_ROC_margin)
+    fair_metric_array = np.zeros(
+        number_classification_threshold * number_ROC_margin)
     balanced_accuracy_array = np.zeros_like(fair_metric_array)
     ROC_margin_array = np.zeros_like(fair_metric_array)
     classification_threshold_array = np.zeros_like(fair_metric_array)
@@ -206,7 +208,8 @@ def func(args):
 
     with open(args.output, 'w', newline="\n", encoding='utf-8') as f:
         writer = csv.writer(f)
-        writer.writerow(['Classification Threshold', 'ROC Margin', 'Accuracy', args.fair_metric])
+        writer.writerow(['Classification Threshold',
+                        'ROC Margin', 'Accuracy', args.fair_metric])
         writer.writerow([clf_thr, ROC_margin, acc, fairness])
 
 
@@ -218,10 +221,12 @@ def restricted_fairness(x):
     try:
         x = float(x)
     except ValueError:
-        raise argparse.ArgumentTypeError("%r not a floating-point literal" % (x,))
+        raise argparse.ArgumentTypeError(
+            "%r not a floating-point literal" % (x,))
 
     if x < -1.0 or x > 1.0:
-        raise argparse.ArgumentTypeError("Fairness metric value : %r not in range [-1.0, 1.0]" % (x,))
+        raise argparse.ArgumentTypeError(
+            "Fairness metric value : %r not in range [-1.0, 1.0]" % (x,))
     return x
 
 

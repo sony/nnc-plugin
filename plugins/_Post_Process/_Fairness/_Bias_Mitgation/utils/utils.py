@@ -84,7 +84,7 @@ def get_equalised_odds(y_privileged, y_unprivileged,
 
     # compute Equalized odds
     average_abs_odds_difference = 0.5 * \
-                                  (abs(unprivileged_FPR - privileged_FPR) +
-                                   abs(unprivileged_TPR - privileged_TPR))
+        (abs(unprivileged_FPR - privileged_FPR) +
+         abs(unprivileged_TPR - privileged_TPR))
 
     return average_abs_odds_difference

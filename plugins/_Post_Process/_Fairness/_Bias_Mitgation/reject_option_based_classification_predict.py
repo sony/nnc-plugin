@@ -69,16 +69,23 @@ def func(args):
                      for row in reader if len(row) > 0]
 
     output_col = enum_cols(in_header, 'output-variable', args.output_variable)
-    privileged_col = enum_cols(in_header, 'privileged-variable', args.privileged_variable)
-    unprivileged_col = enum_cols(in_header, 'unprivileged-variable', args.unprivileged_variable)
+    privileged_col = enum_cols(
+        in_header, 'privileged-variable', args.privileged_variable)
+    unprivileged_col = enum_cols(
+        in_header, 'unprivileged-variable', args.unprivileged_variable)
     roc_margin_col = enum_cols(roc_header, 'ROC', 'ROC Margin')
-    roc_clf_threshold_col = enum_cols(roc_header, 'ROC', 'Classification Threshold')
+    roc_clf_threshold_col = enum_cols(
+        roc_header, 'ROC', 'Classification Threshold')
 
-    clf_out = np.asarray(extract_col(in_header, in_table, output_col)).flatten()
-    privileged_variable = np.array(extract_col(in_header, in_table, privileged_col))
-    unprivileged_variable = np.array(extract_col(in_header, in_table, unprivileged_col))
+    clf_out = np.asarray(extract_col(
+        in_header, in_table, output_col)).flatten()
+    privileged_variable = np.array(
+        extract_col(in_header, in_table, privileged_col))
+    unprivileged_variable = np.array(
+        extract_col(in_header, in_table, unprivileged_col))
     roc_margin = float(extract_col(roc_header, roc_table, roc_margin_col)[0])
-    roc_clf_threshold = float(extract_col(roc_header, roc_table, roc_clf_threshold_col)[0])
+    roc_clf_threshold = float(extract_col(
+        roc_header, roc_table, roc_clf_threshold_col)[0])
     # check privileged/unprivileged variables
     if not ((privileged_variable == 1.0) == (unprivileged_variable == 0.0)).all():
         logger.log(
@@ -92,7 +99,6 @@ def func(args):
 
     save_info_to_csv(args.input, args.output,
                      y_pred, column_name='ROC Predicted')
-
 
 
 def main():
