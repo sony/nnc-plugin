@@ -1,36 +1,26 @@
 ROC and AUC curve
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-ThisÂ pluginÂ drawsÂ aÂ two-dimensionalÂ plotÂ betweenÂ TPRÂ andÂ FPRÂ atÂ differentÂ thresholds.
-HigherÂ AUCÂ scoreÂ indicatesÂ betterÂ model.Â 
+This plugin draws a two-dimensional plot between TPR and FPR at different thresholds.
+Higher AUC score indicates a better model. By Decrease the threshold value, get more TP. 
+If the predicted label is greater than the threshold, then it is classified as a positive prediction; otherwise it is a negative prediction.
 
 .. list-table::
    :widths: 30 70
    :class: longtable
 
    * - input
-     - DatasetÂ CSVÂ file.Â OutputÂ resultsÂ are shownÂ inÂ theÂ 'Evaluation'Â tab.Â 
-       DefaultÂ `output_result.csv`Â isÂ usedÂ asÂ inputÂ forÂ drawingÂ ofÂ `ROCÂ and AUC curve`.Â 
+     - Dataset CSV file. Output results are shown in the 'Evaluation' tab. 
+       Default `output_result.csv` is used as input for drawing of `PR curve`. 
 
    * - target_variable
      - Target label in csv file.
 
    * - output_variable
-     - Predicted label in csv file.
+     - Predicted label in csv file. For multiclassification give the variables as(y'__0,y'__1, ... , y'__n)
 
    * - width
      - Plot width, to be drawn in inches.
 
    * - height
      - Plot height, to be drawn in inches.
-
-   * - threshold
-     - Threshold stepsize between 0 & 1 (default step = 0.02).
-       Get N number of threshold values between 0 & 1.
-
-
-
-
- 
-
-

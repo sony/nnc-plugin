@@ -44,6 +44,8 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
 * 可視化
     * [Scatter plot](./manuals/ja/Post_Process/Visualization/ScatterPlot.rst)
     * [Tile images](./manuals/ja/Post_Process/Visualization/TileImages.rst)
+    * [Precision Recall curve](./manuals/ja/Post_Process/Visualization/precision_recall_curve.rst)
+    * [ROC AUC curve](./manuals/ja/Post_Process/Visualization/roc_auc.rst)
 
 * 説明可能なAI (XAI)
     * [Attention Editor](./manuals/ja/Post_Process/XAI/AttentionEditor.rst)
