@@ -1,4 +1,4 @@
-# Copyright 2021,2022 Sony Group Corporation.
+# Copyright 2021,2022,2023 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ def func(args):
     input_variable, data_name = list(executor.dataset_assign.items())[0]
     output_variable = list(executor.output_assign.keys())[0]
 
-    #logger.log(99, input_variable)
+    # logger.log(99, input_variable)
 
     # Load csv
     d_input = CsvDataSource(args.input)

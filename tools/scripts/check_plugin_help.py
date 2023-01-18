@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022,2023 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,27 +29,35 @@ for plugin in glob.glob(f'{basedir}/plugins/*/*/[A-Za-z]*.py'):
         sys.path.append(plugin_dir)
     plugin_filename = os.path.basename(plugin)
     plugin_name, _ = os.path.splitext(plugin_filename)
+    cat1 = os.path.basename(os.path.dirname(os.path.dirname(plugin)))
+    cat2 = os.path.basename(os.path.dirname(plugin))
 
-    print(f'Checking {plugin_name}', file=sys.stderr)
+    print(f'Checking {cat1}.{cat2}.{plugin_name}', file=sys.stderr)
 
     try:
         plugin_module = importlib.import_module(plugin_name)
     except:
+        import traceback
+        traceback.print_exc()
         print(f'  Error could not import {plugin_filename}')
         ret += 1
         continue
 
     sys.argv = [plugin_name, '-h']
-    old_stdout = sys.stdout
     sys.stdout = mystdout = io.StringIO()
+    sys.stderr = mystderr = io.StringIO()
     t = threading.Thread(target=plugin_module.main)
     t.start()
     t.join()
 
-    sys.stdout = old_stdout
-    if not mystdout.getvalue().startswith('usage'):
+    sys.stdout = sys.__stdout__
+    sys.stderr = sys.__stderr__
+    firstline = mystdout.getvalue().splitlines()[0]
+    if not firstline.startswith('usage'):
         print(f'  Error could not get help message from {plugin_filename}')
         ret += 1
+    print('  Help message: ', firstline)
     mystdout.close()
+    mystderr.close()
 
 sys.exit(ret)
