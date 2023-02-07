@@ -1,4 +1,4 @@
-# Copyright 2022 Sony Group Corporation.
+# Copyright 2022,2023 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ def func(args):
         protected_attribute_names,
         condition=unprivileged_groups)
 
-    # get the favorable(postive outcome) condition vector
+    # get the favorable(positive outcome) condition vector
     # Values are `True` for the favorable values else 'False'
     favorable_cond = labels_train.ravel() == favorable_label
 
@@ -85,14 +85,14 @@ def func(args):
 
     # combination of label and privileged/unprivileged groups
 
-    # Postive outcome for privileged group
+    # Positive outcome for privileged group
     privileged_favorable_cond = np.logical_and(favorable_cond, privileged_cond)
 
     # Negative outcome for privileged group
     privileged_unfavorable_cond = np.logical_and(
         unfavorable_cond, privileged_cond)
 
-    # Postive outcome for unprivileged group
+    # Positive outcome for unprivileged group
     unprivileged_favorable_cond = np.logical_and(
         favorable_cond, unprivileged_cond)
 
