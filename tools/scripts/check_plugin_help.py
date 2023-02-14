@@ -12,52 +12,43 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import concurrent.futures
+import glob
 import io
 import os
+import subprocess
 import sys
-import glob
-import importlib
-import threading
+
+from nnabla import logger
 
 basedir = os.path.abspath(os.path.join(
     os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 
-ret = 0
-for plugin in glob.glob(f'{basedir}/plugins/*/*/[A-Za-z]*.py'):
-    plugin_dir = os.path.abspath(os.path.dirname(plugin))
-    if plugin_dir not in sys.path:
-        sys.path.append(plugin_dir)
-    plugin_filename = os.path.basename(plugin)
-    plugin_name, _ = os.path.splitext(plugin_filename)
-    cat1 = os.path.basename(os.path.dirname(os.path.dirname(plugin)))
-    cat2 = os.path.basename(os.path.dirname(plugin))
 
-    print(f'Checking {cat1}.{cat2}.{plugin_name}', file=sys.stderr)
-
+def get_help(plugin):
+    logger.critical(f'Getting help message of {os.path.basename(plugin)}')
     try:
-        plugin_module = importlib.import_module(plugin_name)
+        output = subprocess.check_output(['python3', plugin, '-h'])
     except:
-        import traceback
-        traceback.print_exc()
-        print(f'  Error could not import {plugin_filename}')
+        return []
+    return output.decode().splitlines()
+
+
+plugins = []
+for plugin in sorted(glob.glob(f'{basedir}/plugins/_*/_*/[A-Za-z]*.py') +
+                     glob.glob(f'{basedir}/plugins/_*/_*/_*/[A-Za-z]*.py')):
+    plugins.append(plugin)
+
+with concurrent.futures.ThreadPoolExecutor(max_workers=30) as executor:
+    help_messages = executor.map(get_help, plugins)
+ret = 0
+for plugin, help_message in zip(plugins, help_messages):
+    if len(help_message) == 0:
+        print(f'    Error getting help from {os.path.basename(plugin)}')
+        print(
+            f'      To check what is wrong, please exec `python3 {plugin} -h` directly.')
         ret += 1
-        continue
-
-    sys.argv = [plugin_name, '-h']
-    sys.stdout = mystdout = io.StringIO()
-    sys.stderr = mystderr = io.StringIO()
-    t = threading.Thread(target=plugin_module.main)
-    t.start()
-    t.join()
-
-    sys.stdout = sys.__stdout__
-    sys.stderr = sys.__stderr__
-    firstline = mystdout.getvalue().splitlines()[0]
-    if not firstline.startswith('usage'):
-        print(f'  Error could not get help message from {plugin_filename}')
-        ret += 1
-    print('  Help message: ', firstline)
-    mystdout.close()
-    mystderr.close()
-
+    else:
+        print(
+            f'    Help message ({os.path.basename(plugin)}): {help_message[0]}')
 sys.exit(ret)
