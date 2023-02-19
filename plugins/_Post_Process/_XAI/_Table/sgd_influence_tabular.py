@@ -13,13 +13,18 @@
 # limitations under the License.
 
 import os
+import sys
 import nnabla as nn
 from nnabla import logger
 from sgd_influence_tabular_utils.network import get_config
 from sgd_influence_tabular_utils.train import train
 from sgd_influence_tabular_utils.infl import infl_sgd
-from sgd_influence_utils.utils import delete_dir, get_context, ensure_dir, save_to_csv, calc_result_mean
 from sgd_influence_tabular_utils.args import get_train_infl_args
+
+
+sys.path.append(os.path.abspath(os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), '..', '_Image')))  # noqa
+from sgd_influence_utils.utils import delete_dir, get_context, ensure_dir, save_to_csv, calc_result_mean  # noqa
 
 
 def func(args):
