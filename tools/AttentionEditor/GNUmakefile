@@ -29,16 +29,20 @@ docker:
 	echo electron-docker:$$(date +'%Y%m%d%H%M%S') > dist_electron/tmp/docker-image_id.txt
 	docker build -t $$(cat dist_electron/tmp/docker-image_id.txt) docker |tee dist_electron/tmp/docker-build.log
 
-.PHONY: yarn
-yarn: docker
+.PHONY: yarn-docker
+yarn-docker: docker
 	docker run --rm -e HOME=$$(pwd)/dist_electron/tmp -u $$(id -u):$$(id -g) -v $$(pwd):$$(pwd) -w $$(pwd) $$(cat dist_electron/tmp/docker-image_id.txt) \
-		yarn install
+		yarn
 
 .PHONY: win
-win: yarn
+win: yarn-docker
 	docker run --rm -e HOME=$$(pwd)/dist_electron/tmp -u $$(id -u):$$(id -g) -v $$(pwd):$$(pwd) -w $$(pwd) $$(cat dist_electron/tmp/docker-image_id.txt) \
-		yarn electron:build --win --x64
+		yarn electron:build --win --x64 --dir
+
+.PHONY: yarn
+yarn:
+	yarn
 
 .PHONY: mac
-mac:
-	yarn electron:build --mac
+mac: yarn
+	yarn electron:build --mac --dir

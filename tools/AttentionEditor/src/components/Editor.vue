@@ -5,7 +5,7 @@
       <img id="editorImage" v-on:load="onEditorImageLoad" />
     </div>
     <el-row>
-      <el-col :span="4">
+      <el-col :span="12">
         <el-switch
           style="margin-right: 20px"
           v-model="cursorMode"
@@ -13,8 +13,10 @@
           inactive-text="Remove"
         />
       </el-col>
+    </el-row>
+    <el-row>
       <el-col :span="4">Cursor size</el-col>
-      <el-col :span="16">
+      <el-col :span="20">
         <el-slider
           v-model="cursorSize"
           show-input
@@ -47,7 +49,7 @@ import { useStore } from "vuex";
 
 import * as fs from "fs";
 import * as path from "path";
-import * as PIXI from "pixi.js";
+import * as PIXI from "pixi.js-legacy";
 import debounce from "lodash";
 
 export default defineComponent({
@@ -154,6 +156,7 @@ export default defineComponent({
       const div = document.getElementById("editor");
       const canvas = document.getElementById("editorCanvas");
       const image = document.getElementById("editorImage");
+
       if (div && canvas && image) {
         const iW = image.clientWidth;
         const iH = image.clientHeight;
@@ -240,6 +243,7 @@ export default defineComponent({
           info.imageSprite.width,
           info.imageSprite.height
         );
+        info.mask[0].tex.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
         info.mask[0].spr = new PIXI.Sprite(info.mask[0].tex);
         info.mask[0].spr.width = iW;
         info.mask[0].spr.height = iH;
@@ -394,7 +398,8 @@ export default defineComponent({
       onEditorImageLoad: () => {
         info.maskdata = null;
         redraw();
-        if (store.state.imageFilename in store.state.attentionMaps) {
+        if (store.state.attentionMaps != null &&
+            store.state.imageFilename in store.state.attentionMaps) {
           drawMap(store.state.attentionMaps[store.state.imageFilename]);
         }
       },
@@ -431,5 +436,6 @@ export default defineComponent({
 #editorCanvas {
   width: 100%;
   height: 100%;
+  image-rendering: pixelated;
 }
 </style>

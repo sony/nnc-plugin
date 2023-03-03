@@ -191,7 +191,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description='Attention Editor (all data)\n' +
+        description='Attention Editor (single image)\n' +
         '\n' +
         'You can use this editor to change the attention map in an attention branch network to see how the inference results change.\n' +
         '\n' +
@@ -261,12 +261,12 @@ def main():
     #     help='Specify port number',
     #     default=0)
 
-    # parser.add_argument(
-    #     '-e',
-    #     '--editor',
-    #     type=str,
-    #     help='Path to editor executable.',
-    #     default=None)
+    parser.add_argument(
+        '-e',
+        '--editor',
+        type=str,
+        help='Path to editor executable.',
+        default=None)
 
     args = parser.parse_args()
 
@@ -283,11 +283,12 @@ def main():
     except:
         settings = None
     if settings is not None:
-        editor = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                              'attention_editor_binary',
-                              'attention-editor.exe')
-        # if args.editor is not None:
-        #     editor = args.editor
+        if args.editor is not None and os.path.isfile(args.editor):
+            editor = args.editor
+        else:
+            editor = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  'attention_editor_binary',
+                                  'attention-editor.exe')
 
         os.environ['AE_SERVICE_ADDR'] = f"http://{settings['host']}:{settings['port']}/"
         proc = subprocess.run([editor])
