@@ -23,7 +23,14 @@ from nnabla.utils.data_source_implements import CsvDataSource
 
 def func(args):
     d_input = CsvDataSource(args.input)
-    X = np.array([[float(r) for r in row] for row in d_input._rows])[:, :-1]
+    required_column = [
+        i for i in d_input._columns if i[0][0].casefold() == 'x']
+    index = []
+    for col in required_column:
+        index.append((d_input._columns).index(col))
+
+    table = np.array([[float(r) for r in row] for row in d_input._rows])
+    X = table[args.index - 1][index]
 
     d_train = CsvDataSource(args.train)
     feature_names = []

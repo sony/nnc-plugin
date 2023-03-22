@@ -132,9 +132,6 @@ Input Information
    * - input
      - Specify the dataset CSV file containing the data to analyze.
 
-   * - categorical
-     - Specify the indices of the columns in the input CSV where categorical features are used. It has to be given in integers separated with comma.
-
    * - index
      - Specify the index of the data in the input CSV.
 
@@ -154,9 +151,18 @@ Output Information
 ===================
 
 The result of this plugin is saved in the designated 'output' path as CSV file.
+
 The information on the rows and columns of CSV file is as follows.
-The 'Sample (Index {n})' row represents the value of each feature, the name of which corresponds to each column name in output_result.csv.
-The 'Importance' row shows the importance of each input feature in the classification. The row above 'Importance' means the feature range that gives the importance.
+
+* The 'Sample (Index {n})' row represents the value of each feature, the name of which corresponds to each column name in output_result.csv.
+
+* The 'Importance' row shows the importance of each input feature in the classification. 
+
+* The row above 'Importance' means the feature range that gives the importance.
+
+The importance of target instance are visualized with bar plot. The visualization results are saved to the Evaluation folder.
+
+* Bar plot represents the importance of target instance respect to the features range(saved as 'LIME_Importance.png').
 
 XAI/LIME(tabular batch)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -181,9 +187,6 @@ Input Information
    * - input
      - Specify the dataset CSV file containing the data to analyze.
 
-   * - categorical
-     - Specify the indices of the columns in the input CSV where categorical features are used. It has to be given in integers separated with comma.
-
    * - class_index
      - Specify the index of the class of the data to analyze. Default value is 0. For regression model or binary classification model, only class_index=0 can be specified.
 
@@ -200,8 +203,10 @@ Output Information
 ===================
 
 The result of this plugin is saved in the designated 'output' path as CSV file.
+
 The information on the columns of CSV file is as follows.
-For the other columns, the column name of each feature represents the importance of target instance.
+
+* For the other columns, the column name of each feature represents the importance of target instance.
 
 
 .. list-table::
@@ -210,3 +215,10 @@ For the other columns, the column name of each feature represents the importance
 
    * - index
      - The index of the target instance in input-train dataset CSV file.
+
+The importance of target instance are visualized with mean plot and Beeswarm plot. The visualization results are saved to the Evaluation folder.
+
+* Mean plot represents the absolute mean for the importance of target instance respect to the features(saved as 'Mean_LIME.png').
+
+* Beeswarm plot represents the absolute mean for the importance of target instance and importance of target instance respect to the features(saved as 'Beeswarm_LIME.png').
+
