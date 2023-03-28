@@ -1,30 +1,27 @@
 Precision/Recall curve
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-ThisÂ pluginÂ drawsÂ aÂ two-dimensionalÂ plotÂ showingÂ theÂ tradeoffÂ betweenÂ precisionÂ andÂ recallÂ forÂ differentÂ thresholds HigherÂ AUC-PRÂ scoreÂ indicatesÂ aÂ betterÂ model.Â BaselineÂ ofÂ the PRÂ curveÂ isÂ theÂ horizontalÂ lineÂ thatÂ indicatesÂ theÂ valueÂ ofÂ theÂ positiveÂ rateÂ P/(P+N)Â â€”Â theÂ smallestÂ valueÂ ofÂ precision.
-
+This plugin draws a two-dimensional plot showing the tradeoff between precision and recall for different thresholds.
+Higher AUC-PR score indicates a better model. By Decrease the threshold value, get more TP. 
+If the predicted label is greater than the threshold, then it is classified as a positive prediction; otherwise it is a negative prediction.
 
 .. list-table::
    :widths: 30 70
    :class: longtable
 
    * - input
-     - DatasetÂ CSVÂ file.Â OutputÂ resultsÂ are shownÂ inÂ theÂ 'Evaluation'Â tab.Â 
-       DefaultÂ `output_result.csv`Â isÂ usedÂ asÂ inputÂ forÂ drawingÂ ofÂ `PRÂ curve`.Â 
+     - Dataset CSV file. Output results are shown in the 'Evaluation' tab. 
+       Default `output_result.csv` is used as input for drawing of `PR curve`. 
 
    * - target_variable
-     - Target label in csv file
+     - Target label in csv file.
 
    * - output_variable
-     - Predicted label in csv file
+     - Predicted label in csv file. For multiclassification give the variables as(y'__0,y'__1, ... , y'__n)
 
    * - width
-     - Plot width, to be drawn in inches
+     - Plot width, to be drawn in inches.
 
    * - height
-     - Plot height, to be drawn in inches
-
-   * - threshold
-     - Threshold stepsize between 0 & 1.
-       Get N number of threshold values between 0 & 1 by stepsize.
+     - Plot height, to be drawn in inches.
 
