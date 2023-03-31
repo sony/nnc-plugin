@@ -26,8 +26,8 @@ all-clean: clean
 .PHONY: docker
 docker:
 	mkdir -p dist_electron/tmp
-	docker build docker |tee dist_electron/tmp/docker-build.log
-	cat dist_electron/tmp/docker-build.log |awk 'END{print $$3}' >dist_electron/tmp/docker-image_id.txt
+	echo electron-docker:$$(date +'%Y%m%d%H%M%S') > dist_electron/tmp/docker-image_id.txt
+	docker build -t $$(cat dist_electron/tmp/docker-image_id.txt) docker |tee dist_electron/tmp/docker-build.log
 
 .PHONY: yarn
 yarn: docker
