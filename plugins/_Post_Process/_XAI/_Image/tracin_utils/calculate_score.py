@@ -150,6 +150,10 @@ def calc_infl(args):
 
     # sort by influence in ascendissng order
     rows = read_csv(args.input_train)
+    image_head = rows[0][0]
+    rows = [[r[1]] for r in rows]  # remove image rows
+    # add abs image path
+    rows = add_info_to_csv(rows, results["img_path"], image_head, position=0)
     rows = add_info_to_csv(rows, results["influence"], "influence", position=0)
     header = rows.pop(0)
     rows = np.array(rows)
