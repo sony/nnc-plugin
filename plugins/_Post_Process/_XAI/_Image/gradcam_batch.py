@@ -33,6 +33,8 @@ def main():
     parser.add_argument(
         '-v1', '--input_variable', help='Variable to be processed (variable), default=x', required=True, default='x')
     parser.add_argument(
+        '-ov', '--output_variable', help="output variable to visualize (variable) default=y0' ", required=True, default="y0'")
+    parser.add_argument(
         '-v2', '--label_variable', help='Variable representing class index to visualize (variable) default=y', required=True, default='y')
     parser.add_argument(
         '-o', '--output', help='path to output csv file (csv) default=gradcam.csv', required=True, default='gradcam.csv')
