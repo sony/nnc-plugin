@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022,2023 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -112,8 +112,8 @@ def func(args):
                 base_size = patch_sizes[i] - overlap_sizes[i] * 2
                 im = load_image(line[vi])
                 line[vi] = os.path.join(input_csv_path, line[vi])
-                patch_num_x = (im.shape[0] - 1) // base_size + 1
-                patch_num_y = (im.shape[1] - 1) // base_size + 1
+                patch_num_x = (im.shape[1] - 1) // base_size + 1
+                patch_num_y = (im.shape[0] - 1) // base_size + 1
                 patch_index = 0
                 # Patch loop
                 for py in range(patch_num_y):
@@ -125,8 +125,8 @@ def func(args):
                         y_offset = -top
                         y_size = patch_sizes[i] - y_offset
                         top = 0
-                    if y_offset + y_size > im.shape[0]:
-                        y_size = im.shape[0] = y_offset
+                    if top + y_size > im.shape[0]:
+                        y_size = im.shape[0] - top
                     for px in range(patch_num_x):
                         left = org_left = - overlap_sizes[i] + px * base_size
                         if left >= 0:
@@ -136,8 +136,8 @@ def func(args):
                             x_offset = -left
                             x_size = patch_sizes[i] - x_offset
                             left = 0
-                        if x_offset + x_size > im.shape[1]:
-                            x_size = im.shape[0] = x_offset
+                        if left + x_size > im.shape[1]:
+                            x_size = im.shape[1] - left
 
                         # Crop image
                         out_im = np.zeros(
