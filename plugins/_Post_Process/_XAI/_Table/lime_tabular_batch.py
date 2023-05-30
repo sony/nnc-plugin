@@ -17,11 +17,55 @@ from scipy import stats
 from sklearn.linear_model import Ridge
 import csv
 import collections
-
+from sklearn.utils.extmath import softmax
+import matplotlib.pyplot as plt
 from nnabla import logger
 import nnabla.utils.load as load
 from nnabla.utils.cli.utility import let_data_to_variable
 from nnabla.utils.data_source_implements import CsvDataSource
+
+
+def get_mean_weight_lime(abs_mean):
+    '''
+    Mean weight plot for LIME weights
+    '''
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(12, 8))
+    y_ticks = range(len(abs_mean))
+    y_labels = list(zip(*abs_mean))[0]
+    plt.barh(y=y_ticks, width=list(zip(*abs_mean))[1])
+    plt.yticks(ticks=y_ticks, labels=y_labels, size=8)
+    for index, value in enumerate(list(zip(*abs_mean))[1]):
+        plt.text(value, index, str(round(value, 4)), fontweight='bold')
+    plt.title('Mean weight plot for LIME weights', fontweight='bold')
+    plt.xlabel('Mean |Weight|', size=8, fontweight='bold')
+    plt.savefig('Mean_LIME.png')
+
+
+def get_beeswarm_lime(abs_mean, lime_weight, samples):
+    '''
+    Beeswarm plot for LIME weights
+    '''
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(15, 10))
+    y_ticks = range(len(abs_mean))
+    y_labels = list(zip(*abs_mean))[0]
+
+    # plot scatterplot for each feature
+    for i, feature in enumerate(y_labels):
+        feature_weigth = lime_weight[:, i]
+        feature_value = samples[:, i]
+        plt.scatter(x=feature_weigth,
+                    y=[i]*len(feature_weigth),
+                    c=feature_value,
+                    cmap='bwr',
+                    edgecolors='black',
+                    alpha=0.8)
+    plt.vlines(x=0, ymin=0, ymax=len(y_labels),
+               colors='black', linestyles="--")
+    plt.colorbar(label='Feature Value', ticks=[])
+    plt.yticks(ticks=y_ticks, labels=y_labels, size=8)
+    plt.xlabel('LIME Weight', size=8, fontweight='bold')
+    plt.title('Beeswarm plot for LIME weights', fontweight='bold')
+    plt.savefig('Beeswarm_LIME.png')
 
 
 def func(args):
@@ -57,8 +101,14 @@ def func(args):
 
     # Load csv
     d_input = CsvDataSource(args.input)
-    samples = np.array([[float(r) for r in row]
-                       for row in d_input._rows])[:, :-1]
+    required_column = [
+        i for i in d_input._columns if i[0][0].casefold() == 'x']
+    index = []
+    for col in required_column:
+        index.append((d_input._columns).index(col))
+
+    table = np.array([[float(r) for r in row] for row in d_input._rows])
+    samples = table[:, index]
 
     d_train = CsvDataSource(args.train)
     feature_names = []
@@ -69,15 +119,10 @@ def func(args):
     train = np.array([[float(r) for r in row]
                      for row in d_train._rows])[:, :-1]
 
-    categorical_features = ''.join(args.categorical.split())
-    categorical_features = [
-        int(x) for x in categorical_features.split(',') if x != '']
-
     results = []
     for sample in samples:
         # discretization
-        to_discretize = list(
-            set(range(train.shape[1])) - set(categorical_features))
+        to_discretize = list(set(range(train.shape[1])))
         discrete_train = train.copy()
         discrete_sample = sample.copy()
         freq = {}
@@ -117,6 +162,7 @@ def func(args):
 
         discrete_data = np.zeros((args.num_samples, train.shape[1]))
         binary_data = np.zeros((args.num_samples, train.shape[1]))
+        data_row = sample.copy()
         np.random.seed(0)
         for i in range(train.shape[1]):
             discrete_data[:, i] = np.random.choice(
@@ -124,9 +170,9 @@ def func(args):
             binary_data[:, i] = (discrete_data[:, i] ==
                                  discrete_sample[i]).astype(int)
 
-        discrete_data[0] = discrete_sample
+        discrete_data[0] = data_row
 
-        binary_data[0] = np.ones_like(discrete_sample)
+        binary_data[0] = np.ones_like(data_row)
         continuous_data = discrete_data.copy()
         discrete_data = discrete_data.astype(int)
 
@@ -156,18 +202,19 @@ def func(args):
         # Forward
         executor.forward_target.forward(clear_buffer=True)
 
-        pseudo_label = output_variable.variable_instance.d[:, args.class_index]
+        pseudo_label = output_variable.variable_instance.d
+        yss = softmax(pseudo_label)
 
         # regerssion
         def kernel(x, y):
             sigma = np.sqrt(train.shape[1]) * 0.75
             d = np.linalg.norm(y - x, axis=1)
-            return np.sqrt(np.exp(-d * d / sigma**2))
+            return np.sqrt(np.exp(-(d ** 2) / sigma**2))
 
         np.random.seed(0)
         weights = kernel(binary_data, binary_data[0])
         model = Ridge(alpha=1, fit_intercept=True)
-        model.fit(binary_data, pseudo_label, sample_weight=weights)
+        model.fit(binary_data, yss[:, args.class_index], sample_weight=weights)
         results.append(model.coef_)
 
     # Generate output csv
@@ -179,6 +226,23 @@ def func(args):
             writer.writerow(
                 [str(i + 1)] + ['{:.5f}'.format(value) for value in result])
 
+    lime_csv = CsvDataSource(args.output)
+    lime_weight = np.array([[float(r) for r in row]
+                            for row in lime_csv._rows])
+    lime_weight = lime_weight[:, 1:len(lime_csv._columns)]
+    abs_mean = []
+    abs_weight = []
+    for i in range(len(lime_csv._columns)-1):
+        abs_weight = np.absolute(lime_weight[:, i]).mean(axis=0)
+        abs_mean.append([lime_csv._columns[i+1], abs_weight])
+
+    # Get abs mean of LIME weights
+    get_mean_weight_lime(abs_mean)
+
+    # Get Beeswarm of LIME weights
+    get_beeswarm_lime(abs_mean, lime_weight, samples)
+
+    logger.log(99, 'Mean_weight plot and Beeswarm plot saved successfully.')
     logger.log(99, 'LIME(tabular batch) completed successfully.')
 
 
@@ -195,8 +259,6 @@ def main():
         '-m', '--model', help='path to model nnp file (model), default=results.nnp', required=True, default='results.nnp')
     parser.add_argument(
         '-i', '--input', help='path to input csv file (csv)', required=True)
-    parser.add_argument(
-        '-c', '--categorical', help='indexes of categorical features in input csv (comma separated int)', required=False, default='')
     parser.add_argument(
         '-c2', '--class_index', help='class index (int), default=0', required=True, default=0, type=int)
     parser.add_argument(

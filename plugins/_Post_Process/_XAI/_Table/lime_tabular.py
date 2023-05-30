@@ -17,10 +17,32 @@ from scipy import stats
 from sklearn.linear_model import Ridge
 import csv
 import collections
+import matplotlib.pyplot as plt
+from sklearn.utils.extmath import softmax
 from nnabla import logger
 import nnabla.utils.load as load
 from nnabla.utils.cli.utility import let_data_to_variable
 from nnabla.utils.data_source_implements import CsvDataSource
+
+
+def get_plot(result):
+    '''
+    plot for lime weights
+    '''
+    fig, axs = plt.subplots(nrows=1, ncols=1, figsize=(15, 8))
+    x_weight = list(map(float, np.array(result[1]).flatten()))
+    y_ticks = range(len(result[1]))
+    plt.barh(y_ticks, x_weight)
+    plt.yticks(ticks=y_ticks, labels=result[0], size=8)
+    for index, value in enumerate(x_weight):
+        if value > 0:
+            plt.text(value, index, str(round(value, 5)), fontweight='bold')
+        else:
+            plt.text(value, index, str(round(value, 5)),
+                     ha='right', fontweight='bold')
+    plt.title('LIME weights for sample data', fontweight='bold')
+    plt.xlabel('|Weight|', size=8, fontweight='bold')
+    plt.savefig('LIME_Importance.png')
 
 
 def func(args):
@@ -58,8 +80,14 @@ def func(args):
 
     # Load csv
     d_input = CsvDataSource(args.input)
+    required_column = [
+        i for i in d_input._columns if i[0][0].casefold() == 'x']
+    index = []
+    for col in required_column:
+        index.append((d_input._columns).index(col))
+
     table = np.array([[float(r) for r in row] for row in d_input._rows])
-    sample = table[args.index - 1][:-1]
+    sample = table[args.index - 1][index]
 
     d_train = CsvDataSource(args.train)
     feature_names = []
@@ -70,13 +98,8 @@ def func(args):
     train = np.array([[float(r) for r in row]
                      for row in d_train._rows])[:, :-1]
 
-    categorical_features = ''.join(args.categorical.split())
-    categorical_features = [
-        int(x) for x in categorical_features.split(',') if x != '']
-
     # discretization
-    to_discretize = list(
-        set(range(train.shape[1])) - set(categorical_features))
+    to_discretize = list(set(range(train.shape[1])))
     discrete_train = train.copy()
     discrete_sample = sample.copy()
     freq = {}
@@ -115,6 +138,7 @@ def func(args):
 
     discrete_data = np.zeros((args.num_samples, train.shape[1]))
     binary_data = np.zeros((args.num_samples, train.shape[1]))
+    data_row = sample.copy()
     np.random.seed(0)
     for i in range(train.shape[1]):
         discrete_data[:, i] = np.random.choice(
@@ -122,9 +146,9 @@ def func(args):
         binary_data[:, i] = (discrete_data[:, i] ==
                              discrete_sample[i]).astype(int)
 
-    discrete_data[0] = discrete_sample
+    discrete_data[0] = data_row
 
-    binary_data[0] = np.ones_like(discrete_sample)
+    binary_data[0] = np.ones_like(data_row)
     continuous_data = discrete_data.copy()
     discrete_data = discrete_data.astype(int)
 
@@ -154,36 +178,41 @@ def func(args):
     # Forward
     executor.forward_target.forward(clear_buffer=True)
 
-    pseudo_label = output_variable.variable_instance.d[:, args.class_index]
+    pseudo_label = output_variable.variable_instance.d
+    yss = softmax(pseudo_label)
 
     # regerssion
     def kernel(x, y):
         sigma = np.sqrt(train.shape[1]) * 0.75
         d = np.linalg.norm(y - x, axis=1)
-        return np.sqrt(np.exp(-d * d / sigma**2))
+        return np.sqrt(np.exp(-(d ** 2) / sigma**2))
 
     np.random.seed(0)
     weights = kernel(binary_data, binary_data[0])
     model = Ridge(alpha=1, fit_intercept=True)
-    model.fit(binary_data, pseudo_label, sample_weight=weights)
+    model.fit(binary_data, yss[:, args.class_index], sample_weight=weights)
     weight = model.coef_
 
     result = np.stack([feature_names, weight])
+
     for i in range(train.shape[1]):
         if i in to_discretize:
             if discrete_sample[i] == 0:
 
                 result[0, i] = "'%s' <= %.2f" % (
-                    feature_names[i].split(":")[0], quartiles[i][0])
+                    feature_names[i].split(":")[1], quartiles[i][0])
             elif discrete_sample[i] == len(quartiles[i]):
                 result[0, i] = "%.2f < '%s'" % (
-                    quartiles[i][-1], feature_names[i].split(":")[0])
+                    quartiles[i][-1], feature_names[i].split(":")[1])
             else:
                 result[0, i] = "%.2f < '%s' <= %.2f" % (quartiles[i][int(
-                    discrete_sample[i] - 1)], feature_names[i].split(":")[0], quartiles[i][int(discrete_sample[i])])
+                    discrete_sample[i] - 1)], feature_names[i].split(":")[1], quartiles[i][int(discrete_sample[i])])
         else:
             result[0, i] = "'%s' = %.2f" % (
-                feature_names[i].split(":")[0], discrete_sample[i])
+                feature_names[i].split(":")[1], discrete_sample[i])
+
+    # get the plot for lime importance
+    get_plot(result)
 
     # Generate output csv
     with open(args.output, 'w', newline="\n") as f:
@@ -211,8 +240,6 @@ def main():
         '-m', '--model', help='path to model nnp file (model), default=results.nnp', required=True, default='results.nnp')
     parser.add_argument(
         '-i', '--input', help='path to input csv file (csv)', required=True)
-    parser.add_argument(
-        '-c', '--categorical', help='indexes of categorical features in input csv (comma separated int)', required=False, default='')
     parser.add_argument(
         '-i2', '--index', help='index to be explained (int), default=1', required=True, default=1, type=int)
     parser.add_argument(
