@@ -118,7 +118,7 @@ def main():
     parser.add_argument(
         '-p',
         '--output_variable',
-        help="Predicted labels separated with commas from output_result.csv (variable) For multiclassification - (y'__0,y'__1, ... , y'__n) default=y'",
+        help="Predicted labels separated with commas from output_result.csv For multiclassification(y'__0,y'__1, ... , y'__n)(variable) default=y'",
         required=True,
         default="y'")
     parser.add_argument(
