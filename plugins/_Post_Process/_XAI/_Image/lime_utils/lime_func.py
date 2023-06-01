@@ -66,13 +66,13 @@ def lime_func(args):
 
     # Load image
     im = imread(args.image)
+    if len(im.shape) == 2:
+        im = im.reshape(im.shape + (1,))
     slic = skimage.segmentation.slic(im, n_segments=args.num_segments)
     if not executor.no_image_normalization:
         im = im / 255.0
-    if len(im.shape) == 3:
-        im = im.transpose(2, 0, 1)
-    else:
-        im = im.reshape((1,) + im.shape)
+
+    im = im.transpose(2, 0, 1)
 
     mask_and_result = []
     # Sampling
