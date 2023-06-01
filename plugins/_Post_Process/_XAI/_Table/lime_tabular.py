@@ -229,7 +229,7 @@ def func(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='LIME\n'
+        description='LIME tabular\n'
                     '\n'
                     '"Why Should I Trust You?": Explaining the Predictions of Any Classifier\n' +
                     'Marco Tulio Ribeiro, Sameer Singh, Carlos Guestrin\n' +

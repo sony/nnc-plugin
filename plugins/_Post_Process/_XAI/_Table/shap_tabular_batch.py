@@ -55,7 +55,7 @@ def func(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='SHAP (all data)\n'
+        description='SHAP tabular(all data)\n'
                     '\n'
                     'A Unified Approach to Interpreting Model Predictions\n' +
                     'Scott Lundberg, Su-In Lee\n' +

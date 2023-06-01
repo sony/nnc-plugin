@@ -91,7 +91,7 @@ def get_eval_args():
 
 def get_train_infl_args():
     parser = argparse.ArgumentParser(
-        description='SGD Influence (all data)\n' +
+        description='SGD Influence tabular(all data)\n' +
         '\n' +
         '"Data Cleansing for Models Trained with SGD"\n' +
         '  Satoshi Hara, Atsushi Nitanda, and Takanori Maehara (2019)\n' +

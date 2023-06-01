@@ -33,7 +33,10 @@ def add_train_args(parser):
     )
     # path to validation dataset csv file (csv)
     parser.add_argument(
-        "--model-path", "-mp", type=str, help="pretrained nnp (file)", required=True
+        "-mp",
+        "--model-path",
+        help="pretrained nnp (file) default=results.nnp",
+        default="results.nnp", required=True,
     )
     parser.add_argument("-v", "--input-val",
                         help=argparse.SUPPRESS, required=False)
@@ -133,7 +136,6 @@ def add_basic_args(parser, monitor_path="tracin_infl_results"):
         "--seed", "-s", help="random seed number default=0", default=0, type=int
     )
     return parser
-
 
 def get_infl_args():
     parser = argparse.ArgumentParser()
