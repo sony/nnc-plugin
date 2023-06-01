@@ -29,7 +29,11 @@ def main():
     parser.add_argument(
         '-m', '--model', help='path to model nnp file (model) default=results.nnp', required=True, default='results.nnp')
     parser.add_argument(
-        '-i', '--image', help='path to input image file (image)', required=True)
+        '-i', '--input', help='path to input csv file (csv) default=output_result.csv', required=True, default='output_result.csv')
+    parser.add_argument(
+        '-image', '--image', help='path to input image file (image)', required=True)
+    parser.add_argument(
+        '-ov', '--output_variable', help="output variable to visualize (variable) default=y0'", required=True, default="y0'")
     parser.add_argument(
         '-c', '--class_index', help='class index to visualize (int), default=0', required=True, type=int, default=0)
     parser.add_argument(

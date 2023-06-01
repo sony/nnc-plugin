@@ -13,6 +13,12 @@ Input Information
    :widths: 30 70
    :class: longtable
 
+   * - input
+     -
+        Specify the dataset CSV file containing image files to be processed by Grad-CAM.
+        
+        To process Grad-CAM on images in the Output Result shown in the Evaluation tab, use the default output_result.csv.
+   
    * - model
      -
         Specify the Convolutional Neural Networks model file (*.nnp) that will be used in the Grad-CAM computation.
@@ -24,6 +30,10 @@ Input Information
         Specify the image file to analyze.
         
         To perform Grad-CAM on a specific image shown in the evaluation results of the Evaluation tab, start the plugin with the cell containing the image file name selected. The image file name will be automatically input in image.
+   
+   * - output_variable
+     -
+        specify the name of the output variable to be predicted.
 
    * - class_index
      -
@@ -71,7 +81,10 @@ Input Information
         To perform Grad-CAM based on the training result selected in the Evaluation tab, use the default results.nnp.
 
    * - input_variable
-     - Of the variables included in the dataset CSV file specified in input, specify the name of the variable to be used in the Grad-CAM computation.
+     - Of the variables included in the dataset CSV file specified in input, specify the name of the variable to be used in the Grad-CAM computation. 
+  
+   * - output_variable
+     - Of the variables included in the dataset CSV file specified in input, specify the name of the output variable as predicted.
 
    * - label_variable
      - Of the variables included in the dataset CSV file specified in input, specify the variable name of the class index to be visualized.

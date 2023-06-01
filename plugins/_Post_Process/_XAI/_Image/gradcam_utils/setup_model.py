@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from nnabla import logger
+import numpy as np
 import nnabla.utils.load as load
 from .utils import get_layer_shape, get_last_conv_name, get_first_conv_name
 from .utils import is_binary_classification, get_num_classes
@@ -66,7 +67,19 @@ def get_config(args):
 
     # Prepare variables
     input_variable, data_name = list(executor.dataset_assign.items())[0]
-    output_variable = list(executor.output_assign.keys())[0]
+
+    if hasattr(args, 'input'):
+        csv_file = np.loadtxt(args.input, delimiter=",", dtype=str)
+        header = [item.split(":")[0] for item in csv_file[0]]
+        n_labels = (len(header) - 1)/2
+        if args.output_variable in header:
+            index = int(header.index(args.output_variable)-n_labels-1)
+            output_variable = list(executor.output_assign.keys())[index]
+        else:
+            logger.log(99, "{} is not found in the table".format(
+                args.output_variable))
+            exit()
+
     input_shape = input_variable.shape[-2:]
 
     # set padding if model contains crop
@@ -82,17 +95,17 @@ def get_config(args):
         config.cropped_shape = input_shape
         config.padding = (0, 0)
 
+    # single-image version
+    if hasattr(args, 'input') and hasattr(args, 'class_index'):
+        config.class_index = args.class_index
     # multi-image version
-    if hasattr(args, 'input'):
+    else:
         # judge binary or multi class
         num_classes = get_num_classes(args.input, args.label_variable)
         config.is_binary_clsf = is_binary_classification(
             num_classes, output_variable.variable_instance.d.shape[1]
         )
         config.class_index = None
-    # single-image version
-    else:
-        config.class_index = args.class_index
 
     config.executor = executor
     config.input_shape = input_shape
