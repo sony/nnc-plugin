@@ -74,7 +74,6 @@ def lime_func(args):
 
     im = im.transpose(2, 0, 1)
 
-
     mask_and_result = []
     # Sampling
     logger.log(99, 'Sampling ...')

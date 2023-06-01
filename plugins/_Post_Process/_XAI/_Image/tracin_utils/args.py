@@ -137,6 +137,7 @@ def add_basic_args(parser, monitor_path="tracin_infl_results"):
     )
     return parser
 
+
 def get_infl_args():
     parser = argparse.ArgumentParser()
     parser = add_basic_args(parser)

@@ -30,6 +30,7 @@ def get_mean_weight_lime(abs_mean):
     Mean weight plot for LIME weights
     '''
 <<<<<<< HEAD
+<<<<<<< HEAD
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(12, 8))
     y_ticks = range(len(abs_mean))
     y_labels = list(zip(*abs_mean))[0]
@@ -41,15 +42,24 @@ def get_mean_weight_lime(abs_mean):
     plt.xlabel('Mean |Weight|', size=8, fontweight='bold')
 =======
     fig, ax = plt.subplots(nrows=1, ncols=1,figsize=(12,8))
+=======
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(12, 8))
+>>>>>>> 3fbbee4 (run copyright checker)
     y_ticks = range(len(abs_mean))
     y_labels = list(zip(*abs_mean))[0]
-    plt.barh(y=y_ticks,width=list(zip(*abs_mean))[1])
-    plt.yticks(ticks=y_ticks,labels=y_labels,size= 8)
+    plt.barh(y=y_ticks, width=list(zip(*abs_mean))[1])
+    plt.yticks(ticks=y_ticks, labels=y_labels, size=8)
     for index, value in enumerate(list(zip(*abs_mean))[1]):
+<<<<<<< HEAD
         plt.text(value, index, str(round(value,4)),fontweight='bold')
     plt.title('Mean weight plot for LIME weights',fontweight='bold')
     plt.xlabel('Mean |Weight|',size=8,fontweight='bold')
 >>>>>>> 72bcd8e (plugin issues fixed)
+=======
+        plt.text(value, index, str(round(value, 4)), fontweight='bold')
+    plt.title('Mean weight plot for LIME weights', fontweight='bold')
+    plt.xlabel('Mean |Weight|', size=8, fontweight='bold')
+>>>>>>> 3fbbee4 (run copyright checker)
     plt.savefig('Mean_LIME.png')
 
 
@@ -57,6 +67,7 @@ def get_beeswarm_lime(abs_mean, lime_weight, samples):
     '''
     Beeswarm plot for LIME weights
     '''
+<<<<<<< HEAD
 <<<<<<< HEAD
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(15, 10))
     y_ticks = range(len(abs_mean))
@@ -78,11 +89,25 @@ def get_beeswarm_lime(abs_mean, lime_weight, samples):
         feature_value = samples[:,i]
         plt.scatter(x=feature_weigth ,
 >>>>>>> 72bcd8e (plugin issues fixed)
+=======
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(15, 10))
+    y_ticks = range(len(abs_mean))
+    y_labels = list(zip(*abs_mean))[0]
+
+    # plot scatterplot for each feature
+    for i, feature in enumerate(y_labels):
+        feature_weigth = lime_weight[:, i]
+        feature_value = samples[:, i]
+        plt.scatter(x=feature_weigth,
+>>>>>>> 3fbbee4 (run copyright checker)
                     y=[i]*len(feature_weigth),
                     c=feature_value,
                     cmap='bwr',
                     edgecolors='black',
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3fbbee4 (run copyright checker)
                     alpha=0.8)
     plt.vlines(x=0, ymin=0, ymax=len(y_labels),
                colors='black', linestyles="--")
@@ -90,6 +115,7 @@ def get_beeswarm_lime(abs_mean, lime_weight, samples):
     plt.yticks(ticks=y_ticks, labels=y_labels, size=8)
     plt.xlabel('LIME Weight', size=8, fontweight='bold')
     plt.title('Beeswarm plot for LIME weights', fontweight='bold')
+<<<<<<< HEAD
     plt.savefig('Beeswarm_LIME.png')
 
 
@@ -104,6 +130,11 @@ def get_beeswarm_lime(abs_mean, lime_weight, samples):
     
     
 >>>>>>> 72bcd8e (plugin issues fixed)
+=======
+    plt.savefig('Beeswarm_LIME.png')
+
+
+>>>>>>> 3fbbee4 (run copyright checker)
 def func(args):
     class ForwardConfig:
         pass
@@ -138,21 +169,30 @@ def func(args):
     # Load csv
     d_input = CsvDataSource(args.input)
 <<<<<<< HEAD
+<<<<<<< HEAD
     required_column = [
         i for i in d_input._columns if i[0][0].casefold() == 'x']
 =======
     required_column = [i for i in d_input._columns if i[0][0].casefold() == 'x']
 >>>>>>> 72bcd8e (plugin issues fixed)
+=======
+    required_column = [
+        i for i in d_input._columns if i[0][0].casefold() == 'x']
+>>>>>>> 3fbbee4 (run copyright checker)
     index = []
     for col in required_column:
         index.append((d_input._columns).index(col))
 
     table = np.array([[float(r) for r in row] for row in d_input._rows])
 <<<<<<< HEAD
+<<<<<<< HEAD
     samples = table[:, index]
 =======
     samples = table[:,index]
 >>>>>>> 72bcd8e (plugin issues fixed)
+=======
+    samples = table[:, index]
+>>>>>>> 3fbbee4 (run copyright checker)
 
     d_train = CsvDataSource(args.train)
     feature_names = []
@@ -249,10 +289,14 @@ def func(args):
         pseudo_label = output_variable.variable_instance.d
         yss = softmax(pseudo_label)
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
         
 >>>>>>> 72bcd8e (plugin issues fixed)
+=======
+
+>>>>>>> 3fbbee4 (run copyright checker)
         # regerssion
         def kernel(x, y):
             sigma = np.sqrt(train.shape[1]) * 0.75
@@ -277,6 +321,7 @@ def func(args):
     lime_csv = CsvDataSource(args.output)
     lime_weight = np.array([[float(r) for r in row]
 <<<<<<< HEAD
+<<<<<<< HEAD
                             for row in lime_csv._rows])
     lime_weight = lime_weight[:, 1:len(lime_csv._columns)]
     abs_mean = []
@@ -295,20 +340,29 @@ def func(args):
 =======
                        for row in lime_csv._rows])
     lime_weight = lime_weight[:,1:len(lime_csv._columns)]
+=======
+                            for row in lime_csv._rows])
+    lime_weight = lime_weight[:, 1:len(lime_csv._columns)]
+>>>>>>> 3fbbee4 (run copyright checker)
     abs_mean = []
     abs_weight = []
     for i in range(len(lime_csv._columns)-1):
-        abs_weight = np.absolute(lime_weight[:,i]).mean(axis=0)
-        abs_mean.append([lime_csv._columns[i+1],abs_weight])
+        abs_weight = np.absolute(lime_weight[:, i]).mean(axis=0)
+        abs_mean.append([lime_csv._columns[i+1], abs_weight])
 
-    #Get abs mean of LIME weights
+    # Get abs mean of LIME weights
     get_mean_weight_lime(abs_mean)
 
-    #Get Beeswarm of LIME weights
+    # Get Beeswarm of LIME weights
     get_beeswarm_lime(abs_mean, lime_weight, samples)
+<<<<<<< HEAD
     
     logger.log(99, 'Mean_weight plot and Beeswarm plot saved successfully.')  
 >>>>>>> 72bcd8e (plugin issues fixed)
+=======
+
+    logger.log(99, 'Mean_weight plot and Beeswarm plot saved successfully.')
+>>>>>>> 3fbbee4 (run copyright checker)
     logger.log(99, 'LIME(tabular batch) completed successfully.')
 
 
@@ -345,7 +399,11 @@ def main():
 
 if __name__ == '__main__':
 <<<<<<< HEAD
+<<<<<<< HEAD
     main()
 =======
     main()
 >>>>>>> 72bcd8e (plugin issues fixed)
+=======
+    main()
+>>>>>>> 3fbbee4 (run copyright checker)
