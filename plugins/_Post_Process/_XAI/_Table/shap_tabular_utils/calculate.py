@@ -206,8 +206,8 @@ class KernelSHAP:
                 (self.nsamples * self.train_samples, self.num_classes))
             self.ey = np.zeros((self.nsamples, self.num_classes))
 
-            num_subset_sizes = np.int(np.ceil((M - 1) / 2.0))
-            num_paired_subset_sizes = np.int(np.floor((M - 1) / 2.0))
+            num_subset_sizes = np.int64(np.ceil((M - 1) / 2.0))
+            num_paired_subset_sizes = np.int64(np.floor((M - 1) / 2.0))
             weight_vector = np.array([(M - 1.0) / (i * (M - i))
                                       for i in range(1, num_subset_sizes + 1)])
             weight_vector[:num_paired_subset_sizes] *= 2
