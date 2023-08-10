@@ -152,7 +152,7 @@ class BaseLearningRateScheduler(object):
         class EpochStepLearningRateScheduler(BaseLearningRateScheduler):
             def __init__(self, base_lr, decay_at=[30, 60, 80], decay_rate=0.1, warmup_epochs=5):
                 self.base_learning_rate = base_lr
-                self.decay_at = np.asarray(decay_at, dtype=np.int)
+                self.decay_at = np.asarray(decay_at, dtype=np.int32)
                 self.decay_rate = decay_rate
                 self.warmup_epochs = warmup_epochs
 
@@ -249,7 +249,7 @@ class EpochStepLearningRateScheduler(BaseLearningRateScheduler):
     def __init__(self, base_lr, decay_at=[30, 60, 80], decay_rate=0.1, warmup_epochs=5, legacy_warmup=False):
         super().__init__()
         self.base_learning_rate = base_lr
-        self.decay_at = np.asarray(decay_at, dtype=np.int)
+        self.decay_at = np.asarray(decay_at, dtype=np.int32)
         self.decay_rate = decay_rate
         self.warmup_epochs = warmup_epochs
         self.legacy_warmup_denom = 1 if legacy_warmup else 0
@@ -314,7 +314,7 @@ def save_nnp(input, output, batchsize):
             {'name': 'Runtime',
              'network': 'Validation',
              'data': [k for k, _ in input.items()],
-             'output':[k for k, _ in output.items()]}]}
+             'output': [k for k, _ in output.items()]}]}
     return runtime_contents
 
 

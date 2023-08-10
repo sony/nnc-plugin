@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022,2023 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class ObjectRect:
             self.rect = np.array([XYWH[0] - XYWH[2] * 0.5, XYWH[1] - XYWH[3]
                                   * 0.5, XYWH[0] + XYWH[2] * 0.5, XYWH[1] + XYWH[3] * 0.5])
         else:
-            self.rect = np.full((4,), 0.0, dtype=np.float)
+            self.rect = np.full((4,), 0.0, dtype=np.float64)
 
     def clip(self):
         return ObjectRect(LRTB=self.rect.clip(0.0, 1.0))
@@ -285,7 +285,7 @@ def convert_image(process_dict):
     grid_h = height // grid_size
 
     region_array = np.full(
-        (1, grid_h, grid_w, 4), 0.0, dtype=np.float)
+        (1, grid_h, grid_w, 4), 0.0, dtype=np.float64)
 
     hm = np.zeros((num_class, grid_h, grid_w), dtype=np.float32)
 

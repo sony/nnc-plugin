@@ -101,7 +101,7 @@ def lime_func(args):
             executor.forward_target.forward(clear_buffer=True)
 
             for m, probability in zip(mask, output_variable.variable_instance.d):
-                m = m.astype(np.int)
+                m = m.astype(np.uint8)
                 mask_and_result.append([m, probability[args.class_index]])
 
             pbar.update(x.shape[0])

@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022,2023 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ def func(args):
                 marker={
                     'size': 12,
                     'color': cols[2],
-                    'showscale':True})]
+                    'showscale': True})]
     else:
         data = [
             go.Scatter(

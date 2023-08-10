@@ -1,4 +1,4 @@
-# Copyright 2022 Sony Group Corporation.
+# Copyright 2022,2023 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -97,8 +97,8 @@ def get_kl(p, q):
     Returns:
         kl
     """
-    p = np.asarray(p, dtype=np.float)
-    q = np.asarray(q, dtype=np.float)
+    p = np.asarray(p, dtype=np.float64)
+    q = np.asarray(q, dtype=np.float64)
     return np.sum(np.where(p != 0, p * np.log(p / q), 0))
 
 
