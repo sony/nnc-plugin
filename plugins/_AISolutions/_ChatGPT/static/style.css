@@ -1,0 +1,446 @@
+body {
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 13px;
+}
+
+table {
+    border-collapse: collapse;
+}
+  
+table, th, td {
+    border: 1px solid #808080;
+}
+
+th, td {
+    padding: 4px;
+}
+
+#topPane {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    overflow: hidden;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.tabBtn {
+    color: #ffffff;
+    background-color: #202020;
+    margin-top: 8px;
+    margin-right: 8px;
+    width: 200px;
+    height: 24px;
+    line-height: 16px; 
+    border: 1px solid #606060;
+    border-radius: 5px;
+    align-items: center;
+    display: inline-block;
+}
+
+.tabBtn:hover {
+    border: 1px solid #808080;
+    background-color: #404040;
+}
+
+.tabBtnSelected {
+    border: 1px solid #808080;
+    background-color: #404040;
+}
+
+
+#container {
+    position: fixed;
+    display: flex;
+    top: 120px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#modelList {
+    margin-top: 16px;
+}
+
+.scrollPane {
+    overflow-y: auto;
+}
+
+#leftHistory {
+    width: 224px;
+    min-width: 224px;
+}
+
+.resizeBar {
+    width: 8px;
+    min-width: 8px;
+    background-color: #202020;
+    cursor: col-resize;
+}
+
+.separator {
+    width: 8px;
+    min-width: 8px;
+    background-color: #202020;
+}
+
+#clientChat {
+    flex-grow: 1;
+    min-width: 640px;
+}
+
+#historyTopButtons {
+    display: inline-block;    
+}
+
+#historyContainer {
+    display: inline-block;    
+}
+
+.historyBtn {
+    color: #ffffff;
+    background-color: #000000;
+    margin-left: 8px;
+    margin-bottom: 8px;
+    width: 200px;
+    height: 36px;
+    line-height: 16px; 
+    border: 1px solid #606060;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    align-items: center;
+    display: inline-block;
+}
+
+#historyBtn {
+    text-align: left;
+    background-color: #202020;
+    height: 56px;
+}
+
+#historyBtn:hover {
+    border: 1px solid #808080;
+}
+
+.historyBtnNoBorder {
+    border: 1px solid #202020;
+}
+.historyBtnBorder {
+    border: 1px solid #808080;
+}
+
+.searchHistoryText {
+    color: #ffffff;
+    background-color: #303030;
+    margin-left: 8px;
+    margin-bottom: 8px;
+    width: 178px;
+    height: 36px;
+    border: 1px solid #404040;
+    outline: none;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    resize: none;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.historyDate {
+    color: #A0A0A0;
+    font-size: 11px;
+}
+
+.historyText {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#chatContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.roleIcon {
+    margin-top: 0px;
+    margin-left: 16px;
+    margin-right: 8px;
+    align-self: flex-start;
+    width: 32px;
+    height: 32px;
+}
+
+.message textarea {
+    color: #ffffff;
+    background-color: #303030;
+    padding: 8px;
+    width: 512px;
+    line-height: 1.5; 
+    border: 1px solid #404040;
+    outline: none;
+    border-radius: 5px;
+    resize: none;
+    overflow: hidden;
+    height: auto;
+}
+
+.message textarea::placeholder {
+    color: #808080;
+}
+
+.message textarea:focus {
+    border: 1px solid #808080;
+    outline: none;
+}
+
+.userInputArea {
+    display: flex;
+}
+
+select {
+    color: #ffffff;
+    background-color: #303030;
+    border: 1px solid #404040;
+}
+
+#modelList {
+    float: right;
+}
+
+#systemPromptList {
+    margin-left: 56px;
+    margin-bottom: 8px;
+    width: 530px;
+}
+
+.squareBtn {
+    margin-left: 8px;
+    margin-right: 8px;
+    align-self: flex-end;
+    width: 32px;
+    height: 32px;
+    background-size: 32px 32px;
+    background-color: transparent;
+    border: none;
+}
+
+.sendBtn {
+    background-image: url('image/send.png');
+}
+
+.saveSystemPromptBtn {
+    background-image: url('image/save.png');
+}
+
+#tokenUsage {
+    margin-left: 56px;
+    color: #808080;
+    font-size: 8px;
+}
+
+.errorMessage {
+    margin-left: 16px;
+    color: #ff8080;
+    width: 640px;
+}
+
+.tooltip {
+    font-size: 13px;
+    position: fixed;
+    display: none;
+    background: #303030;
+    color: #ffffff;
+    padding: 5px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    z-index: 99;
+    pointer-events: none;
+}
+
+.tooltip.visible {
+    display: block;
+}
+
+#rightSetting {
+    margin-left: 8px;
+    margin-right: 8px;
+    width: 192px;
+}
+
+.settingInput {
+    color: #ffffff;
+    background-color: #303030;
+    margin-left: 8px;
+    width: 48px;
+    height: 16px;
+    border: 1px solid #404040;
+    outline: none;
+    border-radius: 5px;
+    resize: none;
+    overflow: hidden;
+    white-space: nowrap;
+    float: right;
+    text-align: right;
+}
+
+.settingSlider {
+    margin-top: 4px;
+    width: 192px;
+    margin-bottom: 16px;
+}
+
+#containerFiles {
+    position: fixed;
+    display: flex;
+    top: 120px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#leftFileList {
+    width: 224px;
+    min-width: 224px;
+}
+
+#fileListContainer {
+    display: inline-block;    
+}
+
+
+.fileBtn {
+    color: #ffffff;
+    background-color: #000000;
+    margin-left: 8px;
+    margin-bottom: 8px;
+    width: 200px;
+    height: 36px;
+    line-height: 16px; 
+    border: 1px solid #606060;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    align-items: center;
+    display: inline-block;
+}
+
+.fileBtn:disabled {
+    color: #404040;
+}
+
+#fileBtn {
+    text-align: left;
+    background-color: #202020;
+    height: 56px;
+}
+
+#fileBtn:hover {
+    border: 1px solid #808080;
+}
+
+.fileBtnNoBorder {
+    border: 1px solid #202020;
+}
+.fileBtnBorder {
+    border: 1px solid #808080;
+}
+
+.fileDate {
+    color: #A0A0A0;
+    font-size: 11px;
+}
+
+.fileText {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+#clientFile {
+    padding-left: 8px;
+}
+    
+#clientUploadDataset {
+    padding-left: 8px;
+}
+
+#containerFineTuningJob {
+    position: fixed;
+    display: flex;
+    top: 120px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#leftJobList {
+    width: 224px;
+    min-width: 224px;
+}
+
+#jobListContainer {
+    display: inline-block;    
+}
+
+
+.jobBtn {
+    color: #ffffff;
+    background-color: #000000;
+    margin-left: 8px;
+    margin-bottom: 8px;
+    width: 200px;
+    height: 36px;
+    line-height: 16px; 
+    border: 1px solid #606060;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    align-items: center;
+    display: inline-block;
+}
+
+#jobBtn {
+    text-align: left;
+    background-color: #202020;
+    height: 56px;
+}
+
+#jobBtn:hover {
+    border: 1px solid #808080;
+}
+
+.jobBtnNoBorder {
+    border: 1px solid #202020;
+}
+.jobBtnBorder {
+    border: 1px solid #808080;
+}
+
+.jobDate {
+    color: #A0A0A0;
+    font-size: 11px;
+}
+
+.jobText {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#clientJob {
+    padding-left: 8px;
+}

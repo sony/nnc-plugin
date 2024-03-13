@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot using OpenAI Chat API</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div id="tooltip" class="tooltip"></div>
+
+<div id="topPane">
+    <div id="tabButtons">
+        <button id="btn-container" class="tabBtn tabBtnSelected" onclick="changeTab('container')">Inference</button>
+        <button id="btn-containerFiles" class="tabBtn" onclick="changeTab('containerFiles')">Files</button>
+        <button id="btn-containerFineTuningJob" class="tabBtn" onclick="changeTab('containerFineTuningJob')">Fine Tuning Job</button>
+    </div>
+
+    <select id="modelList" data-hint="Select language model to use">
+    </select>
+    <h2>Chatbot using OpenAI Chat API</h2>
+</div>
+
+<div id="container" class="tab-content">
+    <div id="leftHistory" class="scrollPane">
+        <div id="historyTopButtons">
+            <button id="newChatBtn" class="historyBtn" data-hint="Clear current chat and start new chat (Ctrl+R)" onclick="newChat();">+ New Chat</button>
+            <button id="openHistoryBtn" class="historyBtn" data-hint="Open the folder where chat logs are saved in Explorer" onclick="openLogFolder();">Open log</button>
+            <input type="text" id="searchHistoryText" class="searchHistoryText" rows="1" placeholder="Search text here"></textarea>
+        </div>
+
+        <div id="historyContainer"></div>
+    </div>
+
+    <div id="resizeBar" class="resizeBar"></div>
+    
+    <div id="clientChat" class="scrollPane">
+        <div>
+            <select id="systemPromptList" data-hint="Recall saved system prompts">
+                <option value=""></option>
+                <option value="">[Clear system prompt]</option>
+            </select>
+        </div>
+        <div id="chatContainer"></div>
+
+        <div><p id="tokenUsage"></p></div>
+
+        <div style="margin-left: 56px;"><img id="loading" src="{{ url_for('static', filename='image/loading.gif') }}" style="display: none; width: 10%;"/></div>
+    </div>
+
+    <div id="rightSeparator" class="separator"></div>
+
+    <div id="rightSetting">
+        Temperature : <input type="text" id="inputTemperature" class="settingInput" min="0.0" max="2.0"  value="1.0">
+        <input type="range" id="sliderTemperature" class="settingSlider" min="0.0" max="2.0" value="1.0" step="0.01">
+
+        Maximum length : <input type="text" id="inputMaximumLength" class="settingInput" min="1" max="2048" value="2048">
+        <input type="range" id="sliderMaximumLength" class="settingSlider" min="1" max="2048" value="2048">
+
+        Top P : <input type="text" id="inputTopP" class="settingInput" min="0.0" max="1.0" value="1.0">
+        <input type="range" id="sliderTopP" class="settingSlider" min="0.0" max="1.0" value="1.0" step="0.01">
+
+        Frequency penalty : <input type="text" id="inputFrequencyPenalty" class="settingInput" min="0.0" max="2.0" value="0.0">
+        <input type="range" id="sliderFrequencyPenalty" class="settingSlider" min="0.0" max="2.0" value="0.0" step="0.01">
+
+        Presence penalty : <input type="text" id="inputPresencePenalty" class="settingInput" min="0.0" max="2.0" value="0.0">
+        <input type="range" id="sliderPresencePenalty" class="settingSlider" min="0.0" max="2.0" value="0.0" step="0.01">
+    </div>
+</div>
+
+<div id="containerFiles" class="tab-content" style="display:none;">
+    <div id="leftFileList" class="scrollPane">
+        <div id="fileListTopButtons">
+            <button id="uploadNewDatasetBtn" class="fileBtn" data-hint="Upload new dataset file for fine tuning" onclick="uploadNewDataset();">+ Upload New Dataset</button>
+        </div>
+        <div id="fileListContainer"></div>
+    </div>
+
+    <div id="resizeBarFiles" class="resizeBar"></div>
+    
+    <div id="clientFile" class="scrollPane" style="display:none;">
+        <table border="1" id="fileTable">
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+        </table>
+        <br>
+        <button id="createNewFineTuningJobBtn" class="fileBtn" data-hint="Create new fine-tuning job by using this dataset." style="margin-left:0px; width: 320px;" onclick="createNewFineTuningJob();" disabled>Run fine tuning using this data</button>
+        <button id="deleteFileBtn" class="fileBtn" data-hint="Delete dataset file." style="margin-left:0px; color: #ff8080;" onclick="deleteFile();">Delete</button>
+        <br>
+        <div><img id="processingFile" src="{{ url_for('static', filename='image/loading.gif') }}" style="display: none; width: 10%;"/></div>
+    </div>
+    <div id="clientUploadDataset" class="scrollPane" style="display:none;">
+        <div>Select the dataset file to convert or upload for chat fine-tuning. (*.jsonl or *.csv)</div>
+        <br>
+        <input type="file" id="datasetFileInput">
+        <br><br>
+        <button id="convertDatasetBtn" class="fileBtn" data-hint="Convert selected CSV file to jsonl file." style="margin-left:0px;" onclick="convertDataset();">Convert</button>
+        <button id="uploadDatasetBtn" class="fileBtn" data-hint="Upload selected jsonl dataset file." style="margin-left:0px;" onclick="uploadDataset();">Upload</button>
+        <br>
+        <div><img id="uploadingDataset" src="{{ url_for('static', filename='image/loading.gif') }}" style="display: none; width: 10%;"/></div>
+    </div>
+</div>
+
+<div id="containerFineTuningJob" class="tab-content" style="display:none;">
+    <div id="leftJobList" class="scrollPane">
+        <div id="jobListContainer"></div>
+    </div>
+
+    <div id="resizeBarFiles" class="resizeBar"></div>
+    
+    <div id="clientJob" class="scrollPane" style="display:none;">
+        <table border="1" id="jobTable">
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+        </table>
+        <br>
+        <button id="cancelJobBtn" class="jobBtn" data-hint="Cancel job." style="margin-left:0px; color: #ff8080;" onclick="cancelJob();">Cancel</button>
+    </div>
+</div>
+
+<script>
+var first_chat = true;
+var uniqueId = generateUUID();
+var currentFileId = '';
+var currentFileName = '';
+var currentJobId = '';
+
+function getChatHistory() {
+    var chatHistory = [];
+    $('#chatContainer .message').each(function() {
+        if ($(this).find('textarea').val().length > 0) {
+            var message = {
+                role: $(this).hasClass('user') ? 'user' : $(this).hasClass('assistant') ? 'assistant' : 'system',
+                content: $(this).find('textarea').val()
+            };
+            chatHistory.push(message);
+        }
+    });
+    return chatHistory;
+}
+
+function sendMessage() {
+    var chatHistory = getChatHistory();
+    if (chatHistory.length <= 0){
+        return;
+    }
+
+    // Start loading animation
+    $('#loading').show();
+    tokenUsage.textContent = '';
+    // Scroll to bottom
+    scrollToBottom();
+
+    var modelList = document.getElementById('modelList');
+    var modelText = modelList.options[modelList.selectedIndex].text;
+
+    $.ajax({
+        url: '/chatbot',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            model: modelText,
+            id: uniqueId,
+            history: chatHistory,
+            temperature: sliderTemperature.value,
+            top_p: sliderTopP.value,
+            max_tokens: sliderMaximumLength.value,
+            presence_penalty: sliderPresencePenalty.value,
+            frequency_penalty: sliderFrequencyPenalty.value,
+        }),
+        success: function(data) {
+            // Add assistant message
+
+            // Stop loading animation
+            $('#loading').hide();
+
+            addAssistantMessage(data.message)
+
+            // Remove old send button
+            $('#sendBtn').remove();
+
+            // Add new user input box and send button
+            addUserInput();
+
+            // Set focus on the last user input box
+            setupTextarea();
+            setFocusToTheLastInput();
+
+            tokenUsage.textContent = JSON.stringify(data.usage);
+
+            // Scroll to bottom
+            scrollToBottom();
+
+            if (first_chat) {
+                first_chat = false;
+                updateHistory();
+            }
+        },fail: function() {
+            // Stop loading animation
+            $('#loading').hide();
+        }
+    });
+}
+
+function addSystemInput(text = '') {
+    var newSystemInput = $('<div class="message system userInputArea"><img src="{{ url_for('static', filename='image/system.png') }}" class="roleIcon"><textarea id="systemPrompt" class="userInput" placeholder="Type system message here. System messages are instructions that set a specific role, context, or course of action.">' + text + '</textarea><button id="saveSystemPromptBtn" class="saveSystemPromptBtn squareBtn" data-hint="Save this system prompt for later reuse"/></div>');
+    $("#chatContainer").append(newSystemInput);
+    resizeTextarea(newSystemInput.find('textarea'));
+    saveSystemPromptBtn.addEventListener('click', function (e) {saveSystemPrompt();});
+}
+
+function addUserInput(text = '', sendbtn = true) {
+    var newUserInput = $('<div class="message user userInputArea"><img src="{{ url_for('static', filename='image/user.png') }}" class="roleIcon"><textarea class="userInput" placeholder="Type your message here.">' + text + '</textarea><button class="squareBtn' + (sendbtn ? ' sendBtn" id="sendBtn" data-hint="Send message (Ctrl+Enter)"' : '"" disabled') + '/></div>');
+    $('#chatContainer').append(newUserInput);
+    resizeTextarea(newUserInput.find('textarea'));
+    if (sendbtn) {
+        var sendBtn = document.getElementById('sendBtn');
+        sendBtn.addEventListener('click',  function() {
+            sendMessage();
+        });
+    }
+}
+
+function addAssistantMessage(text = '') {
+    var newAssistantMessage = $('<div class="message assistant"><img src="{{ url_for('static', filename='image/computer.png') }}" class="roleIcon"><textarea>' + text + '</textarea><button disabled class="squareBtn"/></div>');
+    $('#chatContainer').append(newAssistantMessage);
+    resizeTextarea(newAssistantMessage.find('textarea'));
+}
+
+function resetChatContainer() {
+    $('#chatContainer').empty();
+    var tokenUsageText = document.getElementById('tokenUsage');
+    tokenUsageText.textContent = '';
+
+    addSystemInput();
+    addUserInput();
+}
+
+
+function setFocusToTheLastInput() {
+    $('.userInput').last().focus();
+}
+
+function scrollToBottom() {
+    setTimeout(function() {
+        clientChat.scrollTop = clientChat.scrollHeight;
+        window.scrollTo(0, document.body.scrollHeight);
+    }, 0);
+}
+
+function resizeTextarea(textarea) {
+    textarea.css('height', 'auto');
+    textarea.css('height', (textarea.prop('scrollHeight') - 16) + 'px');
+}
+
+function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0,
+        v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+function adjustTextAreaHeight(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = (textarea.scrollHeight - 16) + 'px';
+}
+
+function adjustAllTextAreaHeight() {
+    var textareaElements = document.querySelectorAll('textarea');
+    textareaElements.forEach(function(textarea) {
+        adjustTextAreaHeight(textarea);
+    });
+}
+
+function setupTextarea() {
+    var textareaElements = document.querySelectorAll('textarea');
+    textareaElements.forEach(function(textarea) {
+        textarea.addEventListener('input', function() {
+            adjustTextAreaHeight(this);
+        });
+        textarea.addEventListener('resize', function() {
+            adjustTextAreaHeight(this);
+        });
+    });
+}
+
+function openHistory(id) {
+    $.ajax({
+        url: '/history',
+        type: "GET",
+        data: {
+            id: id
+        },
+        contentType: 'application/json',
+        success: function(response) {
+            if ('history' in response && 'id' in response && response['id'] === id) {
+                if (response['history'].length > 0) {
+                    var tokenUsageText = document.getElementById('tokenUsage');
+                    tokenUsageText.textContent = "";
+
+                    uniqueId = id
+                    $('#chatContainer').empty();
+                    first = true
+                    for (var chatItem of response['history']) {
+                        role = chatItem['role']
+                        if (first && role != 'system'){
+                            addSystemInput()
+                        }
+                        first = false
+                        switch(role) {
+                            case 'system':
+                                addSystemInput(chatItem['content'])
+                                break;
+                            case 'user':
+                                addUserInput(chatItem['content'], false)
+                                break;
+                            case 'assistant':
+                                addAssistantMessage(chatItem['content'])
+                                break;
+                        }
+                    }
+
+                    addUserInput();
+                    setupTextarea();
+                    updateHistory();
+                }
+            }
+        }
+    });
+}
+
+function search_by_text(text, keywords) {
+    var found_all = true;
+    if (keywords !== "") {
+        var keyword_list = keywords.split(' ')
+        for (var i = 0; i < keyword_list.length; i++) {
+            var keyword = keyword_list[i];
+            
+            if (!text.includes(keyword)) {
+                found_all = false;
+                break;
+            }
+        }
+    }
+    return found_all;
+}
+
+function searchHistoryByText() {
+    const historyButtons = document.querySelectorAll('[id^="historyBtn"]');
+    historyButtons.forEach(function(historyButton) {
+        if (!search_by_text(historyButton.getAttribute('data-hint'), searchHistoryText.value)) {
+            historyButton.style.display = "none";
+        }else {
+            historyButton.style.display = "inline-block";
+        }
+    });
+}
+
+function updateHistory() {
+    $.ajax({
+        url: '/history',
+        type: 'GET',
+        contentType: 'application/json',
+        success: function(history) {
+            //Clear history
+            $('#historyContainer').empty();
+            history = history['history'];
+            for (var historyItem of history) {
+                var newHistory = $('<button id="historyBtn" class="historyBtn" data-hint="' + historyItem.q + '" data-id="' + historyItem.id + '"><div class="historyDate">' + historyItem.date + '</div><div class="historyText">' + historyItem.q + '</div></button>');
+                $('#historyContainer').append(newHistory);
+            }
+            const historyButtons = document.querySelectorAll('[id^="historyBtn"]');
+            historyButtons.forEach(function(historyButton) {
+                historyButton.addEventListener('click', function() {
+                    openHistory(this.getAttribute('data-id'));
+                });
+                if (historyButton.getAttribute('data-id') === uniqueId) {
+                    historyButton.classList.add('historyBtnBorder')
+                }else{
+                    historyButton.classList.add('historyBtnNoBorder')
+                }
+            });
+            setupTooltip();
+            searchHistoryByText();
+        }
+    });
+}
+
+function setupTooltip() {
+    var buttons = document.querySelectorAll('button');
+
+    buttons.forEach(function(button) {
+        button.addEventListener('mouseenter', function(e) {
+            if (button.dataset.hint) {
+                var rect = button.getBoundingClientRect();
+
+                tooltip.style.left = rect.right + 'px';
+                tooltip.style.top = rect.top + 'px';
+                tooltip.textContent = button.dataset.hint;
+                tooltip.classList.add('visible');
+            }
+        });
+
+        button.addEventListener('mouseleave', function(e) {
+            tooltip.classList.remove('visible');
+        });
+    });
+
+    var selects = document.querySelectorAll('select');
+    selects.forEach(function(select) {
+        select.addEventListener('mouseenter', function(e) {
+            if (select.dataset.hint) {
+                var rect = select.getBoundingClientRect();
+
+                tooltip.style.left = rect.left + 'px';
+                tooltip.style.top = rect.bottom + 'px';
+                tooltip.textContent = select.dataset.hint;
+                tooltip.classList.add('visible');
+            }
+        });
+
+        select.addEventListener('mouseleave', function(e) {
+            tooltip.classList.remove('visible');
+        });
+    });
+    window.addEventListener('scroll', function() {
+        tooltip.classList.remove('visible');
+    });
+}
+
+function saveSystemPrompt() {
+    var system_prompt = systemPrompt.value;
+    
+    if (system_prompt.length <= 0){
+        return;
+    }
+
+    $.ajax({
+        url: '/save_system_prompt',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            system_prompt: system_prompt
+        }),
+        success: function(data) {
+            updateSystemPromptList();
+        },
+        fail: function() {
+        }
+    });
+}
+
+function updateSystemPromptList() {
+    $.ajax({
+        url: '/get_system_prompt',
+        type: 'GET',
+        contentType: 'application/json',
+        success: function(system_prompt_list) {
+            //Clear system prompt list
+            var options = systemPromptList.querySelectorAll('option');
+            for (var i = 2; i < options.length; i++) {
+                systemPromptList.removeChild(options[i]);
+            }
+            system_prompt = system_prompt_list['system_prompt'];
+            for (var prompt of system_prompt) {
+                var newOption = document.createElement('option');
+                newOption.value = prompt;
+                newOption.textContent = prompt;
+
+                systemPromptList.appendChild(newOption);
+            }
+            var newOption = document.createElement('option');
+                newOption.value = "*Edit";
+                newOption.textContent = "[Edit a saved prompt list]";
+
+                systemPromptList.appendChild(newOption);
+        }
+    });
+}
+
+function editSystemPromptList() {
+    $.ajax({
+        url: '/edit_system_prompt',
+        type: 'GET',
+        contentType: 'application/json',
+        success: function(response) {
+        }
+    });
+}
+
+function recallSystemPrompt() {
+    if (systemPromptList.value === '*Edit') {
+        editSystemPromptList();
+    }else {
+        systemPrompt.value = systemPromptList.value.trim();
+        adjustTextAreaHeight(systemPrompt);
+
+        var textareas = document.querySelectorAll('textarea');
+        var lastTextarea = textareas[textareas.length - 1];
+        lastTextarea.focus();
+    }
+    systemPromptList.selectedIndex = 0;
+}
+
+function openFile(id) {
+    $("#clientUploadDataset").hide();
+    $.ajax({
+        url: '/get_file',
+        type: "GET",
+        data: {
+            id: id
+        },
+        contentType: 'application/json',
+        success: function(response) {
+            if ('file' in response) {
+                filedata = response['file']
+                if ('id' in filedata && filedata['id'] === id) {
+                    const tableBody = document.getElementById('fileTable').getElementsByTagName('tbody')[0];
+                    while (tableBody.firstChild) {
+                        tableBody.removeChild(tableBody.firstChild);
+                    }    
+                    currentFileId = id;
+                    currentFileName = 'filename' in filedata ? filedata['filename'] : '';
+
+                    for (const key in filedata) {
+                        if (filedata.hasOwnProperty(key)) {
+                            const newRow = tableBody.insertRow();
+
+                            const keyCell = newRow.insertCell(0);
+                            keyCell.textContent = key;
+
+                            const valueCell = newRow.insertCell(1);
+                            valueCell.textContent = filedata[key];
+                        }
+                    }
+                    const file_for_fine_tune = 'object' in filedata && filedata['object'] === 'file' && 'purpose' in filedata && filedata['purpose'] === 'fine-tune';
+                    document.getElementById("createNewFineTuningJobBtn").style.display = file_for_fine_tune ? "block" : "none";
+                    document.getElementById("createNewFineTuningJobBtn").disabled = false;
+                    // document.getElementById("createNewFineTuningJobBtn").disabled = !('status' in filedata && filedata['status'] === 'processed');
+                    $("#clientFile").show();
+                    updateFileButtonSelected();
+                }
+            }
+        }
+    });
+}
+
+function updateFileButtonSelected() {
+    const fileButtons = document.querySelectorAll('[id^="fileBtn"]');
+    fileButtons.forEach(function(fileButton) {
+        fileButton.classList.remove('fileBtnBorder')
+        fileButton.classList.remove('fileBtnNoBorder')
+        if (fileButton.getAttribute('file-id') === currentFileId) {
+            fileButton.classList.add('fileBtnBorder')
+        }else{
+            fileButton.classList.add('fileBtnNoBorder')
+        }
+    });
+}
+
+function deleteFile() {
+    if (window.confirm("Are you sure you want to delete this file?")) {
+        $.ajax({
+            url: '/delete_file',
+            type: "GET",
+            data: {
+                id: currentFileId
+            },
+            contentType: 'application/json',
+            success: function(response) {
+                if (response.success) {
+                    updateFiles();
+                    $("#clientFile").hide();
+                }else {
+                    alert("Failed to delete data.\n" + response.message);
+                }
+            }
+        });
+    }
+}
+
+function updateFiles() {
+    $.ajax({
+        url: '/files',
+        type: 'GET',
+        contentType: 'application/json',
+        success: function(filelist) {
+            $('#fileListContainer').empty();
+            filelist = filelist['filelist'];
+            for (var fileItem of filelist) {
+                var newFileItem = $('<button id="fileBtn" class="fileBtn" data-hint="' + fileItem.filename + '" file-id="' + fileItem.id + '"><div class="fileDate">' + fileItem.date + '</div><div class="fileText">' + fileItem.filename + '</div></button>');
+                $('#fileListContainer').append(newFileItem);
+            }
+            const fileButtons = document.querySelectorAll('[id^="fileBtn"]');
+            fileButtons.forEach(function(fileButton) {
+                fileButton.addEventListener('click', function() {
+                    openFile(this.getAttribute('file-id'));
+                });
+            });
+            updateFileButtonSelected();
+            setupTooltip();
+        }
+    });
+}
+
+function uploadNewDataset() {
+    currentFileId = '';
+    currentFileName = '';
+    updateFiles();
+    document.getElementById('datasetFileInput').value = '';
+    $("#clientFile").hide();
+    $("#clientUploadDataset").show();
+}
+
+function convertDataset() {
+    var files = document.getElementById("datasetFileInput").files;
+    if (files.length === 0) {
+        alert('No file selected.')
+		return;
+    }
+    var file = files[0]
+    var formData = new FormData();
+    formData.append("file", file);
+    $('#uploadingDataset').show();
+
+    $.ajax({
+        url: '/csv_to_jsonl',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        xhrFields: {
+            responseType: 'blob'
+        },
+        success: function(data) {
+            $('#uploadingDataset').hide();
+            var blob = new Blob([data], { type: 'text/plain' });
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'dataset.jsonl';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        },
+        error: function(xhr) {
+            $('#uploadingDataset').hide();
+            alert(
+                'Failed to convert CSV to jsonl.\n' + 
+                'Check that the CSV file is in the correct format.\n' + 
+                'CSV encoding containing multi-byte characters must be UTF-8.')
+        }
+    });
+}
+
+function uploadDataset() {
+    var files = document.getElementById("datasetFileInput").files;
+    if (files.length === 0) {
+        alert('No file selected.')
+    }
+    var file = files[0]
+    var formData = new FormData();
+    formData.append("file", file);
+    $('#uploadingDataset').show();
+
+    $.ajax({
+        url: '/upload_dataset',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+
+        success: function(data) {
+            $('#uploadingDataset').hide();
+            if (data.success) {
+                updateFiles();
+                openFile(data['id']);
+            }else {
+                alert("Dataset upload failed.\n" + data.message);
+            }
+        },
+        fail: function() {
+            $('#uploadingDataset').hide();
+        }
+    });
+}
+
+function openJob(id) {
+    $("#clientCreateNewFineTuneJob").hide();
+    $.ajax({
+        url: '/get_job',
+        type: "GET",
+        data: {
+            id: id
+        },
+        contentType: 'application/json',
+        success: function(response) {
+            if (response['job']) {
+                jobdata = response['job']
+                const tableBody = document.getElementById('jobTable').getElementsByTagName('tbody')[0];
+                while (tableBody.firstChild) {
+                    tableBody.removeChild(tableBody.firstChild);
+                }    
+                currentJobId = id;
+
+                jobdata.forEach(function(pair, index) {
+                    const newRow = tableBody.insertRow();
+                    const keyCell = newRow.insertCell(0);
+                    keyCell.textContent = pair[0];
+
+                    const valueCell = newRow.insertCell(1);
+                    valueCell.textContent = pair[1];
+                });
+                $("#clientJob").show();
+                updateJobButtonSelected();
+            }
+        }
+    });
+}
+
+function updateJobButtonSelected() {
+    const jobButtons = document.querySelectorAll('[id^="jobBtn"]');
+    jobButtons.forEach(function(jobButton) {
+        jobButton.classList.remove('jobBtnBorder')
+        jobButton.classList.remove('jobBtnNoBorder')
+        if (jobButton.getAttribute('job-id') === currentJobId) {
+            jobButton.classList.add('jobBtnBorder')
+        }else{
+            jobButton.classList.add('jobBtnNoBorder')
+        }
+    });
+}
+
+function cancelJob() {
+    if (window.confirm("Are you sure you want to cancel this job?")) {
+        $.ajax({
+            url: '/cancel_job',
+            type: "GET",
+            data: {
+                id: currentJobId
+            },
+            contentType: 'application/json',
+            success: function(response) {
+                if (response.success) {
+                    updateJobs();
+                    $("#clientJob").hide();
+                }else {
+                    alert("Failed to cancel job.\n" + response.message);
+                }
+            }
+        });
+    }
+}
+
+function updateJobs() {
+    $.ajax({
+        url: '/jobs',
+        type: 'GET',
+        contentType: 'application/json',
+        success: function(joblist) {
+            $('#jobListContainer').empty();
+            joblist = joblist['joblist'];
+            for (var jobItem of joblist) {
+                var newJobItem = $('<button id="jobBtn" class="jobBtn" data-hint="' + jobItem.model + '" job-id="' + jobItem.id + '"><div class="jobDate">' + jobItem.date + '</div><div class="jobText">' + jobItem.model + '</div></button>');
+                $('#jobListContainer').append(newJobItem);
+            }
+            const jobButtons = document.querySelectorAll('[id^="jobBtn"]');
+            jobButtons.forEach(function(jobButton) {
+                jobButton.addEventListener('click', function() {
+                    openJob(this.getAttribute('job-id'));
+                });
+            });
+            setupTooltip();
+        }
+    });
+}
+
+function createNewFineTuningJob() {
+    var modelList = document.getElementById('modelList');
+    var modelText = modelList.options[modelList.selectedIndex].text;
+    if (window.confirm('Create a fine-tuning job based on the "' + currentFileName + '" dataset and "' + modelText + '" model. Would you like to proceed?')) {
+
+        $('#processingFile').show();
+
+        $.ajax({
+            url: '/create_finetune_job',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                training_file: currentFileId,
+                model: modelText
+            }),
+
+            success: function(data) {
+                $('#processingFile').hide();
+                if (data.success) {
+                    changeTab('containerFineTuningJob')
+                    openJob(data.id)
+                }else {
+                    alert("Create fine-tune job failed.\n" + data.message);
+                }
+            },
+            fail: function() {
+                $('#processingFile').hide();
+            }
+        });
+
+    }    
+}
+
+function updateModels() {
+    $.ajax({
+        url: '/models',
+        type: 'GET',
+        contentType: 'application/json',
+        success: function(modellist) {
+            var modelDropdownList = document.getElementById("modelList");
+
+            var valueBak = modelDropdownList.value;
+
+            modelDropdownList.innerHTML = '';
+            if (! modellist['success']) {
+                alert(modellist['message'])
+            }
+            else {
+                modellist = modellist['modellist'];
+                for (var modelItem of modellist) {
+                    var option = document.createElement("option");
+                    option.value = modelItem.id;
+                    option.textContent = modelItem.id;
+                    modelDropdownList.appendChild(option);
+                }
+
+                if (valueBak != '') {
+                    modelDropdownList.value = valueBak;
+                }else {
+                    modelDropdownList.value = 'gpt-3.5-turbo';
+                }
+            }
+        }
+    });
+}
+
+function check() {
+    $.ajax({
+        url: '/check',
+        type: 'GET',
+        contentType: 'application/json',
+        success: function(response) {
+            if (!response['success']) {
+                $('#clientChat').empty();
+                var apiKeyErrorMessage = $('<div class="errorMessage">Error: OPENAI_API_KEY_NNC is not specified. Enter the API key obtained from the OpenAI site in OPENAI_API_KEY_NNC of Environment Variable on the ENGINE tab of the setting window of the Neural Network Console, and restart Neural Network Console.</div>')
+                $('#clientChat').append(apiKeyErrorMessage);
+            }
+        }
+    });
+}
+
+$(document).on('keypress', '.userInput', function(e) {
+    if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
+        sendMessage();
+    }
+});
+
+function checkRange(inputbox){
+    if (parseFloat(inputbox.value) > parseFloat(inputbox.max)){
+        inputbox.value = inputbox.max;
+    }else if (parseFloat(inputbox.value) < parseFloat(inputbox.min)){
+        inputbox.value = inputbox.min;
+    }
+}
+
+$(document).ready(function(){
+    // init
+    resetChatContainer();
+    setupTextarea();
+    setFocusToTheLastInput();
+
+    systemPromptList.addEventListener('change', function () {recallSystemPrompt();});
+    window.addEventListener('resize', function () {adjustAllTextAreaHeight();});
+    searchHistoryText.addEventListener("input", function() {searchHistoryByText();});
+
+    sliderTemperature.addEventListener("input", function() {inputTemperature.value = sliderTemperature.value;});
+    inputTemperature.addEventListener("input", function() {checkRange(inputTemperature); sliderTemperature.value = inputTemperature.value;});
+    sliderMaximumLength.addEventListener("input", function() {inputMaximumLength.value = sliderMaximumLength.value;});
+    inputMaximumLength.addEventListener("input", function() {checkRange(inputMaximumLength); sliderMaximumLength.value = inputMaximumLength.value;});
+    sliderTopP.addEventListener("input", function() {inputTopP.value = sliderTopP.value;});
+    inputTopP.addEventListener("input", function() {checkRange(inputTopP); sliderTopP.value = inputTopP.value;});
+    sliderFrequencyPenalty.addEventListener("input", function() {inputFrequencyPenalty.value = sliderFrequencyPenalty.value;});
+    inputFrequencyPenalty.addEventListener("input", function() {checkRange(inputFrequencyPenalty); sliderFrequencyPenalty.value = inputFrequencyPenalty.value;});
+    sliderPresencePenalty.addEventListener("input", function() {inputPresencePenalty.value = sliderPresencePenalty.value;});
+    inputPresencePenalty.addEventListener("input", function() {checkRange(inputPresencePenalty); sliderPresencePenalty.value = inputPresencePenalty.value;});
+
+    updateModels();
+    updateHistory();
+    updateSystemPromptList();
+    check();
+});
+
+function newChat() {
+    location.reload();    
+}
+
+function openLogFolder() {
+    $.ajax({
+        url: '/open_log_folder',
+        type: 'GET',
+        contentType: 'application/json',
+        success: function(response) {
+        }
+    });
+}
+
+function changeTab(tabId) {
+    const tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => {
+        tab.style.display = 'none';
+    });
+
+    document.getElementById(tabId).style.display = 'flex';
+
+    const buttons = document.querySelectorAll('#tabButtons button');
+    buttons.forEach(button => {
+        button.classList.remove('tabBtnSelected');
+    });
+
+    document.getElementById(`btn-${tabId}`).classList.add('tabBtnSelected');
+
+    switch(tabId) {
+        case 'containerFiles':
+            updateFiles();
+            break;
+        case 'containerFineTuningJob':
+            updateJobs();
+            break;
+        default:
+            break;
+    }
+    updateModels();
+}
+
+let isResizing = false;
+
+resizeBar.addEventListener('mousedown', (e) => {
+    isResizing = true;
+    e.preventDefault();
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (!isResizing) return;
+    const mouseX = e.pageX;
+
+    document.getElementById("leftHistory").style.width = `${e.pageX}px`;
+});
+
+document.addEventListener('mouseup', (e) => {
+  isResizing = false;
+});
+
+resizeBar.addEventListener('dblclick', function() {
+    if (document.getElementById("leftHistory").style.width !== '0px') {
+        document.getElementById("leftHistory").style.width = '0px';
+    }else {
+        document.getElementById("leftHistory").style.width = '224px';
+    }
+});
+
+</script>
+
+</body>
+</html>
