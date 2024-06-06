@@ -47,6 +47,12 @@ jobs:
       - name: Clone NNC Plugin
         uses: actions/checkout@v2
 
+      - name: Clone nnabla-example
+        uses: actions/checkout@v2
+        with:
+          repository: sony/nnabla-examples
+          path: ./plugins/_NNablaExamples/nnabla-examples
+
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
@@ -54,7 +60,5 @@ jobs:
 
       - name: Check
         run: |
-          python3 -m pip install -U nnabla
-          python3 -m pip install -U janome nltk scikit-learn plotly matplotlib scikit-image opencv-python psutil
-          python3 -m pip install -U install numpy==1.23
+          python3 -m pip install -r requirement.txt
           python3 tools/scripts/check_plugin_help.py

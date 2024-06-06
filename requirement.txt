@@ -1,0 +1,16 @@
+nnabla
+janome
+nltk
+scikit-learn
+plotly
+matplotlib
+scikit-image
+opencv-python
+psutil
+flask
+flask_cors
+openai
+icrawler
+beautifulsoup4
+requests
+numpy==1.23
