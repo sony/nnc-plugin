@@ -120,7 +120,7 @@ def chatbot():
         with open(os.path.join(log_path, user_message['id'] + '.json'), 'w') as f:
             json.dump(user_message, f)
 
-        return jsonify({'success': True, 'message': response_text, 'usage': dict(response.usage)})
+        return jsonify({'success': True, 'message': response_text, 'usage': f'Usage : Input {response.usage.prompt_tokens}, Output {response.usage.completion_tokens}, Total {response.usage.total_tokens}'})
     except Exception as e:
         return jsonify({'success': False, 'message': str(e), 'usage': 'An error occurred while calling OpenAI API.'})
 
