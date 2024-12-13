@@ -32,8 +32,8 @@ from nnabla.utils.save import save
 
 
 def get_model(model, batch_size, feature_ratio):
-    nn.set_default_context(get_extension_context('cudnn'))
     try:
+        nn.set_default_context(get_extension_context('cudnn'))
         x = nn.Variable()
         F.relu(x)
     except:
@@ -265,7 +265,7 @@ def func(args):
     # Create anomary detection model
     logger.log(99, 'Saving anomary detection model...')
     contents = {
-        'global_config': {'default_context': get_extension_context('cudnn')},
+        'global_config': {'default_context': nn.get_current_context()},
         'networks': [
             {'name': 'network',
              'batch_size': batch_size,
