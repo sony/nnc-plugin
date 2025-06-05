@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022,2023,2024,2025 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,366 +11,134 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""
-Provide data iterator for Cifar100 examples.
-"""
-from contextlib import contextmanager
 import argparse
+import io
+import math
 import numpy as np
-import random
-import tarfile
 import os
-import tqdm
-import csv
-from imageio import imwrite
+import pandas as pd
+import random
 
+from huggingface_hub import hf_hub_download
+from PIL import Image
+from tqdm import tqdm
 from nnabla.logger import logger
-from nnabla.utils.data_iterator import data_iterator
-from nnabla.utils.data_source import DataSource
-from nnabla.utils.data_source_loader import download
 
 
-def set_seed():
-    random.seed(args.seed)
-    np.random.seed(args.seed)
+def set_seed(seed):
+    random.seed(seed)
+    np.random.seed(seed)
 
 
-class Cifar100DataSource(DataSource):
-    """
-    Get data directly from cifar100 dataset from Internet(yann.lecun.com).
-    """
-
-    def _get_data(self, position):
-        image = self._images[self._indexes[position]]
-        label = self._labels[self._indexes[position]]
-        if args.label_shuffle and self._train:
-            shuffle = self._shuffle_label[self._indexes[position]]
-            return (image, label, shuffle)
-        else:
-            return (image, label)
-
-    def __init__(
-        self,
-        train=True,
-        shuffle=False,
-        rng=None,
-        label_shuffle=False,
-        label_shuffle_rate=0.1,
-    ):
-        super(Cifar100DataSource, self).__init__(shuffle=shuffle)
-
-        self._train = train
-        data_uri = "https://dl.sony.com/app/datasets/cifar-100-python.tar.gz"
-        logger.info("Getting labeled data from {}.".format(data_uri))
-        r = download(data_uri)  # file object returned
-        with tarfile.open(fileobj=r, mode="r:gz") as fpin:
-            # Training data
-            if train:
-                images = []
-                labels = []
-                for member in fpin.getmembers():
-                    if "train" not in member.name:
-                        continue
-                    fp = fpin.extractfile(member)
-                    data = np.load(fp, allow_pickle=True, encoding="bytes")
-                    images = data[b"data"]
-                    labels = data[b"fine_labels"]
-                self._size = 50000
-                self._images = images.reshape(self._size, 3, 32, 32)
-                self._labels = np.array(labels).reshape(-1, 1)
-                if label_shuffle:
-                    raw_label = self._labels.copy()
-                    self.shuffle_rate = label_shuffle_rate
-                    self._shuffle_label = self.label_shuffle()
-                    print(f"{self.shuffle_rate*100}% of data was shuffled ")
-                    print(
-                        "shuffle_label_number: ",
-                        len(np.where(self._labels != self._shuffle_label)[0]),
-                    )
-            # Validation data
-            else:
-                for member in fpin.getmembers():
-                    if "test" not in member.name:
-                        continue
-                    fp = fpin.extractfile(member)
-                    data = np.load(fp, allow_pickle=True, encoding="bytes")
-                    images = data[b"data"]
-                    labels = data[b"fine_labels"]
-                self._size = 10000
-                self._images = images.reshape(self._size, 3, 32, 32)
-                self._labels = np.array(labels).reshape(-1, 1)
-        r.close()
-        logger.info("Getting labeled data from {} done.".format(data_uri))
-
-        self._size = self._labels.size
-        if args.label_shuffle and train:
-            self._variables = ("x", "y", "shuffle")
-        else:
-            self._variables = ("x", "y")
-        if rng is None:
-            rng = np.random.RandomState(313)
-        self.rng = rng
-        self.reset()
-
-    def label_shuffle(self):
-        num_cls = int(np.max(self._labels)) + 1
-        shuffle_label = self._labels.copy()
-        print("num_cls: ", num_cls)
-        extract_num = int(len(self._labels) * self.shuffle_rate // num_cls)
-        for i in range(num_cls):
-            extract_ind = np.where(self._labels == i)[0]
-            labels = [j for j in range(num_cls)]
-            labels.remove(i)  # candidate of shuffle label
-            artificial_label = [
-                labels[int(i) % (num_cls - 1)] for i in range(int(extract_num))
-            ]
-            artificial_label = np.array(
-                random.sample(artificial_label, len(artificial_label))
-            ).astype("float32")
-            convert_label = np.array([i for _ in range(len(extract_ind))])
-            convert_label[-extract_num:] = artificial_label
-            random.shuffle(convert_label)
-
-            shuffle_label[extract_ind] = convert_label.reshape(-1, 1)
-
-        return shuffle_label
-
-    def reset(self):
-        if self._shuffle:
-            self._indexes = self.rng.permutation(self._size)
-        else:
-            self._indexes = np.arange(self._size)
-        super(Cifar100DataSource, self).reset()
-
-    @property
-    def images(self):
-        """Get copy of whole data with a shape of (N, 1, H, W)."""
-        return self._images.copy()
-
-    @property
-    def labels(self):
-        """Get copy of whole label with a shape of (N, 1)."""
-        return self._labels.copy()
-
-    @property
-    def shuffle_labels(self):
-        return self._shuffle_label.copy()
+labels = ['apple', 'aquarium_fish', 'baby', 'bear', 'beaver',
+          'bed', 'bee', 'beetle', 'bicycle', 'bottle',
+          'bowl', 'boy', 'bridge', 'bus', 'butterfly',
+          'camel', 'can', 'castle', 'caterpillar', 'cattle',
+          'chair', 'chimpanzee', 'clock', 'cloud', 'cockroach',
+          'couch', 'crab', 'crocodile', 'cup', 'dinosaur',
+          'dolphin', 'elephant', 'flatfish', 'forest', 'fox',
+          'girl', 'hamster', 'house', 'kangaroo', 'computer_keyboard',
+          'lamp', 'lawn_mower', 'leopard', 'lion', 'lizard',
+          'lobster', 'man', 'maple_tree', 'motorcycle', 'mountain',
+          'mouse', 'mushroom', 'oak_tree', 'orange', 'orchid',
+          'otter', 'palm_tree', 'pear', 'pickup_truck', 'pine_tree',
+          'plain', 'plate', 'poppy', 'porcupine', 'possum',
+          'rabbit', 'raccoon', 'ray', 'road', 'rocket',
+          'rose', 'sea', 'seal', 'shark', 'shrew',
+          'skunk', 'skyscraper', 'snail', 'snake', 'spider',
+          'squirrel', 'streetcar', 'sunflower', 'sweet_pepper', 'table',
+          'tank', 'telephone', 'television', 'tiger', 'tractor',
+          'train', 'trout', 'tulip', 'turtle', 'wardrobe',
+          'whale', 'willow_tree', 'wolf', 'woman', 'worm']
 
 
-@contextmanager
-def data_iterator_cifar100(
-    batch_size,
-    train=True,
-    rng=None,
-    shuffle=True,
-    with_memory_cache=False,
-    with_file_cache=False,
-    label_shuffle=False,
-):
-    """
-    Provide DataIterator with :py:class:`Cifar100DataSource`
-    with_memory_cache, with_parallel and with_file_cache option's default value is all False,
-    because :py:class:`Cifar100DataSource` is able to store all data into memory.
+def df_to_csv(base_path, csv_file_name, data_path, df):
 
-    For example,
+    for label in labels:
+        os.makedirs(
+            os.path.abspath(os.path.join(base_path, data_path, label)),
+            exist_ok=True)
 
-    .. code-block:: python
+    datalist = []
+    for idx, row in tqdm(df.iterrows(), total=len(df), unit='images'):
+        relative_path = '/'.join(
+            (data_path, labels[row.fine_label], f'{idx}.png'))
+        image_path = os.path.abspath(os.path.join(base_path, relative_path))
+        Image.open(io.BytesIO(row.img['bytes'])).save(image_path)
+        datalist.append([relative_path, row.fine_label])
 
-        with data_iterator_cifar100(True, batch_size) as di:
-            for data in di:
-                SOME CODE TO USE data.
-
-    """
-    with Cifar100DataSource(
-        train=train, shuffle=shuffle, rng=rng, label_shuffle=label_shuffle
-    ) as ds, data_iterator(
-        ds,
-        batch_size,
-        rng=rng,
-        with_memory_cache=with_memory_cache,
-        with_file_cache=with_file_cache,
-    ) as di:
-        yield di
+    csv_df = pd.DataFrame(datalist, columns=['x', 'y'])
+    return put_csv(os.path.join(base_path, csv_file_name), csv_df)
 
 
-def data_iterator_to_csv(csv_path, csv_file_name, data_path, data_iterator, shuffle):
-    index = 0
-    csv_data = []
-    labels = [
-        "apple",
-        "aquarium_fish",
-        "baby",
-        "bear",
-        "beaver",
-        "bed",
-        "bee",
-        "beetle",
-        "bicycle",
-        "bottle",
-        "bowl",
-        "boy",
-        "bridge",
-        "bus",
-        "butterfly",
-        "camel",
-        "can",
-        "castle",
-        "caterpillar",
-        "cattle",
-        "chair",
-        "chimpanzee",
-        "clock",
-        "cloud",
-        "cockroach",
-        "couch",
-        "crab",
-        "crocodile",
-        "cup",
-        "dinosaur",
-        "dolphin",
-        "elephant",
-        "flatfish",
-        "forest",
-        "fox",
-        "girl",
-        "hamster",
-        "house",
-        "kangaroo",
-        "computer_keyboard",
-        "lamp",
-        "lawn_mower",
-        "leopard",
-        "lion",
-        "lizard",
-        "lobster",
-        "man",
-        "maple_tree",
-        "motorcycle",
-        "mountain",
-        "mouse",
-        "mushroom",
-        "oak_tree",
-        "orange",
-        "orchid",
-        "otter",
-        "palm_tree",
-        "pear",
-        "pickup_truck",
-        "pine_tree",
-        "plain",
-        "plate",
-        "poppy",
-        "porcupine",
-        "possum",
-        "rabbit",
-        "raccoon",
-        "ray",
-        "road",
-        "rocket",
-        "rose",
-        "sea",
-        "seal",
-        "shark",
-        "shrew",
-        "skunk",
-        "skyscraper",
-        "snail",
-        "snake",
-        "spider",
-        "squirrel",
-        "streetcar",
-        "sunflower",
-        "sweet_pepper",
-        "table",
-        "tank",
-        "telephone",
-        "television",
-        "tiger",
-        "tractor",
-        "train",
-        "trout",
-        "tulip",
-        "turtle",
-        "wardrobe",
-        "whale",
-        "willow_tree",
-        "wolf",
-        "woman",
-        "worm",
-    ]
-    with data_iterator as data:
-        if shuffle:
-            line = ["x:image", "y:label;" + ";".join(labels), "original_label"]
-        else:
-            line = ["x:image", "y:label;" + ";".join(labels)]
-        csv_data.append(line)
-        pbar = tqdm.tqdm(total=data.size, unit="images")
-        initial_epoch = data.epoch
-        while data.epoch == initial_epoch:
-            d = data.next()
-            for i in range(len(d[0])):
-                label = d[1][i][0]
-                file_name = (
-                    data_path +
-                    "/{}".format(labels[label]) + "/{}.png".format(index)
-                )
-                full_path = os.path.join(
-                    csv_path, file_name.replace("/", os.path.sep))
-                directory = os.path.dirname(full_path)
-                if not os.path.exists(directory):
-                    os.makedirs(directory)
-                imwrite(full_path, d[0][i].reshape(
-                    3, 32, 32).transpose(1, 2, 0))
-                if shuffle:
-                    shuffled_label = d[2][i][0]
-                    csv_data.append([file_name, shuffled_label, label])
-                else:
-                    csv_data.append([file_name, label])
-                index += 1
-                pbar.update(1)
-        pbar.close()
-    with open(os.path.join(csv_path, csv_file_name), "w") as f:
-        writer = csv.writer(f, lineterminator="\n")
-        writer.writerows(csv_data)
-    return csv_data
+def put_csv(path, df):
+    columns = ['x:image', 'y:label;' + ';'.join(labels)]
+    if df.shape[1] == 3:
+        columns.append('original_label')
+
+    df.to_csv(path, index=False, header=columns, lineterminator='\n')
+    return df
 
 
-def main():
+def shuffle_label(label_df, shuffle_rate):
+    num_class = label_df.max() + 1
+
+    shuffle_df = pd.Series(dtype=int)
+    for label in range(num_class):
+        num_wrong_per_class = round((label_df == label).sum() * shuffle_rate)
+        num_correct_per_class = (label_df == label).sum() - num_wrong_per_class
+
+        # generate `num_wrong_per_class` wrong labels
+        num_repeat = math.ceil(num_wrong_per_class / (num_class - 1))
+        artificial_label = np.tile(
+            [i for i in range(num_class) if i != label],
+            num_repeat)[:num_wrong_per_class]
+        np.random.shuffle(artificial_label)
+
+        # concatenate with correct labels
+        update_labels = np.insert(
+            artificial_label, 0, np.full(num_correct_per_class, label))
+        np.random.shuffle(update_labels)
+
+        # add the updated labels to shuffle_df
+        shuffle_df = pd.concat([
+            shuffle_df,
+            pd.Series(update_labels, index=label_df[label_df == label].index)])
+    return shuffle_df.sort_index()
+
+
+def main(args):
     path = os.path.abspath(os.path.dirname(__file__))
 
     # Create original training set
-    logger.log(99, "Downloading CIFAR-100 dataset...")
-    train_di = data_iterator_cifar100(
-        50000, True, None, False, label_shuffle=args.label_shuffle
-    )
+    logger.log(99, "Downloading CIFAR-100 training dataset...")
+    _df = pd.read_parquet(
+        hf_hub_download(
+            repo_id='uoft-cs/cifar100',
+            filename='cifar100/train-00000-of-00001.parquet',
+            repo_type='dataset'))
     logger.log(99, 'Creating "cifar100_training.csv"... ')
-    if args.label_shuffle:
-        train_csv = data_iterator_to_csv(
-            path,
-            "cifar100_training_shuffle.csv",
-            os.path.join(os.getcwd(), "training"),
-            train_di,
-            shuffle=args.label_shuffle,
-        )
-    else:
-        train_csv = data_iterator_to_csv(
-            path,
-            "cifar100_training.csv",
-            os.path.join(os.getcwd(), "training"),
-            train_di,
-            shuffle=False,
-        )
+    train_csv_df = df_to_csv(path, 'cifar100_training.csv', './training', _df)
 
-    # Create original test set
-    validation_di = data_iterator_cifar100(10000, False, None, False)
+    if args.label_shuffle:
+        logger.log(99, 'Creating "cifar100_training_shuffle.csv"... ')
+        label_df = shuffle_label(train_csv_df['y'].copy(), args.shuffle_rate)
+
+        num = (label_df != train_csv_df['y']).sum()
+        logger.log(99, f'{num} labels are shuffled.')
+
+        train_csv_df.insert(1, 'shuffle', label_df)
+        put_csv(os.path.join(path, 'cifar100_training_shuffle.csv'),
+                train_csv_df)
+
+    logger.log(99, 'Downloading CIFAR-100 test dataset...')
+    _df = pd.read_parquet(
+        hf_hub_download(
+            repo_id='uoft-cs/cifar100',
+            filename='cifar100/test-00000-of-00001.parquet',
+            repo_type='dataset'))
     logger.log(99, 'Creating "cifar100_test.csv"... ')
-    test_csv = data_iterator_to_csv(
-        path,
-        "cifar100_test.csv",
-        os.path.join(os.getcwd(), "validation"),
-        validation_di,
-        shuffle=False,
-    )
+    df_to_csv(path, 'cifar100_test.csv', './validation', _df)
 
     logger.log(99, "Dataset creation completed successfully.")
 
@@ -378,12 +146,12 @@ def main():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--label_shuffle", action="store_true", help="generate label shuffled dataset"
-    )
+        "--label_shuffle",
+        action="store_true",
+        help="generate label shuffled dataset")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--shuffle_rate", type=float, default=0.1)
     args = parser.parse_args()
 
-    set_seed()
-    print("Label Shuffle: ", args.label_shuffle)
-    main()
+    set_seed(args.seed)
+    main(args)
