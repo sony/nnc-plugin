@@ -16,6 +16,7 @@ import io
 import os
 import pandas as pd
 
+from concurrent import futures
 from huggingface_hub import hf_hub_download
 from PIL import Image
 from tqdm import tqdm
@@ -49,13 +50,23 @@ def df_to_csv(base_path, csv_file_name, data_path, df):
             os.path.abspath(os.path.join(base_path, data_path, label)),
             exist_ok=True)
 
-    datalist = []
-    for idx, row in tqdm(df.iterrows(), total=len(df), unit='images'):
-        relative_path = '/'.join(
-            (data_path, labels[row.fine_label], f'{idx}.png'))
-        image_path = os.path.abspath(os.path.join(base_path, relative_path))
-        Image.open(io.BytesIO(row.img['bytes'])).save(image_path)
-        datalist.append([relative_path, row.fine_label])
+    datalist = [None] * len(df)
+    with futures.ThreadPoolExecutor() as executor:
+        def _save_image(idx, row):
+            rel_path = '/'.join(
+                (data_path, labels[row.fine_label], f'{idx}.png'))
+            abs_path = os.path.abspath(os.path.join(base_path, rel_path))
+            Image.open(io.BytesIO(row.img['bytes'])).save(abs_path)
+            return idx, [rel_path, row.fine_label]
+
+        futurelist = [
+            executor.submit(_save_image, idx, row)
+            for idx, row in tqdm(df.iterrows(), total=len(df), unit='issues')]
+
+        for future in tqdm(futures.as_completed(futurelist),
+                           total=len(df), unit='images'):
+            idx, result = future.result()
+            datalist[idx] = result
 
     columns = ['x:image', 'y:label;' + ';'.join(labels)]
     csv_path = os.path.join(base_path, csv_file_name)
