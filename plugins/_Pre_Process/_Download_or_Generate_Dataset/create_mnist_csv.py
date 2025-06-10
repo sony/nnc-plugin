@@ -161,6 +161,7 @@ def func(args):
         os.path.join(path, 'small_mnist_4or9_test_w_initmemory.csv'),
         index=False,
         lineterminator='\n')
+    logger.log(99, 'Dataset creation completed successfully.')
 
 
 def main():
