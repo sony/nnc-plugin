@@ -1,4 +1,4 @@
-# Copyright 2021 Sony Group Corporation.
+# Copyright 2021,2022,2023,2024,2025 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ def load_wav(file_name, default_sampling_freq):
     if os.path.splitext(file_name)[1].lower() == ".csv":
         return default_sampling_freq, (np.loadtxt(file_name) * 32768).astype(np.int16)
     else:
-        return wavfiles.read(file_name)
+        return wavfile.read(file_name)
 
 
 def func(args):
