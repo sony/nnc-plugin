@@ -1,4 +1,4 @@
-# Copyright 2023 Sony Group Corporation.
+# Copyright 2023,2024,2025 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,8 +39,10 @@ def func(args):
     if args.GradCAM:
         gradcam_args = Args()
         gradcam_args.model = args.model
+        gradcam_args.input = args.input
         gradcam_args.image = args.image
         gradcam_args.class_index = args.class_index
+        gradcam_args.output_variable = args.output_variable
         gradcam_args.output = data_output_dir + '_' + 'gradcam.png'
         gradcam_args.contains_crop = args.contains_crop
         gradcam_result = gradcam_func(gradcam_args)
@@ -142,6 +144,8 @@ def main():
     # designage if the model contains crop between input and first conv layer.
     parser.add_argument(
         '-cr', '--contains_crop', help=argparse.SUPPRESS, action='store_true')
+    parser.add_argument(
+        '-ov', '--output_variable', help="(Grad-CAM) output variable to visualize (variable) default=y0' ", required=True, default="y0'")
     parser.add_argument(
         '-s', '--num_segments', help='(LIME) number of segments (int), default=10', required=True, type=int, default=10)
     parser.add_argument(
