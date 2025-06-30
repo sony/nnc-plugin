@@ -1,4 +1,4 @@
-# Copyright 2022 Sony Group Corporation.
+# Copyright 2022,2023,2024,2025 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ def func(args):
 def main():
     parser = argparse.ArgumentParser(
         description='MNISTCycleGAN\n\n' +
-        'Download MNIST dataset from dl.sony.com (original file is from http://yann.lecun.com/exdb/mnist/).\n\n',
+        'Download MNIST dataset from huggingface.\n\n',
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         '-o',

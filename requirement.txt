@@ -14,3 +14,6 @@ icrawler
 beautifulsoup4
 requests
 numpy==1.23
+huggingface-hub
+pyarrow
+pandas

@@ -1,4 +1,4 @@
-# Copyright 2022 Sony Group Corporation.
+# Copyright 2022,2023,2024,2025 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,281 +11,163 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import io
 import os
 import argparse
-import csv
-from imageio import imwrite
-from contextlib import contextmanager
-import numpy
-import struct
-import zlib
-import tqdm
+import numpy as np
+import pandas as pd
 
+from concurrent import futures
+from huggingface_hub import hf_hub_download
+from PIL import Image
+from tqdm import tqdm
 from nnabla.logger import logger
-from nnabla.utils.data_iterator import data_iterator
-from nnabla.utils.data_source import DataSource
-from nnabla.utils.data_source_loader import download
 
 
-class MnistDataSource(DataSource):
-    '''
-    Get data directly from MNIST dataset from Internet(yann.lecun.com).
-    '''
+def df_to_csv(base_path, csv_file_name, data_path, df):
+    for label in df.label.unique():
+        os.makedirs(
+            os.path.abspath(os.path.join(base_path, data_path, str(label))),
+            exist_ok=True)
 
-    def _get_data(self, position):
-        image = self._images[self._indexes[position]]
-        label = self._labels[self._indexes[position]]
-        return (image, label)
+    datalist = [None] * len(df)
+    with futures.ThreadPoolExecutor() as executor:
+        def _save_image(idx, row):
+            rel_path = '/'.join((data_path, str(row.label), f'{idx}.png'))
+            abs_path = os.path.abspath(os.path.join(base_path, rel_path))
+            Image.open(io.BytesIO(row.image['bytes'])).save(abs_path)
+            return idx, [rel_path, row.label]
 
-    def __init__(self, train=True, shuffle=False, rng=None):
-        super(MnistDataSource, self).__init__(shuffle=shuffle)
-        self._train = train
-        if self._train:
-            image_uri = 'https://dl.sony.com/app/datasets/train-images-idx3-ubyte.gz'
-            label_uri = 'https://dl.sony.com/app/datasets/train-labels-idx1-ubyte.gz'
-        else:
-            image_uri = 'https://dl.sony.com/app/datasets/t10k-images-idx3-ubyte.gz'
-            label_uri = 'https://dl.sony.com/app/datasets/t10k-labels-idx1-ubyte.gz'
+        futurelist = [
+            executor.submit(_save_image, idx, row)
+            for idx, row in tqdm(df.iterrows(), total=len(df), unit='issues')]
 
-        logger.info('Getting label data from {}.'.format(label_uri))
-        r = download(label_uri)
-        data = zlib.decompress(r.read(), zlib.MAX_WBITS | 32)
-        _, size = struct.unpack('>II', data[0:8])
-        self._labels = numpy.frombuffer(data[8:], numpy.uint8).reshape(-1, 1)
-        r.close()
-        logger.info('Getting label data done.')
+        for future in tqdm(futures.as_completed(futurelist),
+                           total=len(df), unit='images'):
+            idx, result = future.result()
+            datalist[idx] = result
 
-        logger.info('Getting image data from {}.'.format(image_uri))
-        r = download(image_uri)
-        data = zlib.decompress(r.read(), zlib.MAX_WBITS | 32)
-        _, size, height, width = struct.unpack('>IIII', data[0:16])
-        self._images = numpy.frombuffer(data[16:], numpy.uint8).reshape(
-            size, 1, height, width)
-        r.close()
-        logger.info('Getting image data done.')
-
-        self._size = self._labels.size
-        self._variables = ('x', 'y')
-        if rng is None:
-            rng = numpy.random.RandomState(313)
-        self.rng = rng
-        self.reset()
-
-    def reset(self):
-        if self._shuffle:
-            self._indexes = self.rng.permutation(self._size)
-        else:
-            self._indexes = numpy.arange(self._size)
-        super(MnistDataSource, self).reset()
-
-    @property
-    def images(self):
-        """Get copy of whole data with a shape of (N, 1, H, W)."""
-        return self._images.copy()
-
-    @property
-    def labels(self):
-        """Get copy of whole label with a shape of (N, 1)."""
-        return self._labels.copy()
+    csv_path = os.path.join(base_path, csv_file_name)
+    csv_df = pd.DataFrame(datalist, columns=['x:image', 'y:label'])
+    csv_df.to_csv(csv_path, index=False, lineterminator='\n')
+    return csv_df
 
 
-@contextmanager
-def data_iterator_mnist(batch_size,
-                        train=True,
-                        rng=None,
-                        shuffle=True,
-                        with_memory_cache=False,
-                        with_file_cache=False):
-    '''
-    Provide DataIterator with :py:class:`MnistDataSource`
-    with_memory_cache, with_parallel and with_file_cache option's default value is all False,
-    because :py:class:`MnistDataSource` is able to store all data into memory.
+def build_onehot_df(df):
+    columns = ['x:image']
+    columns.extend([f'y__{i}:{i}' for i in range(10)])
 
-    For example,
-
-    .. code-block:: python
-
-        with data_iterator_mnist(True, batch_size) as di:
-            for data in di:
-                SOME CODE TO USE data.
-
-    '''
-    with MnistDataSource(train=train, shuffle=shuffle, rng=rng) as ds, \
-        data_iterator(ds,
-                      batch_size,
-                      rng=None,
-                      with_memory_cache=with_memory_cache,
-                      with_file_cache=with_file_cache) as di:
-        yield di
-
-
-def data_iterator_to_csv(csv_path, csv_file_name, data_path, data_iterator):
-    index = 0
-    csv_data = []
-    with data_iterator as data:
-        line = ['x:image', 'y:label']
-        csv_data.append(line)
-        pbar = tqdm.tqdm(total=data.size, unit='images')
-        initial_epoch = data.epoch
-        while data.epoch == initial_epoch:
-            d = data.next()
-            for i in range(len(d[0])):
-                label = d[1][i][0]
-                file_name = data_path + \
-                    '/{}'.format(label) + '/{}.png'.format(index)
-                full_path = os.path.join(
-                    csv_path, file_name.replace('/', os.path.sep))
-                directory = os.path.dirname(full_path)
-                if not os.path.exists(directory):
-                    os.makedirs(directory)
-                imwrite(full_path, d[0][i].reshape(28, 28))
-                csv_data.append([file_name, label])
-                index += 1
-                pbar.update(1)
-        pbar.close()
-    with open(os.path.join(csv_path, csv_file_name), 'w') as f:
-        writer = csv.writer(f, lineterminator='\n')
-        writer.writerows(csv_data)
-    return csv_data
-
-
-def create_onehot_dataset(source_csv, file_name, num_class):
-    csv_data = []
-    for i, line in enumerate(source_csv):
-        if i == 0:
-            new_line = [line[0]]
-            for i2 in range(num_class):
-                new_line.append('y__{}:{}'.format(i2, i2))
-            csv_data.append(new_line)
-        else:
-            label = line[1]
-            onehot = numpy.zeros(num_class)
-            onehot[label] = 1
-            new_line = [line[0]]
-            new_line.extend(onehot)
-            csv_data.append(new_line)
-    with open(file_name, 'w') as f:
-        writer = csv.writer(f, lineterminator='\n')
-        writer.writerows(csv_data)
+    csv_df = pd.get_dummies(df, dtype=int, columns=['y:label'])
+    csv_df = csv_df.set_axis(columns, axis=1, copy=False)
+    return csv_df
 
 
 def func(args):
-    path = args.output_dir
+    path = os.path.abspath(args.output_dir)
 
-    # Create original training set
+    # Create original training/test set
     logger.log(99, 'Downloading MNIST training set images...')
-    train_di = data_iterator_mnist(60000, True, None, False)
+    _df = pd.read_parquet(
+        hf_hub_download(
+            repo_id='ylecun/mnist',
+            filename='mnist/train-00000-of-00001.parquet',
+            repo_type='dataset'))
     logger.log(99, 'Creating "mnist_training.csv"... ')
-    train_csv = data_iterator_to_csv(
-        path, 'mnist_training.csv', './training', train_di)
+    train_csv_df = df_to_csv(path, 'mnist_training.csv', './training', _df)
 
-    # Create original test set
     logger.log(99, 'Downloading MNIST test set images...')
-    validation_di = data_iterator_mnist(10000, False, None, False)
+    _df = pd.read_parquet(
+        hf_hub_download(
+            repo_id='ylecun/mnist',
+            filename='mnist/test-00000-of-00001.parquet',
+            repo_type='dataset'))
     logger.log(99, 'Creating "mnist_test.csv"... ')
-    test_csv = data_iterator_to_csv(
-        path, 'mnist_test.csv', './validation', validation_di)
+    test_csv_df = df_to_csv(path, 'mnist_test.csv', './validation', _df)
 
-    # Create one-hot training set
+    # Create one-hot training/test set
     logger.log(99, 'Creating "mnist_training_onehot.csv"... ')
-    create_onehot_dataset(train_csv, os.path.join(
-        path, "mnist_training_onehot.csv"), 10)
+    onehot_train_csv_df = build_onehot_df(train_csv_df)
+    onehot_train_csv_df.to_csv(
+        os.path.join(path, 'mnist_training_onehot.csv'),
+        index=False,
+        lineterminator='\n')
 
-    # Create one-hot test set
     logger.log(99, 'Creating "mnist_test_onehot.csv"... ')
-    create_onehot_dataset(test_csv, os.path.join(
-        path, "mnist_test_onehot.csv"), 10)
+    onehot_test_csv_df = build_onehot_df(test_csv_df)
+    onehot_test_csv_df.to_csv(
+        os.path.join(path, 'mnist_test_onehot.csv'),
+        index=False,
+        lineterminator='\n')
 
     # Create 100 data training set for semi-supervised learning
     logger.log(99, 'Creating "mnist_training_100.csv"... ')
-    labels = numpy.zeros(10)
-    csv_data = []
-    for i, line in enumerate(train_csv):
-        if i == 0:
-            csv_data.append(line)
-        else:
-            label = line[1]
-            if labels[label] < 10:
-                csv_data.append(line)
-                labels[label] += 1
-    with open(os.path.join(path, "mnist_training_100.csv"), 'w') as f:
-        writer = csv.writer(f, lineterminator='\n')
-        writer.writerows(csv_data)
+    tens_train_df = pd.DataFrame()
+    for label in train_csv_df['y:label'].unique():
+        first_ten_df = (train_csv_df[train_csv_df['y:label'] == label])[:10]
+        tens_train_df = pd.concat([tens_train_df, first_ten_df])
+    tens_train_df.sort_index().to_csv(
+        os.path.join(path, 'mnist_training_100.csv'),
+        index=False,
+        lineterminator='\n')
 
     # Create unlabeled training set for semi-supervised learning
     logger.log(99, 'Creating "mnist_training_unlabeled.csv"... ')
-    labels = numpy.zeros(10)
-    csv_data = []
-    for i, line in enumerate(train_csv):
-        if i == 0:
-            csv_data.append(['xu:image'])
-        else:
-            csv_data.append([line[0]])
-    with open(os.path.join(path, "mnist_training_unlabeled.csv"), 'w') as f:
-        writer = csv.writer(f, lineterminator='\n')
-        writer.writerows(csv_data)
+    unlabel_train_df = train_csv_df.drop(columns='y:label')
+    unlabel_train_df = unlabel_train_df.set_axis(
+        ['xu:image'], axis=1, copy=False)
+    unlabel_train_df.to_csv(
+        os.path.join(path, 'mnist_training_unlabeled.csv'),
+        index=False,
+        lineterminator='\n')
 
-    # Create small training set
+    # Create small training/test set
     logger.log(99, 'Creating "small_mnist_4or9_training.csv"... ')
-    labels = numpy.zeros(2)
-    csv_data = []
-    for i, line in enumerate(train_csv):
-        if i == 0:
-            csv_data.append(['x:image', 'y:label;4;9'])
-        else:
-            label = line[1]
-            if label == 4 or label == 9:
-                if label == 4:
-                    label = 0
-                else:
-                    label = 1
-                if labels[label] < 750:
-                    csv_data.append([line[0], label])
-                    labels[label] += 1
-    with open(os.path.join(path, "small_mnist_4or9_training.csv"), 'w') as f:
-        writer = csv.writer(f, lineterminator='\n')
-        writer.writerows(csv_data)
+    small_train_df = pd.concat([
+        train_csv_df[train_csv_df['y:label'] == 4][:750],
+        train_csv_df[train_csv_df['y:label'] == 9][:750]
+    ])
+    small_train_df['y:label'] = (small_train_df['y:label'] == 9).astype(int)
+    small_train_df.sort_index(inplace=True)
+    small_train_df = small_train_df.set_axis(
+        ['x:image', 'y:label;4;9'], axis=1, copy=False)
+    small_train_df.to_csv(
+        os.path.join(path, 'small_mnist_4or9_training.csv'),
+        index=False,
+        lineterminator='\n')
 
-    # Create small test set
     logger.log(99, 'Creating "small_mnist_4or9_test.csv"... ')
-    labels = numpy.zeros(2)
-    csv_data = []
-    for i, line in enumerate(test_csv):
-        if i == 0:
-            csv_data.append(['x:image', 'y:label;4;9'])
-        else:
-            label = line[1]
-            if label == 4 or label == 9:
-                if label == 4:
-                    label = 0
-                else:
-                    label = 1
-                if labels[label] < 250:
-                    csv_data.append([line[0], label])
-                    labels[label] += 1
-    with open(os.path.join(path, "small_mnist_4or9_test.csv"), 'w') as f:
-        writer = csv.writer(f, lineterminator='\n')
-        writer.writerows(csv_data)
+    small_test_df = pd.concat([
+        test_csv_df[test_csv_df['y:label'] == 4][:250],
+        test_csv_df[test_csv_df['y:label'] == 9][:250]
+    ])
+    small_test_df['y:label'] = (small_test_df['y:label'] == 9).astype(int)
+    small_test_df.sort_index(inplace=True)
+    small_test_df = small_test_df.set_axis(
+        ['x:image', 'y:label;4;9'], axis=1, copy=False)
+    small_test_df.to_csv(
+        os.path.join(path, 'small_mnist_4or9_test.csv'),
+        index=False,
+        lineterminator='\n')
 
     # Create small test set with initial memory
     logger.log(99, 'Creating "small_mnist_4or9_test_w_initmemory.csv"... ')
     memory_size = 256
-    for i in range(len(csv_data)):
-        if i == 0:
-            for i2 in range(memory_size):
-                csv_data[0].append('c__{}'.format(i2))
-        else:
-            csv_data[i].extend(numpy.zeros(memory_size))
-    with open(os.path.join(path, "small_mnist_4or9_test_w_initmemory.csv"), 'w') as f:
-        writer = csv.writer(f, lineterminator='\n')
-        writer.writerows(csv_data)
+    zeros = pd.DataFrame(
+        np.zeros((len(small_test_df), memory_size)),
+        columns=[f'c__{i}' for i in range(memory_size)],
+        index=small_test_df.index)
+    mem_test_df = pd.concat([small_test_df, zeros], axis=1)
+    mem_test_df.to_csv(
+        os.path.join(path, 'small_mnist_4or9_test_w_initmemory.csv'),
+        index=False,
+        lineterminator='\n')
     logger.log(99, 'Dataset creation completed successfully.')
 
 
 def main():
     parser = argparse.ArgumentParser(
         description='MNIST\n\n' +
-        'Download MNIST dataset from dl.sony.com (original file is from http://yann.lecun.com/exdb/mnist/).\n\n',
+        'Download MNIST dataset from huggingface.\n\n',
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         '-o',
