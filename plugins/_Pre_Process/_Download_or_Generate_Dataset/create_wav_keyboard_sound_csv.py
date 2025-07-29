@@ -26,7 +26,7 @@ def func(args):
     logger.log(99, 'Downloading Keyboard Sound dataset...')
 
     r = download(
-        'https://nnabla.org/sample/sample_dataset/keyboard_sound_dataset.zip')
+        'https://zenodo.org/records/16564409/files/keyboard_sound_dataset.zip')
     with zipfile.ZipFile(r) as zip:
         zip.extractall(path)
 
@@ -36,7 +36,7 @@ def func(args):
 def main():
     parser = argparse.ArgumentParser(
         description='WavKeyboardSound\n\n' +
-        'Download KeyboardSound dataset from https://support.dl.sony.com/blogs-ja/dataset/keyboard-sound-dataset/.\n\n',
+        'Download KeyboardSound dataset from https://zenodo.org/records/16564409.\n\n',
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         '-o',

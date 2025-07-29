@@ -25,7 +25,7 @@ def func(args):
     logger.log(99, 'Downloading Flower Food dataset...')
 
     r = download(
-        'https://nnabla.org/sample/sample_dataset/flower_food_dataset.zip')
+        'https://zenodo.org/records/16563563/files/flower_food_dataset.zip')
     with zipfile.ZipFile(r) as zip:
         zip.extractall(args.output_dir)
 
@@ -35,7 +35,7 @@ def func(args):
 def main():
     parser = argparse.ArgumentParser(
         description='FlowerFood\n\n' +
-        'Download "Flower Food Dataset" from https://support.dl.sony.com/blogs-ja/dataset/flower-food-dataset/.\n\n',
+        'Download "Flower Food Dataset" from https://zenodo.org/records/16563563.\n\n',
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         '-o',

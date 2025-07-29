@@ -28,7 +28,7 @@ def func(args):
     # Create original training set
     logger.log(99, 'Downloading Character Extraction dataset...')
 
-    with zipfile.ZipFile(download('https://nnabla.org/sample/sample_dataset/character_extraction_dataset.zip')) as zip:
+    with zipfile.ZipFile(download('https://zenodo.org/records/16564060/files/character_extraction_dataset.zip')) as zip:
         zip.extractall(path)
 
     for csv_file in ['train40000\\train40000.csv', 'validation\\validation.csv', 'validation\\validation_small.csv']:
@@ -52,7 +52,7 @@ def func(args):
 def main():
     parser = argparse.ArgumentParser(
         description='CharacterExtraction\n\n' +
-        'Download Character Extraction dataset from https://support.dl.sony.com/blogs-ja/dataset/character-extraction-dataset/.\n\n',
+        'Download Character Extraction dataset from https://zenodo.org/records/16564060.\n\n',
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         '-o',
