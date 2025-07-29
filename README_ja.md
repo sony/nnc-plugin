@@ -74,7 +74,7 @@ Neural Network Consoleにプラグインが同梱されていますが、この�
 
 ## 最新のプラグインを利用するには
 
-プラグインは、Neural Network Consoleで動作します。もしNeural Network Consoleをお持ちでない場合には、こちら(https://dl.sony.com/)からダウンロードしてください。
+プラグインは、Neural Network Consoleで動作します。もしNeural Network Consoleをお持ちでない場合には、こちら(https://github.com/sony/neural-network-console)からダウンロードしてください。
 
 1. このリポジトリからzipファイルをダウンロードします。
 2. PC上でzipファイルを解凍します。
