@@ -70,7 +70,7 @@ The plugins enable pre-processing and post-processing on Neural Network Console.
        * [Face evaluation](./manuals/Post_Process/Fairness/Evaluation/FaceEvaluation.rst)
 
 ## How to use the latest plugins
-The plugins run on Neural Network Console. If you do not have Neural Network Console, please download from here (https://dl.sony.com/).
+The plugins run on Neural Network Console. If you do not have Neural Network Console, please download from here (https://github.com/sony/neural-network-console).
 1. Download the zip files from this repository. 
 2. Extract the zip files on your PC.
 3. Delete the existing plugins folder. You can find it from neural_network_console > libs > **plugins**. 
