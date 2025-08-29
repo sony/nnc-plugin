@@ -58,7 +58,7 @@ def func(args):
         sys.exit(1)
     path_nnp = os.path.join(
         get_model_home(), 'clip', f'{model_name}.h5')
-    url = f'https://nnabla.org/pretrained-models/nnabla-examples/vision-and-language/clip/{model_name}.h5'
+    url = f'https://zenodo.org/records/16973930/files/{model_name}.h5?download=1'
     logger.log(99, f'Downloading {model_name} from {url}...')
     dir_nnp = os.path.dirname(path_nnp)
     if not os.path.isdir(dir_nnp):

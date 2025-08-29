@@ -83,7 +83,7 @@ def func(args):
 
     path_nnp = os.path.join(
         get_model_home(), 'imagenet', f'{model_name}.nnp')
-    url = f'https://nnabla.org/pretrained-models/nnp_models/imagenet/{model_name}/{model_name}.nnp'
+    url = f'https://zenodo.org/records/16962677/files/{model_name}.nnp?download=1'
     logger.log(99, f'Downloading {model_name} from {url}...')
     dir_nnp = os.path.dirname(path_nnp)
     if not os.path.isdir(dir_nnp):

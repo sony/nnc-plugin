@@ -82,7 +82,7 @@ def func(args):
 
     path_nnp = os.path.join(
         get_model_home(), 'c1_models', f'{model_name}_c1.nnp')
-    url = f'https://nnabla.org/pretrained-models/nnp_models/c1_models/{model_name}_c1.nnp'
+    url = f'https://zenodo.org/records/16961278/files/{model_name}_c1.nnp?download=1'
     logger.log(99, f'Downloading {model_name} from {url}...')
     dir_nnp = os.path.dirname(path_nnp)
     if not os.path.isdir(dir_nnp):
